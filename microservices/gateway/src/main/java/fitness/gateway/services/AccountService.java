@@ -1,0 +1,40 @@
+package fitness.gateway.services;
+
+import fitness.data.events.accounts.AccountsReplied;
+import fitness.data.events.accounts.AccountsRequested;
+import fitness.messaging.Event;
+import fitness.messaging.MessageQueue;
+import fitness.messaging.ReplyListener;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+
+@Service
+public class AccountService {
+
+    private final MessageQueue messageQueue = new MessageQueue();
+    private final ReplyListener replyListener = new ReplyListener(messageQueue,
+            AccountsReplied.AllAccountsReplied.topic
+    );
+
+    public AccountService() {}
+
+    public AccountsReplied.AllAccountsReplied getAccounts() {
+        final UUID correlationId = UUID.randomUUID();
+        replyListener.registerWaiterForCorrelation(correlationId);
+        messageQueue.publish(
+            new Event(
+                AccountsRequested.AllAccountsRequested.topic,
+                new Object[]{
+                    new AccountsRequested.AllAccountsRequested(
+                        correlationId,
+                        false,
+                        "Request initialized"
+                    )
+                }
+            )
+        );
+        var event = replyListener.synchronouslyWaitForReply(correlationId);
+        return event.getArgument(0, AccountsReplied.AllAccountsReplied.class);
+    }
+}
