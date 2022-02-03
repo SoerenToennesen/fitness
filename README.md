@@ -28,6 +28,17 @@ The application is a fullstack application featuring a UI, frontend, business lo
   - https://www.rabbitmq.com/download.html
 - Install Docker
 
+## Running the application
+
+Currently, the application is only setup to be run locally. To run this, we have to add
+
+"--add-opens java.base/java.time=ALL-UNNAMED"
+
+as starting arguments to the applications that pass LocalDate through RabbitMQ.
+There can possible be a GSON mapping fix, but this is not implemented yet.
+
+More to come..
+
 ## Architecture & Pipeline
 TODO: Insert picture and explain
 
