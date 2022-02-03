@@ -59,7 +59,8 @@ public class AccountsApplication {
 					new AccountsReplied.AllAccountsReplied(
 						allAccountsRequest.getCorrelationId(),
 						true,
-						"All accounts retrieved successfully"
+						"All accounts retrieved successfully",
+						accounts
 					)
 				}
 		));

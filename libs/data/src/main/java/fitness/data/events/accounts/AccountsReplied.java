@@ -19,8 +19,9 @@ public class AccountsReplied extends BaseEvent {
     public static class AllAccountsReplied extends BaseEvent {
         public static String topic = baseTopic + "." + "ALL_ACCOUNTS";
         private List<Account> accounts;
-        public AllAccountsReplied(UUID correlationId, boolean success, String responseMessage) {
+        public AllAccountsReplied(UUID correlationId, boolean success, String responseMessage, List<Account> accounts) {
             super(correlationId, success, responseMessage);
+            this.accounts = accounts;
         }
     }
 
