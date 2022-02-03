@@ -9,6 +9,8 @@ import fitness.messaging.ReplyListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,7 +40,7 @@ public class AccountsApplication {
 						UUID.randomUUID(),
 						"Samuel",
 						"L. Jackson",
-						"LocalDate.of(1948, Month.DECEMBER, 21)",
+						LocalDate.of(1948, Month.DECEMBER, 21),
 						"samuel.l.jackson@businessinquries.com",
 						Account.AccountType.CLIENT
 				),
@@ -46,7 +48,7 @@ public class AccountsApplication {
 						UUID.randomUUID(),
 						"Keanu",
 						"Reeves",
-						"LocalDate.of(1964, Month.SEPTEMBER, 2)",
+						LocalDate.of(1964, Month.SEPTEMBER, 2),
 						"keanu.reeves@businessinquries.com",
 						Account.AccountType.MANAGER
 				)

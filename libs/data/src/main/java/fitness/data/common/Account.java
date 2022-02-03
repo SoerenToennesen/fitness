@@ -12,7 +12,7 @@ public class Account {
     private UUID id;
     private String firstName;
     private String lastName;
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
     private String email;
     private AccountType accountType;
 
