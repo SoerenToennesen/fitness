@@ -17,11 +17,22 @@ public class AccountsReplied extends BaseEvent {
     @Data
     @EqualsAndHashCode(callSuper = true)
     public static class AllAccountsReplied extends BaseEvent {
-        public static String topic = baseTopic + "." + "ALL_ACCOUNTS";
+        public static String topic = baseTopic + "." + "GET_ALL";
         private List<Account> accounts;
         public AllAccountsReplied(UUID correlationId, boolean success, String responseMessage, List<Account> accounts) {
             super(correlationId, success, responseMessage);
             this.accounts = accounts;
+        }
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    public static class CreateAccountReplied extends BaseEvent {
+        public static String topic = baseTopic + "." + "CREATE";
+        private UUID accountId;
+        public CreateAccountReplied(UUID correlationId, boolean success, String responseMessage, UUID accountId) {
+            super(correlationId, success, responseMessage);
+            this.accountId = accountId;
         }
     }
 
