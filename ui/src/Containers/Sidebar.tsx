@@ -45,7 +45,7 @@ export function Sidebar(props: any) {
         } else {
             return (
                 <h5>
-                    Zero Calorie Water
+                    Menu
                 </h5>
             )
         }

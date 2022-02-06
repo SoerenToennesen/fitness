@@ -1,18 +1,19 @@
 import React, {Component} from 'react';
 import {api_urls} from '../Api_urls'
+import account_picture from "../Photos/users/defaultuser.png"
 
 interface MyProps {
 }
 interface MyStates {
-    departments: [],
     accounts: [],
-    modalTitle: string,
-    accountId: number,
-    accountName: string,
-    Department: string,
-    DateOfJoining: string,
-    PhotoFileName: string,
-    PhotoPath: any,
+    clients: [],
+    managers: [],
+    admins: [],
+    updateOrCreateModal: boolean,
+    targetFirstName: string,
+    targetLastName: string,
+    targetEmail: string,
+    targetDateOfBirth: string,
 }
 
 export class Account extends Component<MyProps, MyStates> {
@@ -20,15 +21,15 @@ export class Account extends Component<MyProps, MyStates> {
     constructor(props: any) {
         super(props);
         this.state={
-            departments: [],
             accounts: [],
-            modalTitle: "",
-            accountId: 0,
-            accountName: "",
-            Department: "",
-            DateOfJoining: "",
-            PhotoFileName: "anonymous.png",
-            PhotoPath: api_urls.PHOTO_URL,
+            clients: [],
+            managers: [],
+            admins: [],
+            updateOrCreateModal: false,
+            targetFirstName: '',
+            targetLastName: '',
+            targetEmail: '',
+            targetDateOfBirth: '2000-01-01',
         }
     }
 
@@ -36,39 +37,21 @@ export class Account extends Component<MyProps, MyStates> {
         fetch(api_urls.ACCOUNT_URL)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 this.setState({accounts: data.accounts});
+                this.setState({clients: data.accounts.filter(function (acc: any) {
+                    return acc.accountType === "CLIENT"
+                })});
+                this.setState({managers: data.accounts.filter(function (acc: any) {
+                    return acc.accountType === "MANAGER"
+                })});
+                this.setState({admins: data.accounts.filter(function (acc: any) {
+                    return acc.accountType === "ADMIN"
+                })});
             })
     }
 
     componentDidMount() {
         this.refreshList();
-    }
-
-    changeAccountName = (e: any) => {
-        this.setState({accountName: e.target.value});
-    }
-    
-    addClick() {
-        this.setState({
-            modalTitle: "Add account",
-            accountId: 0,
-            accountName: "",
-            Department: "",
-            DateOfJoining: "",
-            PhotoFileName: "anonymous.png",
-        })
-    }
-
-    editClick(acc: any) {
-        this.setState({
-            modalTitle: "Edit account",
-            accountId: acc.accountId,
-            accountName: acc.accountName,
-            Department: acc.Department,
-            DateOfJoining: acc.DateOfJoining,
-            PhotoFileName: acc.PhotoFileName,
-        })
     }
 
     createClick() {
@@ -80,7 +63,6 @@ export class Account extends Component<MyProps, MyStates> {
             },
             body: JSON.stringify({
                 accountName: this.state.accountName,
-                Department: this.state.Department,
                 DateOfJoining: this.state.DateOfJoining,
                 PhotoFileName: this.state.PhotoFileName,
             })
@@ -104,7 +86,6 @@ export class Account extends Component<MyProps, MyStates> {
             body: JSON.stringify({
                 accountId: this.state.accountId,
                 accountName: this.state.accountName,
-                Department: this.state.Department,
                 DateOfJoining: this.state.DateOfJoining,
                 PhotoFileName: this.state.PhotoFileName,
             })
@@ -151,143 +132,180 @@ export class Account extends Component<MyProps, MyStates> {
         })*/
     }
 
-    render() {
-        const {departments, accounts, modalTitle, accountId, accountName, Department, DateOfJoining, PhotoFileName, PhotoPath} = this.state;
+    accountTypeTable(accountType: String) {
+        let accountMap : any = [];
+        let title : String = ""
+        switch (accountType) {
+            case "CLIENT":
+                accountMap = this.state.clients;
+                title = "Clients";
+                break;
+            case "MANAGER":
+                accountMap = this.state.managers;
+                title = "Managers";
+                break;
+            case "ADMIN":
+                accountMap = this.state.admins;
+                title = "Admins";
+                break;
+        }
         return (
             <div>
+                <h3 style={{paddingLeft: "5px"}}>{title}</h3>
+                <table className="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Date of Birth
+                        </th>
+                        <th>
+                            E-mail
+                        </th>
+                        <th>
+                            Options
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {accountMap.map((acc : any) =>
+                        <tr key={acc.id}>
+                            <td>{acc.firstName + ' ' + acc.lastName}</td>
+                            <td>{acc.dateOfBirth}</td>
+                            <td>{acc.email}</td>
+                            <td>
+                                <button
+                                    type="button"
+                                    className="btn btn-light mr-1"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal"
+                                    onClick={() => this.setState({updateOrCreateModal: false})}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                        <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                    </svg>
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-light mr-1"
+                                    onClick={() => this.deleteClick(acc.id)}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
+                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                    )}
+                    </tbody>
+                </table>
+            </div>
+        )
+    }
+
+    modalPopup() {
+        return (
+            <div className="modal fade" id="exampleModal" tabIndex={-1} aria-hidden="true">
+                <div className="modal-dialog modal-lg modal-dialog-centered">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">
+                                Edit account
+                            </h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+                        </div>
+                        <div className="modal-body">
+                            <div className="d-flex flex-row bd-highlight mb-3">
+                                <div className="p-2 w-50 bd-highlight">
+                                    <div className="input-group mb-3">
+                                        <span className="input-group-text">First name</span>
+                                        <input type="text" className="form-control"
+                                            placeholder={'Enter first name...'}
+                                            value={this.state.targetFirstName}
+                                               onChange={(e) => this.setState({targetFirstName: e.target.value})}
+                                        ></input>
+                                        <span className="input-group-text">Last name</span>
+                                        <input type="text" className="form-control"
+                                            placeholder={'Enter last name...'}
+                                            value={this.state.targetLastName}
+                                            onChange={(e) => this.setState({targetLastName: e.target.value})}
+                                        ></input>
+                                    </div>
+                                    <div className="input-group mb-3">
+                                        <span className="input-group-text">E-mail</span>
+                                        <input type="text" className="form-control"
+                                            placeholder={'Enter e-mail...'}
+                                            value={this.state.targetEmail}
+                                               onChange={(e) => this.setState({targetEmail: e.target.value})}
+                                        ></input>
+                                    </div>
+                                    {/* Template for dropdowns...
+                                        <div className="input-group mb-3">
+                                            <span className="input-group-text">Title</span>
+                                            <select className="form-select"
+                                                    onclick={this.changeVal}
+                                                    value={val}
+                                                >
+                                                {dropdownVals.map((val: any) =>
+                                                    <option key={val.id}>
+                                                        {val.targetVal}
+                                                    </option>)}
+                                            </select>
+                                        </div>
+                                        */}
+                                    <div className="input-group mb-3">
+                                        <span className="input-group-text">Date of birth</span>
+                                        <input type="date" className="form-control"
+                                            value={this.state.targetDateOfBirth}
+                                            onChange={(e) => this.setState({targetDateOfBirth: e.target.value})}
+                                        ></input>
+                                    </div>
+                                </div>
+                                <div className="p-2 w-50 bd-highlight">
+                                    <img height="100px"
+                                         src={account_picture}
+                                         alt="account image"/>
+                                    <input className="m-2" type="file" onChange={this.imageUpload}/>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                className="btn btn-primary float-start"
+                                onClick={() => this.state.updateOrCreateModal ? this.createClick() : this.updateClick()}
+                            >
+                                {this.state.updateOrCreateModal ? 'Create' : 'Update'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    render() {
+        return (
+            <div>
+                {this.accountTypeTable("CLIENT")}
+                {this.accountTypeTable("MANAGER")}
+                {this.accountTypeTable("ADMIN")}
+
+
                 <button
                     type="button"
                     className="btn btn-primary m-2 float-end"
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal"
-                    onClick={() => this.addClick()}
+                    onClick={() => this.setState({updateOrCreateModal: true})}
                 >
                     Add account
                 </button>
-                <table className="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>
-                                Account ID
-                            </th>
-                            <th>
-                                Name
-                            </th>
-                            <th>
-                                Date of Birth
-                            </th>
-                            <th>
-                                E-mail
-                            </th>
-                            <th>
-                                Options
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {accounts.map((acc : any) =>
-                            <tr key={acc.id}>
-                                <td>{acc.id}</td>
-                                <td>{acc.firstName + ' ' + acc.lastName}</td>
-                                <td>{acc.dateOfBirth}</td>
-                                <td>{acc.email}</td>
-                                <td>
-                                    <button
-                                        type="button"
-                                        className="btn btn-light mr-1"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal"
-                                        //onClick={() => this.editClick(acc)}
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
-                                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                                <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                                            </svg>
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-light mr-1"
-                                        //onClick={() => this.deleteClick("id")}
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
-                                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-                                            </svg>
-                                    </button>
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-                <div className="modal fade" id="exampleModal" tabIndex={-1} aria-hidden="true">
-                    <div className="modal-dialog modal-lg modal-dialog-centered">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">
-                                    {modalTitle}
-                                </h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
 
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                <div className="d-flex flex-row bd-highlight mb-3">
-                                    <div className="p-2 w-50 bd-highlight">
-                                        <div className="input-group mb-3">
-                                            <span className="input-group-text">accountName</span>
-                                            <input type="text" className="form-control"
-                                            //value={accountName}
-                                            //onChange={this.changeAccountName}
-                                            ></input>
-                                        </div>
-                                        <div className="input-group mb-3">
-                                            <span className="input-group-text">Department</span>
-                                            <select className="form-select"
-                                                    //onclick={this.changeDepartment}
-                                                    //value={Department}
-                                                >
-                                                {departments.map((dep: any) =>
-                                                    <option key={dep.DepartmentId}>
-                                                        {dep.DepartmentName}
-                                                    </option>)}
-                                            </select>
-                                        </div>
-                                        <div className="input-group mb-3">
-                                            <span className="input-group-text">DOJ</span>
-                                            <input type="date" className="form-control"
-                                            //value={DateOfJoining}
-                                            //onChange={this.changeDateOfJoining}
-                                            ></input>
-                                        </div>
-                                    </div>
-                                    <div className="p-2 w-50 bd-highlight">
-                                        <img width="250px" height="250px"
-                                        src={PhotoPath + PhotoFileName}
-                                        alt="Placeholder description"/>
-                                        <input className="m-2" type="file" onChange={this.imageUpload}/>
-                                    </div>
-                                </div>
-                                {accountId === 0 ?
-                                    <button 
-                                        type="button"
-                                        className="btn btn-primary float-start"
-                                        onClick={() => this.createClick()}
-                                        >
-                                            Create
-                                    </button>
-                                    : null}
-                                    {accountId !== 0 ?
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary float-start"
-                                        onClick={() => this.updateClick()}
-                                        >
-                                            Update
-                                    </button>
-                                    : null}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {this.modalPopup()}
+
+
             </div>
         )
     }

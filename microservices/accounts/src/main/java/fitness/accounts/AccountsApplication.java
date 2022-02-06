@@ -46,11 +46,43 @@ public class AccountsApplication {
 				),
 				new Account(
 						UUID.randomUUID(),
+						"Niels",
+						"Bohr",
+						LocalDate.of(1885, Month.OCTOBER, 7),
+						"niels.bohr@businessinquries.com",
+						Account.AccountType.CLIENT
+				),
+				new Account(
+						UUID.randomUUID(),
+						"Albert",
+						"Einstein",
+						LocalDate.of(1879, Month.MARCH, 14),
+						"albert.einstein@businessinquries.com",
+						Account.AccountType.CLIENT
+				),
+				new Account(
+						UUID.randomUUID(),
 						"Keanu",
 						"Reeves",
 						LocalDate.of(1964, Month.SEPTEMBER, 2),
 						"keanu.reeves@businessinquries.com",
 						Account.AccountType.MANAGER
+				),
+				new Account(
+						UUID.randomUUID(),
+						"Lars",
+						"Ulrik",
+						LocalDate.of(1963, Month.DECEMBER, 26),
+						"lars.ulrik@businessinquries.com",
+						Account.AccountType.MANAGER
+				),
+				new Account(
+						UUID.randomUUID(),
+						"Søren",
+						"Tønnesen",
+						LocalDate.of(1995, Month.DECEMBER, 26),
+						"søren.tønnesen@businessinquries.com",
+						Account.AccountType.ADMIN
 				)
 		);
 		messageQueue.publish(new Event(
