@@ -14,6 +14,7 @@ interface MyStates {
     targetLastName: string,
     targetEmail: string,
     targetDateOfBirth: string,
+    targetAccountType: string,
 }
 
 export class Account extends Component<MyProps, MyStates> {
@@ -29,7 +30,8 @@ export class Account extends Component<MyProps, MyStates> {
             targetFirstName: '',
             targetLastName: '',
             targetEmail: '',
-            targetDateOfBirth: '2000-01-01',
+            targetDateOfBirth: '',//new Date(Date.now()).toISOString().split('T')[0],
+            targetAccountType: 'Client',
         }
     }
 
@@ -55,16 +57,19 @@ export class Account extends Component<MyProps, MyStates> {
     }
 
     createClick() {
-        /*fetch(api_urls.API_URL + 'account', {
+        fetch(api_urls.ACCOUNT_URL, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                accountName: this.state.accountName,
-                DateOfJoining: this.state.DateOfJoining,
-                PhotoFileName: this.state.PhotoFileName,
+                id: null,
+                firstName: this.state.targetFirstName,
+                lastName: this.state.targetLastName,
+                dateOfBirth: this.state.targetDateOfBirth,
+                email: this.state.targetEmail,
+                accountType: this.state.targetAccountType.toUpperCase(),
             })
         })
         .then(res => res.json())
@@ -73,7 +78,7 @@ export class Account extends Component<MyProps, MyStates> {
             this.refreshList();
         }, (error) => {
             alert('Failed');
-        })*/
+        })
     }
 
     updateClick() {
@@ -239,23 +244,32 @@ export class Account extends Component<MyProps, MyStates> {
                                         <input type="text" className="form-control"
                                             placeholder={'Enter e-mail...'}
                                             value={this.state.targetEmail}
-                                               onChange={(e) => this.setState({targetEmail: e.target.value})}
+                                            onChange={(e) => this.setState({targetEmail: e.target.value})}
                                         ></input>
                                     </div>
-                                    {/* Template for dropdowns...
-                                        <div className="input-group mb-3">
-                                            <span className="input-group-text">Title</span>
-                                            <select className="form-select"
-                                                    onclick={this.changeVal}
-                                                    value={val}
-                                                >
-                                                {dropdownVals.map((val: any) =>
-                                                    <option key={val.id}>
-                                                        {val.targetVal}
-                                                    </option>)}
-                                            </select>
-                                        </div>
-                                        */}
+                                    <div className="input-group mb-3">
+                                        <span className="input-group-text">Title</span>
+                                        <select className="form-select"
+                                                placeholder={'Select an account type...'}
+                                                value={this.state.targetAccountType}
+                                                onChange={(e) => this.setState({targetAccountType: e.target.value})}
+                                                //onClick={(e) => this.setState({targetAccountType: (e.target as HTMLInputElement).value})}
+                                            >
+                                            <option>
+                                                Client
+                                            </option>
+                                            <option>
+                                                Manager
+                                            </option>
+                                            <option>
+                                                Admin
+                                            </option>
+                                            {/*{dropdownVals.map((val: any) =>
+                                                <option key={val.id}>
+                                                    {val.targetVal}
+                                                </option>)}*/}
+                                        </select>
+                                    </div>
                                     <div className="input-group mb-3">
                                         <span className="input-group-text">Date of birth</span>
                                         <input type="date" className="form-control"
@@ -273,7 +287,7 @@ export class Account extends Component<MyProps, MyStates> {
                             </div>
                             <button
                                 type="button"
-                                className="btn btn-primary float-start"
+                                className="btn btn-primary float-start data-bs-dismiss"
                                 onClick={() => this.state.updateOrCreateModal ? this.createClick() : this.updateClick()}
                             >
                                 {this.state.updateOrCreateModal ? 'Create' : 'Update'}
