@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {variables} from '../Variables'
+import {api_urls} from '../Api_urls'
 
 interface MyProps {
 }
@@ -67,7 +67,7 @@ export class Department extends Component<MyProps, MyStates> {
     }
 
     refreshList() {
-        fetch(variables.API_URL + 'department')
+        fetch(api_urls.API_URL + 'department')
         .then(response => response.json())
         .then(data => {
             this.setState({departments: data, departmentsWithoutFilter: data});
@@ -99,7 +99,7 @@ export class Department extends Component<MyProps, MyStates> {
     }
 
     createClick() {
-        fetch(variables.API_URL + 'department', {
+        fetch(api_urls.API_URL + 'department', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -119,7 +119,7 @@ export class Department extends Component<MyProps, MyStates> {
     }
 
     updateClick() {
-        fetch(variables.API_URL + 'department', {
+        fetch(api_urls.API_URL + 'department', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -141,7 +141,7 @@ export class Department extends Component<MyProps, MyStates> {
 
     deleteClick(id: string) {
         if (window.confirm('Are you sure?')) {
-            fetch(variables.API_URL + 'department/' + id, {
+            fetch(api_urls.API_URL + 'department/' + id, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',

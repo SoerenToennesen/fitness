@@ -5,7 +5,7 @@ import './index.css';
 import {Home} from './Components/Home';
 import {Dashboard} from './Components/Dashboard';
 import {Department} from './Components/Department';
-import {Employee} from './Components/Employee';
+import {Account} from './Components/Account';
 import {Navbar, NavItem} from './Containers/Navbar';
 import {Sidebar} from './Containers/Sidebar';
 import { DropdownMenu } from './Containers/Dropdown';
@@ -59,7 +59,7 @@ function App() {
               <Dashboard />
             </Route>
             <Route exact path="/department" component={Department} />
-            <Route exact path="/employee" component={Employee} />
+            <Route exact path="/account" component={Account} />
             <Route exact path="/content">
               <Content />
             </Route>
@@ -93,8 +93,8 @@ function App() {
               </NavLink>
             </li>
             <li className="nav-item- m-1">
-              <NavLink className="btn btn-light btn-outline-primary" to="/employee">
-                Employee
+              <NavLink className="btn btn-light btn-outline-primary" to="/account">
+                Account
               </NavLink>
             </li>
           </ul>
@@ -103,7 +103,7 @@ function App() {
         <Switch>
           <Route path='/home' component={Home}/>
           <Route path='/department' component={Department}/>
-          <Route path='/employee' component={Employee}/>
+          <Route path='/account' component={Account}/>
         </Switch>*/}
     </BrowserRouter>
   );

@@ -190,7 +190,7 @@
     box-sizing: border-box;
 }
 
-.side-bar-footer .user-avatar {
+.side-bar-footer .account-avatar {
     width: 40px;
     height: 40px;
     overflow: hidden;
@@ -198,11 +198,11 @@
     display: inline-block;
 }
 
-.side-bar-footer .user-avatar img {
+.side-bar-footer .account-avatar img {
     max-width: 105%;
 }
 
-.side-bar-footer .user-info {
+.side-bar-footer .account-info {
     display: inline-block;
     margin: 0 10px;
     color: var(--bg);
@@ -211,18 +211,18 @@
     transition: opacity 100ms ease-in;
 }
 
-.side-bar.inactive .side-bar-footer .user-info {
+.side-bar.inactive .side-bar-footer .account-info {
     opacity: 1;
     width: 0;
     height: 0;
     overflow: hidden;
 }
 
-.side-bar-footer .user-info h5{
+.side-bar-footer .account-info h5{
     font-size: 15px;
 }
 
-.side-bar-footer .user-info p{
+.side-bar-footer .account-info p{
     font-size: 12px;
 }
 

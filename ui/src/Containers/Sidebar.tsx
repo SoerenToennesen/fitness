@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { NavLink } from "react-router-dom";
 import './css/Sidebar.css';
 import logo from "../Photos/logos/mainlogo2.png"
-import account from "../Photos/users/mypicture.png"
+import account_picture from "../Photos/users/defaultuser.png"
+import account_picture2 from "../Photos/users/mypicture.png"
 import { ReactTypical } from '@deadcoder0904/react-typical';
 
 export function Sidebar(props: any) {
@@ -54,7 +55,7 @@ export function Sidebar(props: any) {
         {name: "Dashboard", exact: true, to: "/", iconClassName: "bi bi-speedometer2"},
         {name: "Department", exact: true, to: `/department`, iconClassName: "bi bi-pencil-square",
             subMenus: [{name: "Courses", to: "/content/courses"}, {name: "Videos", to: "/content/videos"}]},
-        {name: "Employee", to: `/employee`, iconClassName: "bi bi-palette-fill"},
+        {name: "Account", to: `/account`, iconClassName: "bi bi-palette-fill"},
     ];
 
     const MenuItem = (props: any) => {
@@ -146,7 +147,7 @@ export function Sidebar(props: any) {
             </div>
             <div className="side-bar-footer">
                 <div className="account-avatar">
-                    <img src={account} alt="account"/>
+                    <img src={account_picture2} alt="account"/>
                 </div>
                 <div className="account-info">
                     <h5>Søren Tønnesen</h5>

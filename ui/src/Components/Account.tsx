@@ -1,96 +1,85 @@
 import React, {Component} from 'react';
-import {variables} from '../Variables'
+import {api_urls} from '../Api_urls'
 
 interface MyProps {
 }
 interface MyStates {
     departments: [],
-    employees: [],
+    accounts: [],
     modalTitle: string,
-    EmployeeId: number,
-    EmployeeName: string,
+    accountId: number,
+    accountName: string,
     Department: string,
     DateOfJoining: string,
     PhotoFileName: string,
     PhotoPath: any,
 }
 
-export class Employee extends Component<MyProps, MyStates> {
+export class Account extends Component<MyProps, MyStates> {
 
     constructor(props: any) {
         super(props);
         this.state={
             departments: [],
-            employees: [],
+            accounts: [],
             modalTitle: "",
-            EmployeeId: 0,
-            EmployeeName: "",
+            accountId: 0,
+            accountName: "",
             Department: "",
             DateOfJoining: "",
             PhotoFileName: "anonymous.png",
-            PhotoPath: variables.PHOTO_URL,
+            PhotoPath: api_urls.PHOTO_URL,
         }
     }
 
     refreshList() {
-        fetch(variables.API_URL + 'employee')
-        .then(response => response.json())
-        .then(data => {
-            this.setState({employees: data});
-        })
-
-        fetch(variables.API_URL + 'department')
-        .then(response => response.json())
-        .then(data => {
-            this.setState({departments: data});
-        })
+        fetch(api_urls.ACCOUNT_URL)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                this.setState({accounts: data.accounts});
+            })
     }
 
     componentDidMount() {
         this.refreshList();
     }
 
-    changeEmployeeName = (e: any) => {
-        this.setState({EmployeeName: e.target.value});
-    }
-    changeDepartment = (e: any) => {
-        this.setState({Department: e.target.value});
-    }
-    changeDateOfJoining = (e: any) => {
-        this.setState({DateOfJoining: e.target.value});
+    changeAccountName = (e: any) => {
+        this.setState({accountName: e.target.value});
     }
     
     addClick() {
         this.setState({
-            modalTitle: "Add employee",
-            EmployeeId: 0,
-            EmployeeName: "",
+            modalTitle: "Add account",
+            accountId: 0,
+            accountName: "",
             Department: "",
             DateOfJoining: "",
             PhotoFileName: "anonymous.png",
         })
     }
 
-    editClick(emp: any) {
+    editClick(acc: any) {
         this.setState({
-            modalTitle: "Edit employee",
-            EmployeeId: emp.EmployeeId,
-            EmployeeName: emp.EmployeeName,
-            Department: emp.Department,
-            DateOfJoining: emp.DateOfJoining,
-            PhotoFileName: emp.PhotoFileName,
+            modalTitle: "Edit account",
+            accountId: acc.accountId,
+            accountName: acc.accountName,
+            Department: acc.Department,
+            DateOfJoining: acc.DateOfJoining,
+            PhotoFileName: acc.PhotoFileName,
         })
     }
 
     createClick() {
-        fetch(variables.API_URL + 'employee', {
+        /*fetch(api_urls.API_URL + 'account', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                EmployeeName: this.state.EmployeeName,
+                accountName: this.state.accountName,
                 Department: this.state.Department,
                 DateOfJoining: this.state.DateOfJoining,
                 PhotoFileName: this.state.PhotoFileName,
@@ -102,19 +91,19 @@ export class Employee extends Component<MyProps, MyStates> {
             this.refreshList();
         }, (error) => {
             alert('Failed');
-        })
+        })*/
     }
 
     updateClick() {
-        fetch(variables.API_URL + 'employee', {
+        /*fetch(api_urls.API_URL + 'account', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                EmployeeId: this.state.EmployeeId,
-                EmployeeName: this.state.EmployeeName,
+                accountId: this.state.accountId,
+                accountName: this.state.accountName,
                 Department: this.state.Department,
                 DateOfJoining: this.state.DateOfJoining,
                 PhotoFileName: this.state.PhotoFileName,
@@ -126,12 +115,12 @@ export class Employee extends Component<MyProps, MyStates> {
             this.refreshList();
         }, (error) => {
             alert('Failed');
-        })
+        })*/
     }
 
     deleteClick(id: string) {
-        if (window.confirm('Are you sure?')) {
-            fetch(variables.API_URL + 'employee/' + id, {
+        /*if (window.confirm('Are you sure?')) {
+            fetch(api_urls.API_URL + 'account/' + id, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
@@ -145,25 +134,25 @@ export class Employee extends Component<MyProps, MyStates> {
             }, (error) => {
                 alert('Failed');
             })
-        }
+        }*/
     }
 
     imageUpload = (e: any) => {
-        e.preventDefault();
+        /*e.preventDefault();
         const formData = new FormData();
         formData.append("file", e.target.files[0], e.target.files[0].name);
-        fetch(variables.API_URL + "employee/savefile", {
+        fetch(api_urls.API_URL + "account/savefile", {
             method: "POST",
             body: formData
         })
         .then(res => res.json())
         .then(data => {
             this.setState({PhotoFileName: data});
-        })
+        })*/
     }
 
     render() {
-        const {departments, employees, modalTitle, EmployeeId, EmployeeName, Department, DateOfJoining, PhotoFileName, PhotoPath} = this.state;
+        const {departments, accounts, modalTitle, accountId, accountName, Department, DateOfJoining, PhotoFileName, PhotoPath} = this.state;
         return (
             <div>
                 <button
@@ -173,22 +162,22 @@ export class Employee extends Component<MyProps, MyStates> {
                     data-bs-target="#exampleModal"
                     onClick={() => this.addClick()}
                 >
-                    Add employee
+                    Add account
                 </button>
                 <table className="table table-striped">
                     <thead>
                         <tr>
                             <th>
-                                EmployeeId
+                                Account ID
                             </th>
                             <th>
-                                EmployeeName
+                                Name
                             </th>
                             <th>
-                                Department
+                                Date of Birth
                             </th>
                             <th>
-                                DOJ
+                                E-mail
                             </th>
                             <th>
                                 Options
@@ -196,19 +185,19 @@ export class Employee extends Component<MyProps, MyStates> {
                         </tr>
                     </thead>
                     <tbody>
-                        {employees.map((emp : any) =>
-                            <tr key={emp.EmployeeId}>
-                                <td>{emp.EmployeeId}</td>
-                                <td>{emp.EmployeeName}</td>
-                                <td>{emp.Department}</td>
-                                <td>{emp.DateOfJoining}</td>
+                        {accounts.map((acc : any) =>
+                            <tr key={acc.id}>
+                                <td>{acc.id}</td>
+                                <td>{acc.firstName + ' ' + acc.lastName}</td>
+                                <td>{acc.dateOfBirth}</td>
+                                <td>{acc.email}</td>
                                 <td>
                                     <button
                                         type="button"
                                         className="btn btn-light mr-1"
                                         data-bs-toggle="modal"
                                         data-bs-target="#exampleModal"
-                                        onClick={() => this.editClick(emp)}
+                                        //onClick={() => this.editClick(acc)}
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
@@ -218,7 +207,7 @@ export class Employee extends Component<MyProps, MyStates> {
                                     <button
                                         type="button"
                                         className="btn btn-light mr-1"
-                                        onClick={() => this.deleteClick(emp.EmployeeId)}
+                                        //onClick={() => this.deleteClick("id")}
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
                                                 <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
@@ -244,14 +233,18 @@ export class Employee extends Component<MyProps, MyStates> {
                                 <div className="d-flex flex-row bd-highlight mb-3">
                                     <div className="p-2 w-50 bd-highlight">
                                         <div className="input-group mb-3">
-                                            <span className="input-group-text">EmployeeName</span>
+                                            <span className="input-group-text">accountName</span>
                                             <input type="text" className="form-control"
-                                            value={EmployeeName}
-                                            onChange={this.changeEmployeeName}></input>
+                                            //value={accountName}
+                                            //onChange={this.changeAccountName}
+                                            ></input>
                                         </div>
                                         <div className="input-group mb-3">
                                             <span className="input-group-text">Department</span>
-                                            <select className="form-select" onChange={this.changeDepartment} value={Department}>
+                                            <select className="form-select"
+                                                    //onclick={this.changeDepartment}
+                                                    //value={Department}
+                                                >
                                                 {departments.map((dep: any) =>
                                                     <option key={dep.DepartmentId}>
                                                         {dep.DepartmentName}
@@ -261,8 +254,9 @@ export class Employee extends Component<MyProps, MyStates> {
                                         <div className="input-group mb-3">
                                             <span className="input-group-text">DOJ</span>
                                             <input type="date" className="form-control"
-                                            value={DateOfJoining}
-                                            onChange={this.changeDateOfJoining}></input>
+                                            //value={DateOfJoining}
+                                            //onChange={this.changeDateOfJoining}
+                                            ></input>
                                         </div>
                                     </div>
                                     <div className="p-2 w-50 bd-highlight">
@@ -272,7 +266,7 @@ export class Employee extends Component<MyProps, MyStates> {
                                         <input className="m-2" type="file" onChange={this.imageUpload}/>
                                     </div>
                                 </div>
-                                {EmployeeId === 0 ?
+                                {accountId === 0 ?
                                     <button 
                                         type="button"
                                         className="btn btn-primary float-start"
@@ -281,7 +275,7 @@ export class Employee extends Component<MyProps, MyStates> {
                                             Create
                                     </button>
                                     : null}
-                                    {EmployeeId !== 0 ?
+                                    {accountId !== 0 ?
                                     <button
                                         type="button"
                                         className="btn btn-primary float-start"
