@@ -34,6 +34,7 @@ public class AccountsApplication {
 	public void handleQueuedMessages() {
 		messageQueue.addHandler(AccountsRequested.AllAccountsRequested.topic, this::handleAllAccountsRequest);
 		messageQueue.addHandler(AccountsRequested.CreateAccountRequested.topic, this::handleCreateAccountRequest);
+		messageQueue.addHandler(AccountsRequested.UpdateAccountRequested.topic, this::handleUpdateAccountRequest);
 	}
 
 	public void handleAllAccountsRequest(Event event) {
@@ -63,6 +64,21 @@ public class AccountsApplication {
 								true,
 								"Account created successfully",
 								generatedAccountId
+						)
+				}
+		));
+	}
+
+	public void handleUpdateAccountRequest(Event event) {
+		final var updateAccountRequested = event.getArgument(0, AccountsRequested.UpdateAccountRequested.class);
+		accountsDB.updateAccount(updateAccountRequested.getAccount());
+		messageQueue.publish(new Event(
+				AccountsReplied.UpdateAccountReplied.topic,
+				new Object[]{
+						new AccountsReplied.UpdateAccountReplied(
+								updateAccountRequested.getCorrelationId(),
+								true,
+								"Account updated successfully"
 						)
 				}
 		));

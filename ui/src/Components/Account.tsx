@@ -10,6 +10,7 @@ interface MyStates {
     managers: [],
     admins: [],
     updateOrCreateModal: boolean,
+    targetId: string,
     targetFirstName: string,
     targetLastName: string,
     targetEmail: string,
@@ -27,6 +28,7 @@ export class Account extends Component<MyProps, MyStates> {
             managers: [],
             admins: [],
             updateOrCreateModal: false,
+            targetId: '',
             targetFirstName: '',
             targetLastName: '',
             targetEmail: '',
@@ -73,35 +75,37 @@ export class Account extends Component<MyProps, MyStates> {
             })
         })
         .then(res => res.json())
-        .then((result) => {
-            alert(result);
+        .then(() => {
             this.refreshList();
         }, (error) => {
-            alert('Failed');
+            alert("Error: " + error);
         })
     }
 
     updateClick() {
-        /*fetch(api_urls.API_URL + 'account', {
+        console.log('clicked')
+        fetch(api_urls.ACCOUNT_URL, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                accountId: this.state.accountId,
-                accountName: this.state.accountName,
-                DateOfJoining: this.state.DateOfJoining,
-                PhotoFileName: this.state.PhotoFileName,
+                id: this.state.targetId,
+                firstName: this.state.targetFirstName,
+                lastName: this.state.targetLastName,
+                dateOfBirth: this.state.targetDateOfBirth,
+                email: this.state.targetEmail,
+                accountType: this.state.targetAccountType.toUpperCase(),
             })
         })
         .then(res => res.json())
-        .then((result) => {
-            alert(result);
+        .then((res) => {
+            console.log(res);
             this.refreshList();
         }, (error) => {
-            alert('Failed');
-        })*/
+            alert('Error:' + error);
+        })
     }
 
     deleteClick(id: string) {
@@ -186,7 +190,16 @@ export class Account extends Component<MyProps, MyStates> {
                                     className="btn btn-light mr-1"
                                     data-bs-toggle="modal"
                                     data-bs-target="#exampleModal"
-                                    onClick={() => this.setState({updateOrCreateModal: false})}
+                                    onClick={() => {
+                                        this.setState({updateOrCreateModal: false,
+                                                            targetId: acc.id,
+                                                            targetFirstName: acc.firstName,
+                                                            targetLastName: acc.lastName,
+                                                            targetDateOfBirth: acc.dateOfBirth,
+                                                            targetEmail: acc.email,
+                                                            targetAccountType: acc.accountType.charAt(0).toUpperCase() + acc.accountType.slice(1).toLowerCase(),
+                                        });
+                                    }}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
@@ -312,7 +325,16 @@ export class Account extends Component<MyProps, MyStates> {
                     className="btn btn-primary m-2 float-end"
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal"
-                    onClick={() => this.setState({updateOrCreateModal: true})}
+                    onClick={() =>
+                        this.setState({updateOrCreateModal: true,
+                                            targetId: '',
+                                            targetFirstName: '',
+                                            targetLastName: '',
+                                            targetDateOfBirth: '',
+                                            targetEmail: '',
+                                            targetAccountType: 'Client',
+                        })
+                    }
                 >
                     Add account
                 </button>

@@ -18,14 +18,14 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    @PutMapping(consumes = "application/json", produces = "application/json")
+    public AccountsReplied.UpdateAccountReplied updateAccount(@RequestBody Account account) {
+        return accountService.updateAccount(account);
+    }
+
     @PostMapping(consumes = "application/json", produces = "application/json")
     public AccountsReplied.CreateAccountReplied createAccount(@RequestBody Account account) {
-        //return accountService.createAccount(account);
-        System.out.println(account);
-        AccountsReplied.CreateAccountReplied test = accountService.createAccount(account);
-        System.out.println(test);
-        return test;
-
+        return accountService.createAccount(account);
     }
 
     @GetMapping(produces = "application/json")

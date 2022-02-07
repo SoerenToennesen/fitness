@@ -16,7 +16,8 @@ public class AccountService {
     private final MessageQueue messageQueue = new MessageQueue();
     private final ReplyListener replyListener = new ReplyListener(messageQueue,
             AccountsReplied.AllAccountsReplied.topic,
-            AccountsReplied.CreateAccountReplied.topic
+            AccountsReplied.CreateAccountReplied.topic,
+            AccountsReplied.UpdateAccountReplied.topic
     );
 
     public AccountService() {}
@@ -58,5 +59,25 @@ public class AccountService {
         );
         var event = replyListener.synchronouslyWaitForReply(correlationId);
         return event.getArgument(0, AccountsReplied.CreateAccountReplied.class);
+    }
+
+    public AccountsReplied.UpdateAccountReplied updateAccount(Account account) {
+        final UUID correlationId = UUID.randomUUID();
+        replyListener.registerWaiterForCorrelation(correlationId);
+        messageQueue.publish(
+                new Event(
+                        AccountsRequested.UpdateAccountRequested.topic,
+                        new Object[]{
+                                new AccountsRequested.UpdateAccountRequested(
+                                        correlationId,
+                                        false,
+                                        "Request initialized",
+                                        account
+                                )
+                        }
+                )
+        );
+        var event = replyListener.synchronouslyWaitForReply(correlationId);
+        return event.getArgument(0, AccountsReplied.UpdateAccountReplied.class);
     }
 }

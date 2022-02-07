@@ -74,4 +74,8 @@ public class AccountsDB {
         return uuid;
     }
 
+    public void updateAccount(Account account) {
+        accounts.put(account.getId(), account);
+    }
+
 }

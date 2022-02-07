@@ -36,4 +36,11 @@ public class AccountsReplied extends BaseEvent {
         }
     }
 
+    public static class UpdateAccountReplied extends BaseEvent {
+        public static String topic = baseTopic + "." + "UPDATE";
+        public UpdateAccountReplied(UUID correlationId, boolean success, String responseMessage) {
+            super(correlationId, success, responseMessage);
+        }
+    }
+
 }

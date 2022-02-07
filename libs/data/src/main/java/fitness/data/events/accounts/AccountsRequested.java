@@ -31,4 +31,15 @@ public class AccountsRequested extends BaseEvent {
         }
     }
 
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    public static class UpdateAccountRequested extends BaseEvent {
+        public static String topic = baseTopic + "." + "UPDATE";
+        private Account account;
+        public UpdateAccountRequested(UUID correlationId, boolean success, String responseMessage, Account account) {
+            super(correlationId, success, responseMessage);
+            this.account = account;
+        }
+    }
+
 }
