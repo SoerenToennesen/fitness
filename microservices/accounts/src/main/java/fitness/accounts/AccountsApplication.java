@@ -35,6 +35,7 @@ public class AccountsApplication {
 		messageQueue.addHandler(AccountsRequested.AllAccountsRequested.topic, this::handleAllAccountsRequest);
 		messageQueue.addHandler(AccountsRequested.CreateAccountRequested.topic, this::handleCreateAccountRequest);
 		messageQueue.addHandler(AccountsRequested.UpdateAccountRequested.topic, this::handleUpdateAccountRequest);
+		messageQueue.addHandler(AccountsRequested.DeleteAccountRequested.topic, this::handleDeleteAccountRequest);
 	}
 
 	public void handleAllAccountsRequest(Event event) {
@@ -79,6 +80,21 @@ public class AccountsApplication {
 								updateAccountRequested.getCorrelationId(),
 								true,
 								"Account updated successfully"
+						)
+				}
+		));
+	}
+
+	public void handleDeleteAccountRequest(Event event) {
+		final var deleteAccountRequested = event.getArgument(0, AccountsRequested.DeleteAccountRequested.class);
+		accountsDB.deleteAccount(deleteAccountRequested.getAccountId());
+		messageQueue.publish(new Event(
+				AccountsReplied.DeleteAccountReplied.topic,
+				new Object[]{
+						new AccountsReplied.DeleteAccountReplied(
+								deleteAccountRequested.getCorrelationId(),
+								true,
+								"Account deleted successfully"
 						)
 				}
 		));

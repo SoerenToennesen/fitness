@@ -42,4 +42,15 @@ public class AccountsRequested extends BaseEvent {
         }
     }
 
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    public static class DeleteAccountRequested extends BaseEvent {
+        public static String topic = baseTopic + "." + "DELETE";
+        private UUID accountId;
+        public DeleteAccountRequested(UUID correlationId, boolean success, String responseMessage, UUID accountId) {
+            super(correlationId, success, responseMessage);
+            this.accountId = accountId;
+        }
+    }
+
 }

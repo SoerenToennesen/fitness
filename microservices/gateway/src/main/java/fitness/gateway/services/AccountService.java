@@ -17,7 +17,8 @@ public class AccountService {
     private final ReplyListener replyListener = new ReplyListener(messageQueue,
             AccountsReplied.AllAccountsReplied.topic,
             AccountsReplied.CreateAccountReplied.topic,
-            AccountsReplied.UpdateAccountReplied.topic
+            AccountsReplied.UpdateAccountReplied.topic,
+            AccountsReplied.DeleteAccountReplied.topic
     );
 
     public AccountService() {}
@@ -80,4 +81,25 @@ public class AccountService {
         var event = replyListener.synchronouslyWaitForReply(correlationId);
         return event.getArgument(0, AccountsReplied.UpdateAccountReplied.class);
     }
+
+    public AccountsReplied.DeleteAccountReplied deleteAccount(UUID accountId) {
+        final UUID correlationId = UUID.randomUUID();
+        replyListener.registerWaiterForCorrelation(correlationId);
+        messageQueue.publish(
+                new Event(
+                        AccountsRequested.DeleteAccountRequested.topic,
+                        new Object[]{
+                                new AccountsRequested.DeleteAccountRequested(
+                                        correlationId,
+                                        false,
+                                        "Request initialized",
+                                        accountId
+                                )
+                        }
+                )
+        );
+        var event = replyListener.synchronouslyWaitForReply(correlationId);
+        return event.getArgument(0, AccountsReplied.DeleteAccountReplied.class);
+    }
+
 }

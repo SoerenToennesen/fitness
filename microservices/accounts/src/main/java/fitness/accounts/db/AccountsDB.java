@@ -78,4 +78,8 @@ public class AccountsDB {
         accounts.put(account.getId(), account);
     }
 
+    public void deleteAccount(UUID accountId) {
+        accounts.remove(accountId);
+    }
+
 }

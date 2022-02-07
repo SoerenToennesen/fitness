@@ -83,7 +83,6 @@ export class Account extends Component<MyProps, MyStates> {
     }
 
     updateClick() {
-        console.log('clicked')
         fetch(api_urls.ACCOUNT_URL, {
             method: 'PUT',
             headers: {
@@ -100,8 +99,7 @@ export class Account extends Component<MyProps, MyStates> {
             })
         })
         .then(res => res.json())
-        .then((res) => {
-            console.log(res);
+        .then(() => {
             this.refreshList();
         }, (error) => {
             alert('Error:' + error);
@@ -109,22 +107,21 @@ export class Account extends Component<MyProps, MyStates> {
     }
 
     deleteClick(id: string) {
-        /*if (window.confirm('Are you sure?')) {
-            fetch(api_urls.API_URL + 'account/' + id, {
+        (window.confirm('Are you sure?')) &&
+        fetch(api_urls.ACCOUNT_URL, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
-                }
+                },
+                body: id
             })
             .then(res => res.json())
-            .then((result) => {
-                alert(result);
+            .then(() => {
                 this.refreshList();
             }, (error) => {
-                alert('Failed');
+                alert('Error' + error);
             })
-        }*/
     }
 
     imageUpload = (e: any) => {
@@ -209,7 +206,9 @@ export class Account extends Component<MyProps, MyStates> {
                                 <button
                                     type="button"
                                     className="btn btn-light mr-1"
-                                    onClick={() => this.deleteClick(acc.id)}
+                                    onClick={() => {
+                                        this.deleteClick(acc.id);
+                                    }}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
                                         <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
@@ -300,6 +299,8 @@ export class Account extends Component<MyProps, MyStates> {
                             </div>
                             <button
                                 type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"
                                 className="btn btn-primary float-start data-bs-dismiss"
                                 onClick={() => this.state.updateOrCreateModal ? this.createClick() : this.updateClick()}
                             >

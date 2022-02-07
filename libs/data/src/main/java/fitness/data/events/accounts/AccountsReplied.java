@@ -43,4 +43,11 @@ public class AccountsReplied extends BaseEvent {
         }
     }
 
+    public static class DeleteAccountReplied extends BaseEvent {
+        public static String topic = baseTopic + "." + "DELETE";
+        public DeleteAccountReplied(UUID correlationId, boolean success, String responseMessage) {
+            super(correlationId, success, responseMessage);
+        }
+    }
+
 }
