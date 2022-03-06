@@ -2,7 +2,7 @@
 
 Fitness application that monitors and evaluates your health and nutritional intake.
 
-*Note, at the current state of this project, it is a work-in-progress, and a lot of the below mentioned features are not yet implemented.
+*Note, at the current state of this project, it is a work-in-progress, and a lot of the below mentioned features are not yet implemented. Therefore, let this readme serve as a goal target.
 
 ### Technologies
 
