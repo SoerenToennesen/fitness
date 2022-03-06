@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import "../Containers/css/Dashboard.css"
+import "../Containers/css/Overview.css"
 
 interface MyProps {
 }
@@ -8,7 +8,7 @@ interface MyStates {
     chartData: any,
 }
 
-export class Dashboard extends Component<MyProps, MyStates>  {
+export class Overview extends Component<MyProps, MyStates>  {
     constructor(props: any) {
         super(props);
         this.state={
@@ -140,7 +140,7 @@ export class Dashboard extends Component<MyProps, MyStates>  {
 
     render() {
         return (
-            <div className="dashboard">
+            <div className="overview">
                 <this.FeaturedInfo />
                 <this.Chart />
             </div>

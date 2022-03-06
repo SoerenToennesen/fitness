@@ -1,7 +1,7 @@
 package fitness.accounts;
 
 import fitness.accounts.db.AccountsDB;
-import fitness.data.common.Account;
+import fitness.data.common.account.Account;
 import fitness.data.events.accounts.AccountsReplied;
 import fitness.data.events.accounts.AccountsRequested;
 import fitness.messaging.Event;
@@ -10,8 +10,6 @@ import fitness.messaging.ReplyListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
 import java.util.UUID;
 

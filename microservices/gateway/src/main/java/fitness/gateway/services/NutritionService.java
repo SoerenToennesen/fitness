@@ -1,8 +1,8 @@
 package fitness.gateway.services;
 
-import fitness.data.common.account.Account;
-import fitness.data.events.accounts.AccountsReplied;
-import fitness.data.events.accounts.AccountsRequested;
+import fitness.data.common.nutrition.Nutrition;
+import fitness.data.events.nutritions.NutritionsReplied;
+import fitness.data.events.nutritions.NutritionsRequested;
 import fitness.messaging.Event;
 import fitness.messaging.MessageQueue;
 import fitness.messaging.ReplyListener;
@@ -11,26 +11,26 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class AccountService {
+public class NutritionService {
 
     private final MessageQueue messageQueue = new MessageQueue();
     private final ReplyListener replyListener = new ReplyListener(messageQueue,
-            AccountsReplied.AllAccountsReplied.topic,
-            AccountsReplied.CreateAccountReplied.topic,
-            AccountsReplied.UpdateAccountReplied.topic,
-            AccountsReplied.DeleteAccountReplied.topic
+            NutritionsReplied.AllNutritionsReplied.topic,
+            NutritionsReplied.CreateNutritionReplied.topic,
+            NutritionsReplied.UpdateNutritionReplied.topic,
+            NutritionsReplied.DeleteNutritionReplied.topic
     );
 
-    public AccountService() {}
+    public NutritionService() {}
 
-    public AccountsReplied.AllAccountsReplied getAccounts() {
+    public NutritionsReplied.AllNutritionsReplied getNutritions() {
         final UUID correlationId = UUID.randomUUID();
         replyListener.registerWaiterForCorrelation(correlationId);
         messageQueue.publish(
                 new Event(
-                        AccountsRequested.AllAccountsRequested.topic,
+                        NutritionsRequested.AllNutritionsRequested.topic,
                         new Object[]{
-                                new AccountsRequested.AllAccountsRequested(
+                                new NutritionsRequested.AllNutritionsRequested(
                                         correlationId,
                                         false,
                                         "Request initialized"
@@ -39,67 +39,67 @@ public class AccountService {
                 )
         );
         var event = replyListener.synchronouslyWaitForReply(correlationId);
-        return event.getArgument(0, AccountsReplied.AllAccountsReplied.class);
+        return event.getArgument(0, NutritionsReplied.AllNutritionsReplied.class);
     }
 
-    public AccountsReplied.CreateAccountReplied createAccount(Account account) {
+    public NutritionsReplied.CreateNutritionReplied createNutrition(Nutrition nutrition) {
         final UUID correlationId = UUID.randomUUID();
         replyListener.registerWaiterForCorrelation(correlationId);
         messageQueue.publish(
                 new Event(
-                        AccountsRequested.CreateAccountRequested.topic,
+                        NutritionsRequested.CreateNutritionRequested.topic,
                         new Object[]{
-                                new AccountsRequested.CreateAccountRequested(
+                                new NutritionsRequested.CreateNutritionRequested(
                                         correlationId,
                                         false,
                                         "Request initialized",
-                                        account
+                                        nutrition
                                 )
                         }
                 )
         );
         var event = replyListener.synchronouslyWaitForReply(correlationId);
-        return event.getArgument(0, AccountsReplied.CreateAccountReplied.class);
+        return event.getArgument(0, NutritionsReplied.CreateNutritionReplied.class);
     }
 
-    public AccountsReplied.UpdateAccountReplied updateAccount(Account account) {
+    public NutritionsReplied.UpdateNutritionReplied updateNutrition(Nutrition nutrition) {
         final UUID correlationId = UUID.randomUUID();
         replyListener.registerWaiterForCorrelation(correlationId);
         messageQueue.publish(
                 new Event(
-                        AccountsRequested.UpdateAccountRequested.topic,
+                        NutritionsRequested.UpdateNutritionRequested.topic,
                         new Object[]{
-                                new AccountsRequested.UpdateAccountRequested(
+                                new NutritionsRequested.UpdateNutritionRequested(
                                         correlationId,
                                         false,
                                         "Request initialized",
-                                        account
+                                        nutrition
                                 )
                         }
                 )
         );
         var event = replyListener.synchronouslyWaitForReply(correlationId);
-        return event.getArgument(0, AccountsReplied.UpdateAccountReplied.class);
+        return event.getArgument(0, NutritionsReplied.UpdateNutritionReplied.class);
     }
 
-    public AccountsReplied.DeleteAccountReplied deleteAccount(UUID accountId) {
+    public NutritionsReplied.DeleteNutritionReplied deleteNutrition(UUID nutritionId) {
         final UUID correlationId = UUID.randomUUID();
         replyListener.registerWaiterForCorrelation(correlationId);
         messageQueue.publish(
                 new Event(
-                        AccountsRequested.DeleteAccountRequested.topic,
+                        NutritionsRequested.DeleteNutritionRequested.topic,
                         new Object[]{
-                                new AccountsRequested.DeleteAccountRequested(
+                                new NutritionsRequested.DeleteNutritionRequested(
                                         correlationId,
                                         false,
                                         "Request initialized",
-                                        accountId
+                                        nutritionId
                                 )
                         }
                 )
         );
         var event = replyListener.synchronouslyWaitForReply(correlationId);
-        return event.getArgument(0, AccountsReplied.DeleteAccountReplied.class);
+        return event.getArgument(0, NutritionsReplied.DeleteNutritionReplied.class);
     }
 
 }

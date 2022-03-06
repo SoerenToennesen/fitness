@@ -1,6 +1,6 @@
 package fitness.accounts.db;
 
-import fitness.data.common.Account;
+import fitness.data.common.account.Account;
 
 import java.time.LocalDate;
 import java.time.Month;

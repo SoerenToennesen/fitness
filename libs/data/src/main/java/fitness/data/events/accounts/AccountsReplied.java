@@ -1,6 +1,6 @@
 package fitness.data.events.accounts;
 
-import fitness.data.common.Account;
+import fitness.data.common.account.Account;
 import fitness.messaging.BaseEvent;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

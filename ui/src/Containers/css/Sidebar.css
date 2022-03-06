@@ -111,6 +111,7 @@
 
 .side-bar .main-menu .menu-item:hover {
     color: var(--text-sidebar-compliment);
+    background: var(--bg-sidebar-accent-hover);
 }
 
 .side-bar .main-menu .menu-item.active {

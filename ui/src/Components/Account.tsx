@@ -319,8 +319,6 @@ export class Account extends Component<MyProps, MyStates> {
                 {this.accountTypeTable("CLIENT")}
                 {this.accountTypeTable("MANAGER")}
                 {this.accountTypeTable("ADMIN")}
-
-
                 <button
                     type="button"
                     className="btn btn-primary m-2 float-end"
@@ -339,10 +337,7 @@ export class Account extends Component<MyProps, MyStates> {
                 >
                     Add account
                 </button>
-
                 {this.modalPopup()}
-
-
             </div>
         )
     }

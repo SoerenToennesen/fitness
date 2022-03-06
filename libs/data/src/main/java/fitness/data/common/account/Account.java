@@ -1,4 +1,4 @@
-package fitness.data.common;
+package fitness.data.common.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

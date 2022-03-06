@@ -1,6 +1,6 @@
 package fitness.gateway.controllers;
 
-import fitness.data.common.Account;
+import fitness.data.common.account.Account;
 import fitness.data.events.accounts.AccountsReplied;
 import fitness.gateway.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;

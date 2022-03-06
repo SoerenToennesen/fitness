@@ -52,10 +52,12 @@ export function Sidebar(props: any) {
     }
 
     const menuItems = [
-        {name: "Dashboard", exact: true, to: "/", iconClassName: "bi bi-speedometer2"},
-        {name: "Department", exact: true, to: `/department`, iconClassName: "bi bi-pencil-square",
-            subMenus: [{name: "Courses", to: "/content/courses"}, {name: "Videos", to: "/content/videos"}]},
-        {name: "Account", to: `/account`, iconClassName: "bi bi-palette-fill"},
+        {name: "Overview", exact: true, to: "/", iconClassName: "bi bi-speedometer2"},
+        {name: "Nutrition", exact: true, to: `/nutrition`, iconClassName: "bi bi-heart-fill",
+            subMenus: [{name: "NutritionCourses", to: "/nutrition/content/courses"}, {name: "NutritionVideos", to: "/nutrition/content/videos"}]},
+        {name: "Exercise", exact: true, to: `/exercise`, iconClassName: "bi bi-earbuds",
+            subMenus: [{name: "ExerciseCourses", to: "/exercise/content/courses"}, {name: "ExerciseVideos", to: "/exercise/content/videos"}]},
+        {name: "Account", to: `/account`, iconClassName: "bi bi-person-lines-fill"},
     ];
 
     const MenuItem = (props: any) => {

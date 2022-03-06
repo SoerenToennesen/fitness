@@ -12,6 +12,7 @@
   --bg-navbar-accent: #aaa;
   --bg-sidebar: #3A62D1;
   --bg-sidebar-accent: #264392;
+  --bg-sidebar-accent-hover: rgba(255, 255, 255, 0);
   --text-sidebar-compliment: #FFA500;
   --text-color: #dadce1;
   --nav-size: 60px;

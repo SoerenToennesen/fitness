@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 import {Home} from './Components/Home';
-import {Dashboard} from './Components/Dashboard';
-import {Department} from './Components/Department';
+import {Overview} from './Components/Overview';
+import {Nutrition} from './Components/Nutrition';
+import {Exercise} from './Components/Exercise';
 import {Account} from './Components/Account';
 import {Navbar, NavItem} from './Containers/Navbar';
 import {Sidebar} from './Containers/Sidebar';
@@ -56,17 +57,18 @@ function App() {
         <div className={`container ${inactive ? "inactive" : ""}`}>
           <Switch>
             <Route exact path="/">
-              <Dashboard />
+              <Overview />
             </Route>
-            <Route exact path="/department" component={Department} />
+            <Route exact path="/nutrition" component={Nutrition} />
+            <Route exact path="/exercise" component={Exercise} />
             <Route exact path="/account" component={Account} />
             <Route exact path="/content">
               <Content />
             </Route>
-            <Route path="/content/courses">
+            <Route path="/nutrition/content/courses">
               <Courses />
             </Route>
-            <Route path="/content/videos">
+            <Route path="/nutrition/content/videos">
               <Videos />
             </Route>
             <Route path="/design">
@@ -88,8 +90,13 @@ function App() {
               </NavLink>
             </li>
             <li className="nav-item- m-1">
-              <NavLink className="btn btn-light btn-outline-primary" to="/department">
-                Department
+              <NavLink className="btn btn-light btn-outline-primary" to="/nutrition">
+                Nutrition
+              </NavLink>
+            </li>
+            <li className="nav-item- m-1">
+              <NavLink className="btn btn-light btn-outline-primary" to="/exercise">
+                Exercise
               </NavLink>
             </li>
             <li className="nav-item- m-1">
@@ -102,7 +109,8 @@ function App() {
 
         <Switch>
           <Route path='/home' component={Home}/>
-          <Route path='/department' component={Department}/>
+          <Route path='/nutrition' component={Nutrition}/>
+          <Route path='/exercise' component={Exercise}/>
           <Route path='/account' component={Account}/>
         </Switch>*/}
     </BrowserRouter>
