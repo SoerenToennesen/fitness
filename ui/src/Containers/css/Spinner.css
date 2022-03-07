@@ -1,7 +1,8 @@
 
-
+/*Taken from: https://www.w3tweaks.com/button-loader-with-running-man.html*/
 
 .running {
+  --scale: 1;
   --color: #8a91b4;
   --duration: 0.8s;
   transform: scale(var(--scale, 1));
