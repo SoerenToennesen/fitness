@@ -2,7 +2,6 @@ import React, {  } from 'react';
 import './css/Spinner.css';
 
 export function Spinner() {
-  
     return (
         <div className="running">
             <div className="outer">
@@ -15,4 +14,4 @@ export function Spinner() {
             </div>
         </div>
     );
-  }
+}
