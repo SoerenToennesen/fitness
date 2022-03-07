@@ -6,6 +6,8 @@ import account_picture from "../Photos/users/defaultuser.png"
 import account_picture2 from "../Photos/users/mypicture.png"
 import { ReactTypical } from '@deadcoder0904/react-typical';
 
+// TODO: Make sure that when sidebar is closed,
+// then clicking on menus won't open up the submenus
 export function Sidebar(props: any) {
 
     const [inactive, setInactive] = useState(false);
