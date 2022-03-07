@@ -14,7 +14,7 @@ public class NutritionsDB {
             UUID.fromString("1f3426cc-9c98-11ec-b909-0242ac120002"),
             "Oats with milk",
             300,
-            LocalDate.of(1885, Month.OCTOBER, 7),
+            "LocalDate.of(1885, Month.OCTOBER, 7)",
             Nutrition.NutritionType.BREAKFAST,
             150,
             30,
@@ -32,7 +32,7 @@ public class NutritionsDB {
             UUID.fromString("3f63bcdc-9c98-11ec-b909-0242ac120002"),
             "Rugbrød with hummus",
             100,
-            LocalDate.of(1885, Month.OCTOBER, 7),
+            "LocalDate.of(1885, Month.OCTOBER, 7)",
             Nutrition.NutritionType.LUNCH,
             120,
             10,
@@ -46,11 +46,11 @@ public class NutritionsDB {
             12,
             3
         ));
-        put(UUID.fromString("3f63bcdc-9c98-11ec-b909-0242ac120002"), new Nutrition(
-            UUID.fromString("3f63bcdc-9c98-11ec-b909-0242ac120002"),
+        put(UUID.fromString("1c08fb4c-9e61-11ec-b909-0242ac120002"), new Nutrition(
+            UUID.fromString("1c08fb4c-9e61-11ec-b909-0242ac120002"),
             "Pizza slice",
             450,
-            LocalDate.of(1885, Month.OCTOBER, 7),
+            "LocalDate.of(1885, Month.OCTOBER, 7)",
             Nutrition.NutritionType.LUNCH,
             200,
             50,
@@ -64,11 +64,11 @@ public class NutritionsDB {
             9,
             3
         ));
-        put(UUID.fromString("3f63bcdc-9c98-11ec-b909-0242ac120002"), new Nutrition(
-            UUID.fromString("3f63bcdc-9c98-11ec-b909-0242ac120002"),
+        put(UUID.fromString("2507b54e-9e61-11ec-b909-0242ac120002"), new Nutrition(
+            UUID.fromString("2507b54e-9e61-11ec-b909-0242ac120002"),
             "Wraps",
             1000,
-            LocalDate.of(1885, Month.OCTOBER, 7),
+            "LocalDate.of(1885, Month.OCTOBER, 7)",
             Nutrition.NutritionType.DINNER,
             550,
             100,

@@ -2,7 +2,6 @@ package fitness.nutritions;
 
 import fitness.data.common.nutrition.Nutrition;
 import fitness.nutritions.db.NutritionsDB;
-import fitness.data.common.Nutrition;
 import fitness.data.events.nutritions.NutritionsReplied;
 import fitness.data.events.nutritions.NutritionsRequested;
 import fitness.messaging.Event;

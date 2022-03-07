@@ -14,8 +14,9 @@ public class Nutrition {
     private int calories;
     //private Macro macros;
     //private Micro micros;
-    private LocalDate injestionTime;
-    private NutritionType accountType;
+    //TODO: Figure out how to change below to LocalDate and deserialize it with RabbitMQ
+    private String injestionTime;
+    private NutritionType nutritionType;
 
     public enum NutritionType {
         BREAKFAST,

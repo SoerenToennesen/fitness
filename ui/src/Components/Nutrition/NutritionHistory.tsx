@@ -1,56 +1,55 @@
 import React, {Component} from 'react';
-import {api_urls} from '../Api_urls'
-import account_picture from "../Photos/users/defaultuser.png"
+import {api_urls} from '../../Api_urls'
+import nutrition_picture from "../../Photos/users/defaultuser.png"
 
 interface MyProps {
 }
 interface MyStates {
-    accounts: [],
-    clients: [],
-    managers: [],
-    admins: [],
+    nutritions: [],
+    breakfasts: [],
+    lunches: [],
+    dinners: [],
     updateOrCreateModal: boolean,
     targetId: string,
-    targetFirstName: string,
-    targetLastName: string,
-    targetEmail: string,
-    targetDateOfBirth: string,
-    targetAccountType: string,
+    targetDescription: string,
+    targetCalories: string,
+    targetInjestionTime: string,
+    targetNutritionType: string,
 }
 
-export class Account extends Component<MyProps, MyStates> {
+export class NutritionHistory extends Component<MyProps, MyStates> {
 
     constructor(props: any) {
         super(props);
         this.state={
-            accounts: [],
-            clients: [],
-            managers: [],
-            admins: [],
+            nutritions: [],
+            breakfasts: [],
+            lunches: [],
+            dinners: [],
             updateOrCreateModal: false,
             targetId: '',
-            targetFirstName: '',
-            targetLastName: '',
-            targetEmail: '',
-            targetDateOfBirth: '',//new Date(Date.now()).toISOString().split('T')[0],
-            targetAccountType: 'Client',
+            targetDescription: '',
+            targetCalories: '',
+            targetInjestionTime: '',
+            targetNutritionType: 'Breakfast',
         }
     }
 
     refreshList() {
-        fetch(api_urls.ACCOUNT_URL)
+        fetch(api_urls.NUTRITION_URL)
             .then(response => response.json())
             .then(data => {
-                this.setState({accounts: data.accounts});
-                this.setState({clients: data.accounts.filter(function (acc: any) {
-                    return acc.accountType === "CLIENT"
-                })});
-                this.setState({managers: data.accounts.filter(function (acc: any) {
-                    return acc.accountType === "MANAGER"
-                })});
-                this.setState({admins: data.accounts.filter(function (acc: any) {
-                    return acc.accountType === "ADMIN"
-                })});
+                console.log(data)
+                this.setState({nutritions: data.nutritions});
+                this.setState({breakfasts: data.nutritions.filter(function (nut: any) {
+                        return nut.nutritionType === "BREAKFAST"
+                    })});
+                this.setState({lunches: data.nutritions.filter(function (nut: any) {
+                        return nut.nutritionType === "LUNCH"
+                    })});
+                this.setState({dinners: data.nutritions.filter(function (nut: any) {
+                        return nut.nutritionType === "DINNER"
+                    })});
             })
     }
 
@@ -59,7 +58,7 @@ export class Account extends Component<MyProps, MyStates> {
     }
 
     createClick() {
-        fetch(api_urls.ACCOUNT_URL, {
+        fetch(api_urls.NUTRITION_URL, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -67,23 +66,22 @@ export class Account extends Component<MyProps, MyStates> {
             },
             body: JSON.stringify({
                 id: null,
-                firstName: this.state.targetFirstName,
-                lastName: this.state.targetLastName,
-                dateOfBirth: this.state.targetDateOfBirth,
-                email: this.state.targetEmail,
-                accountType: this.state.targetAccountType.toUpperCase(),
+                description: this.state.targetDescription,
+                calories: this.state.targetCalories,
+                injestionTime: this.state.targetInjestionTime,
+                nutritionType: this.state.targetNutritionType.toUpperCase(),
             })
         })
-        .then(res => res.json())
-        .then(() => {
-            this.refreshList();
-        }, (error) => {
-            alert("Error: " + error);
-        })
+            .then(res => res.json())
+            .then(() => {
+                this.refreshList();
+            }, (error) => {
+                alert("Error: " + error);
+            })
     }
 
     updateClick() {
-        fetch(api_urls.ACCOUNT_URL, {
+        fetch(api_urls.NUTRITION_URL, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -91,31 +89,30 @@ export class Account extends Component<MyProps, MyStates> {
             },
             body: JSON.stringify({
                 id: this.state.targetId,
-                firstName: this.state.targetFirstName,
-                lastName: this.state.targetLastName,
-                dateOfBirth: this.state.targetDateOfBirth,
-                email: this.state.targetEmail,
-                accountType: this.state.targetAccountType.toUpperCase(),
+                description: this.state.targetDescription,
+                calories: this.state.targetCalories,
+                injestionTime: this.state.targetInjestionTime,
+                nutritionType: this.state.targetNutritionType.toUpperCase(),
             })
         })
-        .then(res => res.json())
-        .then(() => {
-            this.refreshList();
-        }, (error) => {
-            alert('Error:' + error);
-        })
+            .then(res => res.json())
+            .then(() => {
+                this.refreshList();
+            }, (error) => {
+                alert('Error:' + error);
+            })
     }
 
     deleteClick(id: string) {
         (window.confirm('Are you sure?')) &&
-        fetch(api_urls.ACCOUNT_URL, {
-                method: 'DELETE',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: id
-            })
+        fetch(api_urls.NUTRITION_URL, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: id
+        })
             .then(res => res.json())
             .then(() => {
                 this.refreshList();
@@ -125,34 +122,23 @@ export class Account extends Component<MyProps, MyStates> {
     }
 
     imageUpload = (e: any) => {
-        /*e.preventDefault();
-        const formData = new FormData();
-        formData.append("file", e.target.files[0], e.target.files[0].name);
-        fetch(api_urls.API_URL + "account/savefile", {
-            method: "POST",
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            this.setState({PhotoFileName: data});
-        })*/
     }
 
-    accountTypeTable(accountType: String) {
-        let accountMap : any = [];
+    nutritionTypeTable(nutritionType: String) {
+        let nutritionMap : any = [];
         let title : String = ""
-        switch (accountType) {
-            case "CLIENT":
-                accountMap = this.state.clients;
-                title = "Clients";
+        switch (nutritionType) {
+            case "BREAKFAST":
+                nutritionMap = this.state.breakfasts;
+                title = "Breakfasts";
                 break;
-            case "MANAGER":
-                accountMap = this.state.managers;
-                title = "Managers";
+            case "LUNCH":
+                nutritionMap = this.state.lunches;
+                title = "Lunches";
                 break;
-            case "ADMIN":
-                accountMap = this.state.admins;
-                title = "Admins";
+            case "DINNER":
+                nutritionMap = this.state.dinners;
+                title = "Dinners";
                 break;
         }
         return (
@@ -162,13 +148,13 @@ export class Account extends Component<MyProps, MyStates> {
                     <thead>
                     <tr>
                         <th>
-                            Name
+                            Description
                         </th>
                         <th>
-                            Date of Birth
+                            Calories
                         </th>
                         <th>
-                            E-mail
+                            Injestion time
                         </th>
                         <th>
                             Options
@@ -176,11 +162,11 @@ export class Account extends Component<MyProps, MyStates> {
                     </tr>
                     </thead>
                     <tbody>
-                    {accountMap.map((acc : any) =>
-                        <tr key={acc.id}>
-                            <td>{acc.firstName + ' ' + acc.lastName}</td>
-                            <td>{acc.dateOfBirth}</td>
-                            <td>{acc.email}</td>
+                    {nutritionMap.map((nut : any) =>
+                        <tr key={nut.id}>
+                            <td>{nut.description}</td>
+                            <td>{nut.calories}</td>
+                            <td>{nut.injestionTime}</td>
                             <td>
                                 <button
                                     type="button"
@@ -189,12 +175,11 @@ export class Account extends Component<MyProps, MyStates> {
                                     data-bs-target="#exampleModal"
                                     onClick={() => {
                                         this.setState({updateOrCreateModal: false,
-                                                            targetId: acc.id,
-                                                            targetFirstName: acc.firstName,
-                                                            targetLastName: acc.lastName,
-                                                            targetDateOfBirth: acc.dateOfBirth,
-                                                            targetEmail: acc.email,
-                                                            targetAccountType: acc.accountType.charAt(0).toUpperCase() + acc.accountType.slice(1).toLowerCase(),
+                                            targetId: nut.id,
+                                            targetDescription: nut.description,
+                                            targetCalories: nut.calories,
+                                            targetInjestionTime: nut.injestionTime,
+                                            targetNutritionType: nut.nutritionType.charAt(0).toUpperCase() + nut.nutritionType.slice(1).toLowerCase(),
                                         });
                                     }}
                                 >
@@ -207,7 +192,7 @@ export class Account extends Component<MyProps, MyStates> {
                                     type="button"
                                     className="btn btn-light mr-1"
                                     onClick={() => {
-                                        this.deleteClick(acc.id);
+                                        this.deleteClick(nut.id);
                                     }}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
@@ -230,7 +215,7 @@ export class Account extends Component<MyProps, MyStates> {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title">
-                                Edit account
+                                Edit nutrition
                             </h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
                         </div>
@@ -238,43 +223,37 @@ export class Account extends Component<MyProps, MyStates> {
                             <div className="d-flex flex-row bd-highlight mb-3">
                                 <div className="p-2 w-50 bd-highlight">
                                     <div className="input-group mb-3">
-                                        <span className="input-group-text">First name</span>
+                                        <span className="input-group-text">Description</span>
                                         <input type="text" className="form-control"
-                                            placeholder={'Enter first name...'}
-                                            value={this.state.targetFirstName}
-                                               onChange={(e) => this.setState({targetFirstName: e.target.value})}
-                                        ></input>
-                                        <span className="input-group-text">Last name</span>
-                                        <input type="text" className="form-control"
-                                            placeholder={'Enter last name...'}
-                                            value={this.state.targetLastName}
-                                            onChange={(e) => this.setState({targetLastName: e.target.value})}
+                                               placeholder={'Enter description...'}
+                                               value={this.state.targetDescription}
+                                               onChange={(e) => this.setState({targetDescription: e.target.value})}
                                         ></input>
                                     </div>
                                     <div className="input-group mb-3">
-                                        <span className="input-group-text">E-mail</span>
+                                        <span className="input-group-text">Calories</span>
                                         <input type="text" className="form-control"
-                                            placeholder={'Enter e-mail...'}
-                                            value={this.state.targetEmail}
-                                            onChange={(e) => this.setState({targetEmail: e.target.value})}
+                                               placeholder={'Enter calories...'}
+                                               value={this.state.targetCalories}
+                                               onChange={(e) => this.setState({targetCalories: e.target.value})}
                                         ></input>
                                     </div>
                                     <div className="input-group mb-3">
                                         <span className="input-group-text">Title</span>
                                         <select className="form-select"
-                                                placeholder={'Select an account type...'}
-                                                value={this.state.targetAccountType}
-                                                onChange={(e) => this.setState({targetAccountType: e.target.value})}
-                                                //onClick={(e) => this.setState({targetAccountType: (e.target as HTMLInputElement).value})}
-                                            >
+                                                placeholder={'Select an nutrition type...'}
+                                                value={this.state.targetNutritionType}
+                                                onChange={(e) => this.setState({targetNutritionType: e.target.value})}
+                                            //onClick={(e) => this.setState({targetNutritionType: (e.target as HTMLInputElement).value})}
+                                        >
                                             <option>
-                                                Client
+                                                Breakfast
                                             </option>
                                             <option>
-                                                Manager
+                                                Lunch
                                             </option>
                                             <option>
-                                                Admin
+                                                Dinner
                                             </option>
                                             {/*{dropdownVals.map((val: any) =>
                                                 <option key={val.id}>
@@ -283,17 +262,17 @@ export class Account extends Component<MyProps, MyStates> {
                                         </select>
                                     </div>
                                     <div className="input-group mb-3">
-                                        <span className="input-group-text">Date of birth</span>
+                                        <span className="input-group-text">Injestion time</span>
                                         <input type="date" className="form-control"
-                                            value={this.state.targetDateOfBirth}
-                                            onChange={(e) => this.setState({targetDateOfBirth: e.target.value})}
+                                               value={this.state.targetInjestionTime}
+                                               onChange={(e) => this.setState({targetInjestionTime: e.target.value})}
                                         ></input>
                                     </div>
                                 </div>
                                 <div className="p-2 w-50 bd-highlight">
                                     <img height="100px"
-                                         src={account_picture}
-                                         alt="account image"/>
+                                         src={nutrition_picture}
+                                         alt="nutrition image"/>
                                     <input className="m-2" type="file" onChange={this.imageUpload}/>
                                 </div>
                             </div>
@@ -316,10 +295,10 @@ export class Account extends Component<MyProps, MyStates> {
     render() {
         return (
             <div>
-                <div className="page-header">Accounts</div>
-                {this.accountTypeTable("CLIENT")}
-                {this.accountTypeTable("MANAGER")}
-                {this.accountTypeTable("ADMIN")}
+                <div className="page-header">Nutrition History</div>
+                {this.nutritionTypeTable("BREAKFAST")}
+                {this.nutritionTypeTable("LUNCH")}
+                {this.nutritionTypeTable("DINNER")}
                 <button
                     type="button"
                     className="btn btn-primary m-2 float-end"
@@ -327,16 +306,15 @@ export class Account extends Component<MyProps, MyStates> {
                     data-bs-target="#exampleModal"
                     onClick={() =>
                         this.setState({updateOrCreateModal: true,
-                                            targetId: '',
-                                            targetFirstName: '',
-                                            targetLastName: '',
-                                            targetDateOfBirth: '',
-                                            targetEmail: '',
-                                            targetAccountType: 'Client',
+                            targetId: '',
+                            targetDescription: '',
+                            targetCalories: '',
+                            targetInjestionTime: '',
+                            targetNutritionType: 'Breakfast',
                         })
                     }
                 >
-                    Add account
+                    Add nutrition
                 </button>
                 {this.modalPopup()}
             </div>

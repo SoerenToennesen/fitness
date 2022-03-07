@@ -4,7 +4,7 @@ import reportWebVitals from './reportWebVitals';
 import './index.css';
 import {Home} from './Components/Home';
 import {Overview} from './Components/Overview';
-import {Nutrition} from './Components/Nutrition';
+import {Nutrition} from './Components/Nutrition/Nutrition';
 import {Exercise} from './Components/Exercise';
 import {Account} from './Components/Account';
 import {Navbar, NavItem} from './Containers/Navbar';
@@ -16,20 +16,7 @@ import { ReactComponent as BellIcon } from './Photos/bell.svg';
 import { ReactComponent as MessengerIcon } from './Photos/messenger.svg';
 import { ReactComponent as PlusIcon } from './Photos/plus.svg';
 import { ReactComponent as CaretIcon } from './Photos/caret.svg';
-
-//Make the below to seperate pages
-const Content = () => {
-  return <h1>Content</h1>
-}
-const Courses = () => {
-  return <h1>Content/Courses</h1>
-}
-const Videos = () => {
-  return <h1>Content/Videos</h1>
-}
-const Design = () => {
-  return <h1>Design</h1>
-}
+import {NutritionHistory} from "./Components/Nutrition/NutritionHistory";
 
 function App() {
 
@@ -62,18 +49,7 @@ function App() {
             <Route exact path="/nutrition" component={Nutrition} />
             <Route exact path="/exercise" component={Exercise} />
             <Route exact path="/account" component={Account} />
-            <Route exact path="/content">
-              <Content />
-            </Route>
-            <Route path="/nutrition/content/courses">
-              <Courses />
-            </Route>
-            <Route path="/nutrition/content/videos">
-              <Videos />
-            </Route>
-            <Route path="/design">
-              <Design />
-            </Route>
+            <Route exact path="/nutrition/history" component={NutritionHistory}/>
           </Switch>
         </div>
 

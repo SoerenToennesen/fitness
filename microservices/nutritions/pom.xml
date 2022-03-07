@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>fitness</groupId>
-	<artifactId>accounts</artifactId>
+	<artifactId>nutritions</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>accounts</name>
-	<description>Account service for fitness application</description>
+	<name>nutritions</name>
+	<description>Nutrition service for fitness application</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
