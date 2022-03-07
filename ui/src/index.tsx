@@ -5,7 +5,7 @@ import './index.css';
 import {Home} from './Components/Home';
 import {Overview} from './Components/Overview';
 import {Nutrition} from './Components/Nutrition/Nutrition';
-import {Exercise} from './Components/Exercise';
+import {Exercise} from './Components/Exercise/Exercise';
 import {Account} from './Components/Account';
 import {Navbar, NavItem} from './Containers/Navbar';
 import {Sidebar} from './Containers/Sidebar';
@@ -17,6 +17,7 @@ import { ReactComponent as MessengerIcon } from './Photos/messenger.svg';
 import { ReactComponent as PlusIcon } from './Photos/plus.svg';
 import { ReactComponent as CaretIcon } from './Photos/caret.svg';
 import {NutritionHistory} from "./Components/Nutrition/NutritionHistory";
+import {ExerciseHistory} from "./Components/Exercise/ExerciseHistory";
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
             <Route exact path="/nutrition" component={Nutrition} />
             <Route exact path="/exercise" component={Exercise} />
             <Route exact path="/account" component={Account} />
+            <Route exact path="/exercise/history" component={ExerciseHistory}/>
             <Route exact path="/nutrition/history" component={NutritionHistory}/>
           </Switch>
         </div>

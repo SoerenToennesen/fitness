@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {api_urls} from '../Api_urls'
+import {api_urls} from '../../Api_urls'
 
 interface MyProps {
 }
