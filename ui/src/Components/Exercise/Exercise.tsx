@@ -13,6 +13,9 @@ interface MyStates {
     exercisesWithoutFilter: [],
 }
 
+// TODO: Add a 'contribution' graph, like the one in github,
+// showcasing which days you've exercised with shades indicating
+// how much or how many sessions per day as well
 export class Exercise extends Component<MyProps, MyStates> {
 
     constructor(props: any) {
