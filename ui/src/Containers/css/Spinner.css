@@ -3,7 +3,7 @@
 
 .running {
   --scale: 1;
-  --color: #8a91b4;
+  --color: #FFA500;
   --duration: 0.8s;
   transform: scale(var(--scale, 1));
 }
