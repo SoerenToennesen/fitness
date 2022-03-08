@@ -6,14 +6,14 @@ interface MyProps {
 }
 interface MyStates {
     exercises: [],
-    breakfasts: [],
-    lunches: [],
-    dinners: [],
+    runnings: [],
+    bikings: [],
+    swimmings: [],
     updateOrCreateModal: boolean,
     targetId: string,
     targetDescription: string,
-    targetCalories: string,
-    targetInjestionTime: string,
+    targetExerciseTime: string,
+    targetExerciseLength: string,
     targetExerciseType: string,
 }
 
@@ -23,15 +23,15 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
         super(props);
         this.state={
             exercises: [],
-            breakfasts: [],
-            lunches: [],
-            dinners: [],
+            runnings: [],
+            bikings: [],
+            swimmings: [],
             updateOrCreateModal: false,
             targetId: '',
             targetDescription: '',
-            targetCalories: '',
-            targetInjestionTime: '',
-            targetExerciseType: 'Breakfast',
+            targetExerciseTime: '',
+            targetExerciseLength: '',
+            targetExerciseType: 'Running',
         }
     }
 
@@ -41,14 +41,14 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             .then(data => {
                 console.log(data)
                 this.setState({exercises: data.exercises});
-                this.setState({breakfasts: data.exercises.filter(function (nut: any) {
-                        return nut.exerciseType === "BREAKFAST"
+                this.setState({runnings: data.exercises.filter(function (nut: any) {
+                        return nut.exerciseType === "RUNNING"
                     })});
-                this.setState({lunches: data.exercises.filter(function (nut: any) {
-                        return nut.exerciseType === "LUNCH"
+                this.setState({bikings: data.exercises.filter(function (nut: any) {
+                        return nut.exerciseType === "BIKING"
                     })});
-                this.setState({dinners: data.exercises.filter(function (nut: any) {
-                        return nut.exerciseType === "DINNER"
+                this.setState({swimmings: data.exercises.filter(function (nut: any) {
+                        return nut.exerciseType === "SWIMMING"
                     })});
             })
     }
@@ -67,8 +67,8 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             body: JSON.stringify({
                 id: null,
                 description: this.state.targetDescription,
-                calories: this.state.targetCalories,
-                injestionTime: this.state.targetInjestionTime,
+                calories: this.state.targetExerciseTime,
+                injestionTime: this.state.targetExerciseLength,
                 exerciseType: this.state.targetExerciseType.toUpperCase(),
             })
         })
@@ -90,8 +90,8 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             body: JSON.stringify({
                 id: this.state.targetId,
                 description: this.state.targetDescription,
-                calories: this.state.targetCalories,
-                injestionTime: this.state.targetInjestionTime,
+                calories: this.state.targetExerciseTime,
+                injestionTime: this.state.targetExerciseLength,
                 exerciseType: this.state.targetExerciseType.toUpperCase(),
             })
         })
@@ -128,17 +128,17 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
         let exerciseMap : any = [];
         let title : String = ""
         switch (exerciseType) {
-            case "BREAKFAST":
-                exerciseMap = this.state.breakfasts;
-                title = "Breakfasts";
+            case "RUNNING":
+                exerciseMap = this.state.runnings;
+                title = "Runnings";
                 break;
-            case "LUNCH":
-                exerciseMap = this.state.lunches;
-                title = "Lunches";
+            case "BIKING":
+                exerciseMap = this.state.bikings;
+                title = "Bikings";
                 break;
-            case "DINNER":
-                exerciseMap = this.state.dinners;
-                title = "Dinners";
+            case "SWIMMING":
+                exerciseMap = this.state.swimmings;
+                title = "Swimmings";
                 break;
         }
         return (
@@ -151,10 +151,10 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                             Description
                         </th>
                         <th>
-                            Calories
+                            Time
                         </th>
                         <th>
-                            Injestion time
+                            Length
                         </th>
                         <th>
                             Options
@@ -165,8 +165,8 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                     {exerciseMap.map((nut : any) =>
                         <tr key={nut.id}>
                             <td>{nut.description}</td>
-                            <td>{nut.calories}</td>
-                            <td>{nut.injestionTime}</td>
+                            <td>{nut.exerciseTime}</td>
+                            <td>{nut.exerciseLength}</td>
                             <td>
                                 <button
                                     type="button"
@@ -177,8 +177,8 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                                         this.setState({updateOrCreateModal: false,
                                             targetId: nut.id,
                                             targetDescription: nut.description,
-                                            targetCalories: nut.calories,
-                                            targetInjestionTime: nut.injestionTime,
+                                            targetExerciseTime: nut.exerciseTime,
+                                            targetExerciseLength: nut.exerciseLength,
                                             targetExerciseType: nut.exerciseType.charAt(0).toUpperCase() + nut.exerciseType.slice(1).toLowerCase(),
                                         });
                                     }}
@@ -231,11 +231,11 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                                         ></input>
                                     </div>
                                     <div className="input-group mb-3">
-                                        <span className="input-group-text">Calories</span>
+                                        <span className="input-group-text">Time</span>
                                         <input type="text" className="form-control"
-                                               placeholder={'Enter calories...'}
-                                               value={this.state.targetCalories}
-                                               onChange={(e) => this.setState({targetCalories: e.target.value})}
+                                               placeholder={'Enter time...'}
+                                               value={this.state.targetExerciseTime}
+                                               onChange={(e) => this.setState({targetExerciseTime: e.target.value})}
                                         ></input>
                                     </div>
                                     <div className="input-group mb-3">
@@ -247,13 +247,13 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                                             //onClick={(e) => this.setState({targetExerciseType: (e.target as HTMLInputElement).value})}
                                         >
                                             <option>
-                                                Breakfast
+                                                Running
                                             </option>
                                             <option>
-                                                Lunch
+                                                Biking
                                             </option>
                                             <option>
-                                                Dinner
+                                                Swimming
                                             </option>
                                             {/*{dropdownVals.map((val: any) =>
                                                 <option key={val.id}>
@@ -262,10 +262,10 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                                         </select>
                                     </div>
                                     <div className="input-group mb-3">
-                                        <span className="input-group-text">Injestion time</span>
+                                        <span className="input-group-text">Length</span>
                                         <input type="date" className="form-control"
-                                               value={this.state.targetInjestionTime}
-                                               onChange={(e) => this.setState({targetInjestionTime: e.target.value})}
+                                               value={this.state.targetExerciseLength}
+                                               onChange={(e) => this.setState({targetExerciseLength: e.target.value})}
                                         ></input>
                                     </div>
                                 </div>
@@ -296,9 +296,9 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
         return (
             <div>
                 <div className="page-header">Exercise History</div>
-                {this.exerciseTypeTable("BREAKFAST")}
-                {this.exerciseTypeTable("LUNCH")}
-                {this.exerciseTypeTable("DINNER")}
+                {this.exerciseTypeTable("RUNNING")}
+                {this.exerciseTypeTable("BIKING")}
+                {this.exerciseTypeTable("SWIMMING")}
                 <button
                     type="button"
                     className="btn btn-primary m-2 float-end"
@@ -308,9 +308,9 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                         this.setState({updateOrCreateModal: true,
                             targetId: '',
                             targetDescription: '',
-                            targetCalories: '',
-                            targetInjestionTime: '',
-                            targetExerciseType: 'Breakfast',
+                            targetExerciseTime: '',
+                            targetExerciseLength: '',
+                            targetExerciseType: 'Running',
                         })
                     }
                 >
