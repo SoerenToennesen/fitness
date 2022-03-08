@@ -5,10 +5,8 @@ import exercise_picture from "../../Photos/users/defaultuser.png"
 interface MyProps {
 }
 interface MyStates {
+    title: string,
     exercises: [],
-    runnings: [],
-    bikings: [],
-    swimmings: [],
     updateOrCreateModal: boolean,
     targetId: string,
     targetDescription: string,
@@ -22,10 +20,8 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
     constructor(props: any) {
         super(props);
         this.state={
+            title: 'Full history',
             exercises: [],
-            runnings: [],
-            bikings: [],
-            swimmings: [],
             updateOrCreateModal: false,
             targetId: '',
             targetDescription: '',
@@ -41,15 +37,6 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             .then(data => {
                 console.log(data)
                 this.setState({exercises: data.exercises});
-                this.setState({runnings: data.exercises.filter(function (nut: any) {
-                        return nut.exerciseType === "RUNNING"
-                    })});
-                this.setState({bikings: data.exercises.filter(function (nut: any) {
-                        return nut.exerciseType === "BIKING"
-                    })});
-                this.setState({swimmings: data.exercises.filter(function (nut: any) {
-                        return nut.exerciseType === "SWIMMING"
-                    })});
             })
     }
 
@@ -124,23 +111,9 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
     imageUpload = (e: any) => {
     }
 
-    exerciseTypeTable(exerciseType: String) {
-        let exerciseMap : any = [];
-        let title : String = ""
-        switch (exerciseType) {
-            case "RUNNING":
-                exerciseMap = this.state.runnings;
-                title = "Runnings";
-                break;
-            case "BIKING":
-                exerciseMap = this.state.bikings;
-                title = "Bikings";
-                break;
-            case "SWIMMING":
-                exerciseMap = this.state.swimmings;
-                title = "Swimmings";
-                break;
-        }
+    exerciseTable() {
+        let exerciseMap : any = this.state.exercises;
+        let title : String = this.state.title;
         return (
             <div>
                 <h3 style={{paddingLeft: "5px"}}>{title}</h3>
@@ -148,13 +121,13 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                     <thead>
                     <tr>
                         <th>
-                            Description
+                            Type
                         </th>
                         <th>
-                            Time
+                            Time & Length
                         </th>
                         <th>
-                            Length
+                            Calories burned
                         </th>
                         <th>
                             Options
@@ -162,11 +135,11 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                     </tr>
                     </thead>
                     <tbody>
-                    {exerciseMap.map((nut : any) =>
-                        <tr key={nut.id}>
-                            <td>{nut.description}</td>
-                            <td>{nut.exerciseTime}</td>
-                            <td>{nut.exerciseLength}</td>
+                    {exerciseMap.map((exe : any) =>
+                        <tr key={exe.id}>
+                            <td>{exe.exerciseType}</td>
+                            <td>{exe.exerciseLength}, {exe.exerciseTime}</td>
+                            <td>{exe.caloriesBurned}</td>
                             <td>
                                 <button
                                     type="button"
@@ -175,11 +148,11 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                                     data-bs-target="#exampleModal"
                                     onClick={() => {
                                         this.setState({updateOrCreateModal: false,
-                                            targetId: nut.id,
-                                            targetDescription: nut.description,
-                                            targetExerciseTime: nut.exerciseTime,
-                                            targetExerciseLength: nut.exerciseLength,
-                                            targetExerciseType: nut.exerciseType.charAt(0).toUpperCase() + nut.exerciseType.slice(1).toLowerCase(),
+                                            targetId: exe.id,
+                                            targetDescription: exe.description,
+                                            targetExerciseTime: exe.exerciseTime,
+                                            targetExerciseLength: exe.exerciseLength,
+                                            targetExerciseType: exe.exerciseType.charAt(0).toUpperCase() + exe.exerciseType.slice(1).toLowerCase(),
                                         });
                                     }}
                                 >
@@ -192,7 +165,7 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                                     type="button"
                                     className="btn btn-light mr-1"
                                     onClick={() => {
-                                        this.deleteClick(nut.id);
+                                        this.deleteClick(exe.id);
                                     }}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
@@ -296,9 +269,7 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
         return (
             <div>
                 <div className="page-header">Exercise History</div>
-                {this.exerciseTypeTable("RUNNING")}
-                {this.exerciseTypeTable("BIKING")}
-                {this.exerciseTypeTable("SWIMMING")}
+                {this.exerciseTable()}
                 <button
                     type="button"
                     className="btn btn-primary m-2 float-end"

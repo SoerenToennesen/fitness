@@ -13,6 +13,7 @@ public class Exercise {
     //TODO: Figure out how to change below to LocalDate and deserialize it with RabbitMQ
     private String exerciseTime;
     private String exerciseLength;
+    private int caloriesBurned;
     private ExerciseType exerciseType;
 
     // Make this a class each, that have information about how much each exercise burns, etc.

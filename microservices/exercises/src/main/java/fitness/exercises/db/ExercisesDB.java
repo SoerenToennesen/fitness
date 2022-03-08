@@ -15,6 +15,7 @@ public class ExercisesDB {
             "Relaxed evening stroll",
             "LocalDate.of(1885, Month.OCTOBER, 7)",
             "30 minutes",
+                100,
             Exercise.ExerciseType.RUNNING
         ));
         put(UUID.fromString("e4d286d2-9f1b-11ec-b909-0242ac120002"), new Exercise(
@@ -22,6 +23,7 @@ public class ExercisesDB {
             "Competition",
             "LocalDate.of(1885, Month.OCTOBER, 7)",
             "10 minutes",
+                150,
             Exercise.ExerciseType.SWIMMING
         ));
         put(UUID.fromString("ea8ae0b0-9f1b-11ec-b909-0242ac120002"), new Exercise(
@@ -29,6 +31,7 @@ public class ExercisesDB {
             "Solo",
             "LocalDate.of(1885, Month.OCTOBER, 7)",
             "2 hours",
+                500,
             Exercise.ExerciseType.POWERLIFTING
         ));
         put(UUID.fromString("f0f93bcc-9f1b-11ec-b909-0242ac120002"), new Exercise(
@@ -36,6 +39,7 @@ public class ExercisesDB {
             "Crossfit with friends",
             "LocalDate.of(1885, Month.OCTOBER, 7)",
             "1 hour",
+                200,
             Exercise.ExerciseType.CROSSFIT
         ));
 
