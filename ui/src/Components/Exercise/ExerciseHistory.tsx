@@ -9,10 +9,11 @@ interface MyStates {
     exercises: [],
     updateOrCreateModal: boolean,
     targetId: string,
-    targetDescription: string,
+    targetType: string,
     targetExerciseTime: string,
     targetExerciseLength: string,
     targetExerciseType: string,
+    targetCaloriesBurned: number,
 }
 
 export class ExerciseHistory extends Component<MyProps, MyStates> {
@@ -24,10 +25,11 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             exercises: [],
             updateOrCreateModal: false,
             targetId: '',
-            targetDescription: '',
+            targetType: '',
             targetExerciseTime: '',
             targetExerciseLength: '',
             targetExerciseType: 'Running',
+            targetCaloriesBurned: 0,
         }
     }
 
@@ -53,9 +55,10 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             },
             body: JSON.stringify({
                 id: null,
-                description: this.state.targetDescription,
-                calories: this.state.targetExerciseTime,
-                injestionTime: this.state.targetExerciseLength,
+                description: this.state.targetType,
+                caloriesBurned: this.state.targetCaloriesBurned,
+                exerciseTime: this.state.targetExerciseTime,
+                exerciseLength: this.state.targetExerciseLength,
                 exerciseType: this.state.targetExerciseType.toUpperCase(),
             })
         })
@@ -76,9 +79,10 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             },
             body: JSON.stringify({
                 id: this.state.targetId,
-                description: this.state.targetDescription,
-                calories: this.state.targetExerciseTime,
-                injestionTime: this.state.targetExerciseLength,
+                description: this.state.targetType,
+                caloriesBurned: this.state.targetCaloriesBurned,
+                exerciseTime: this.state.targetExerciseTime,
+                exerciseLength: this.state.targetExerciseLength,
                 exerciseType: this.state.targetExerciseType.toUpperCase(),
             })
         })
@@ -149,9 +153,9 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                                     onClick={() => {
                                         this.setState({updateOrCreateModal: false,
                                             targetId: exe.id,
-                                            targetDescription: exe.description,
                                             targetExerciseTime: exe.exerciseTime,
                                             targetExerciseLength: exe.exerciseLength,
+                                            targetCaloriesBurned: exe.caloriesBurned,
                                             targetExerciseType: exe.exerciseType.charAt(0).toUpperCase() + exe.exerciseType.slice(1).toLowerCase(),
                                         });
                                     }}
@@ -199,8 +203,8 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                                         <span className="input-group-text">Description</span>
                                         <input type="text" className="form-control"
                                                placeholder={'Enter description...'}
-                                               value={this.state.targetDescription}
-                                               onChange={(e) => this.setState({targetDescription: e.target.value})}
+                                               value={this.state.targetType}
+                                               onChange={(e) => this.setState({targetType: e.target.value})}
                                         ></input>
                                     </div>
                                     <div className="input-group mb-3">
@@ -278,9 +282,10 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                     onClick={() =>
                         this.setState({updateOrCreateModal: true,
                             targetId: '',
-                            targetDescription: '',
+                            targetType: '',
                             targetExerciseTime: '',
                             targetExerciseLength: '',
+                            targetCaloriesBurned: 0,
                             targetExerciseType: 'Running',
                         })
                     }
