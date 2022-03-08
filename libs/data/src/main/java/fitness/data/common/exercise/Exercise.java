@@ -10,9 +10,6 @@ import java.util.UUID;
 public class Exercise {
     private UUID id;
     private String description;
-    private int calories;
-    //private Macro macros;
-    //private Micro micros;
     //TODO: Figure out how to change below to LocalDate and deserialize it with RabbitMQ
     private String exerciseTime;
     private String exerciseLength;
