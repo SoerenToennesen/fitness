@@ -4,6 +4,7 @@ export const api_urls = {
 
     ACCOUNT_URL: "http://localhost:8080/account",
     NUTRITION_URL: "http://localhost:8080/nutrition",
+    EXERCISE_URL: "http://localhost:8080/exercise",
 
 
 
