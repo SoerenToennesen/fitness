@@ -18,6 +18,7 @@ import { ReactComponent as PlusIcon } from './Photos/plus.svg';
 import { ReactComponent as CaretIcon } from './Photos/caret.svg';
 import {NutritionHistory} from "./Components/Nutrition/NutritionHistory";
 import {ExerciseHistory} from "./Components/Exercise/ExerciseHistory";
+import {DummyClass} from "./Components/DummyClass";
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
             <Route exact path="/account" component={Account} />
             <Route exact path="/exercise/history" component={ExerciseHistory}/>
             <Route exact path="/nutrition/history" component={NutritionHistory}/>
+            <Route exact path="/dummyclass" component={DummyClass}/>
           </Switch>
         </div>
 

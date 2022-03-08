@@ -58,7 +58,7 @@ export function Sidebar(props: any) {
         {name: "Nutrition", exact: true, to: "/nutrition", iconClassName: "bi bi-heart-fill",
             subMenus: [
                 {name: "History", to: "/nutrition/history"},
-                {name: "Something else...", to: "/nutrition/somethingelse..."}
+                {name: "Dummy class", to: "/dummyclass"}
             ]},
         {name: "Exercise", exact: true, to: "/exercise", iconClassName: "bi bi-earbuds",
             subMenus: [
