@@ -20,6 +20,8 @@ import {NutritionHistory} from "./Components/Nutrition/NutritionHistory";
 import {ExerciseHistory} from "./Components/Exercise/ExerciseHistory";
 import {DummyClass} from "./Components/DummyClass";
 
+// possible UI inspiration:
+// https://dribbble.com/shots/6463346-Nutrition-Page-Fitness-Web-Application-Design
 function App() {
 
   const [inactive, setInactive] = useState(false);
