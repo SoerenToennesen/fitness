@@ -63,11 +63,19 @@ export class Exercise extends Component<MyProps, MyStates> {
                 data: this.generateData(52)
             }],
             options: {
+                yaxis: {
+                    labels: {
+                        offsetX: 5,
+                    },
+                },
                 xaxis: {
+                    labels: {
+                        offsetY: -5,
+                    },
                     title: {
                         text: 'Week no.',
                         offsetX: 0,
-                        offsetY: -10,
+                        offsetY: -15,
                         style: {
                             color: undefined,
                             fontSize: '12px',
@@ -380,7 +388,7 @@ export class Exercise extends Component<MyProps, MyStates> {
                     options={this.state.options}
                     series={this.state.series}
                     type="heatmap"
-                    height={220}
+                    height={240}
                 />
             </div>
         )
