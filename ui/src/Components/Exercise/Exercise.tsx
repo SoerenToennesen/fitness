@@ -87,6 +87,17 @@ export class Exercise extends Component<MyProps, MyStates> {
                 },
                 chart: {
                     type: 'heatmap',
+                    toolbar: {
+                        show: false,
+                    },
+                    events: {
+                        dataPointSelection: (event: any, chartContext: any, config: any) => {
+                            //value: config.w.config.series[config.seriesIndex].data[config.dataPointIndex].y
+                            // x-index: config.seriesIndex
+                            // y-index: config.dataPointIndex
+                        }
+                    }
+
                 },
                 dataLabels: {
                     enabled: false
