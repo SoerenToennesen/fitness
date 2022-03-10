@@ -103,24 +103,6 @@ export class Exercise extends Component<MyProps, MyStates> {
                     enabled: false
                 },
                 colors: ["#9A2625"],
-                colorScale: {
-                    ranges: [{
-                        from: 0,
-                        to: 3,
-                        name: 'low',
-                    },
-                    {
-                        from: 4,
-                        to: 6,
-                        name: 'medium',
-                    },
-                    {
-                        from: 7,
-                        to: 10,
-                        name: 'high',
-                    }
-                    ]
-                }
             },
         }
     }
