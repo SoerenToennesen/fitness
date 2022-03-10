@@ -36,127 +36,95 @@ export class Exercise extends Component<MyProps, MyStates> {
             // y color strength values are taken relative to each other
             series: [{
                 name: 'Sun',
-                data: [{
-                    x: 'W1',
-                    y: 10
-                }, {
-                    x: 'W2',
-                    y: 20
-                }, {
-                    x: 'W3',
-                    y: 30
-                }, {
-                    x: 'W4',
-                    y: 40
-                }]
+                data: this.generateData(52)
             },
             {
                 name: 'Mon',
-                data: [{
-                    x: 'W1',
-                    y: 40
-                }, {
-                    x: 'W2',
-                    y: 30
-                }, {
-                    x: 'W3',
-                    y: 20
-                }, {
-                    x: 'W4',
-                    y: 10
-                }]
+                data: this.generateData(52)
             },
             {
                 name: 'Tue',
-                data: [{
-                    x: 'W1',
-                    y: 0
-                }, {
-                    x: 'W2',
-                    y: 32
-                }, {
-                    x: 'W3',
-                    y: 30
-                }, {
-                    x: 'W4',
-                    y: 41
-                }]
+                data: this.generateData(52)
             },
             {
                 name: 'Wed',
-                data: [{
-                    x: 'W1',
-                    y: 30
-                }, {
-                    x: 'W2',
-                    y: 20
-                }, {
-                    x: 'W3',
-                    y: 0
-                }, {
-                    x: 'W4',
-                    y: 50
-                }]
+                data: this.generateData(52)
             },
             {
                 name: 'Thu',
-                data: [{
-                    x: 'W1',
-                    y: 60
-                }, {
-                    x: 'W2',
-                    y: 20
-                }, {
-                    x: 'W3',
-                    y: 20
-                }, {
-                    x: 'W4',
-                    y: 10
-                }]
+                data: this.generateData(52)
             },
             {
                 name: 'Fri',
-                data: [{
-                    x: 'W1',
-                    y: 50
-                }, {
-                    x: 'W2',
-                    y: 35
-                }, {
-                    x: 'W3',
-                    y: 25
-                }, {
-                    x: 'W4',
-                    y: 15
-                }]
+                data: this.generateData(52)
             },
             {
                 name: 'Sat',
-                data: [{
-                    x: 'W1',
-                    y: 10
-                }, {
-                    x: 'W2',
-                    y: 30
-                }, {
-                    x: 'W3',
-                    y: 0
-                }, {
-                    x: 'W4',
-                    y: 20
-                }]
+                data: this.generateData(52)
             }],
             options: {
+                xaxis: {
+                    title: {
+                        text: 'Week no.',
+                        offsetX: 0,
+                        offsetY: -10,
+                        style: {
+                            color: undefined,
+                            fontSize: '12px',
+                            fontFamily: 'Helvetica, Arial, sans-serif',
+                            fontWeight: 700,
+                            cssClass: 'apexcharts-xaxis-title',
+                        },
+                    },
+                    tooltip: {
+                        enabled: false,
+                    },
+                },
+                plotOptions: {
+                    heatmap: {
+                        radius: 6,
+                    }
+                },
                 chart: {
-                    height: 350,
                     type: 'heatmap',
                 },
                 dataLabels: {
                     enabled: false
                 },
-                colors: ["#008FFB"],
+                colors: ["#9A2625"],
+                colorScale: {
+                    ranges: [{
+                        from: 0,
+                        to: 3,
+                        name: 'low',
+                    },
+                    {
+                        from: 4,
+                        to: 6,
+                        name: 'medium',
+                    },
+                    {
+                        from: 7,
+                        to: 10,
+                        name: 'high',
+                    }
+                    ]
+                }
             },
         }
+    }
+
+    generateData(numEntries: number) : any {
+        var generatedData: any = [];
+        for (var i = 1; i <= numEntries; i++) {
+            generatedData.push(
+                {
+                    x: '' + i,
+                    y: Math.floor(Math.random() * (10 - 0 + 1) + 0)
+                }
+            );
+        }
+        return generatedData;
     }
 
     FilterFn() {
@@ -419,7 +387,7 @@ export class Exercise extends Component<MyProps, MyStates> {
                     options={this.state.options}
                     series={this.state.series}
                     type="heatmap"
-                    height={200}
+                    height={220}
                 />
             </div>
         )
