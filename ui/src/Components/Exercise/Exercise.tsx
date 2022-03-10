@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Chart from "react-apexcharts";
 import {api_urls} from '../../Api_urls'
 
 interface MyProps {
@@ -11,6 +12,8 @@ interface MyStates {
     ExerciseIdFilter: string,
     ExerciseNameFilter: string,
     exercisesWithoutFilter: [],
+    options: any,
+    series: any,
 }
 
 // TODO: Add a 'contribution' graph, like the one in github,
@@ -29,6 +32,130 @@ export class Exercise extends Component<MyProps, MyStates> {
             ExerciseIdFilter: "",
             ExerciseNameFilter: "",
             exercisesWithoutFilter: [],
+
+            // y color strength values are taken relative to each other
+            series: [{
+                name: 'Sun',
+                data: [{
+                    x: 'W1',
+                    y: 10
+                }, {
+                    x: 'W2',
+                    y: 20
+                }, {
+                    x: 'W3',
+                    y: 30
+                }, {
+                    x: 'W4',
+                    y: 40
+                }]
+            },
+            {
+                name: 'Mon',
+                data: [{
+                    x: 'W1',
+                    y: 40
+                }, {
+                    x: 'W2',
+                    y: 30
+                }, {
+                    x: 'W3',
+                    y: 20
+                }, {
+                    x: 'W4',
+                    y: 10
+                }]
+            },
+            {
+                name: 'Tue',
+                data: [{
+                    x: 'W1',
+                    y: 0
+                }, {
+                    x: 'W2',
+                    y: 32
+                }, {
+                    x: 'W3',
+                    y: 30
+                }, {
+                    x: 'W4',
+                    y: 41
+                }]
+            },
+            {
+                name: 'Wed',
+                data: [{
+                    x: 'W1',
+                    y: 30
+                }, {
+                    x: 'W2',
+                    y: 20
+                }, {
+                    x: 'W3',
+                    y: 0
+                }, {
+                    x: 'W4',
+                    y: 50
+                }]
+            },
+            {
+                name: 'Thu',
+                data: [{
+                    x: 'W1',
+                    y: 60
+                }, {
+                    x: 'W2',
+                    y: 20
+                }, {
+                    x: 'W3',
+                    y: 20
+                }, {
+                    x: 'W4',
+                    y: 10
+                }]
+            },
+            {
+                name: 'Fri',
+                data: [{
+                    x: 'W1',
+                    y: 50
+                }, {
+                    x: 'W2',
+                    y: 35
+                }, {
+                    x: 'W3',
+                    y: 25
+                }, {
+                    x: 'W4',
+                    y: 15
+                }]
+            },
+            {
+                name: 'Sat',
+                data: [{
+                    x: 'W1',
+                    y: 10
+                }, {
+                    x: 'W2',
+                    y: 30
+                }, {
+                    x: 'W3',
+                    y: 0
+                }, {
+                    x: 'W4',
+                    y: 20
+                }]
+            }],
+            options: {
+                chart: {
+                    height: 350,
+                    type: 'heatmap',
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                colors: ["#008FFB"],
+            },
         }
     }
 
@@ -139,6 +266,30 @@ export class Exercise extends Component<MyProps, MyStates> {
 
     render() {
         const {exercises, modalTitle, ExerciseId, ExerciseName} = this.state;
+        var options = {
+            //series: data,
+            chart: {
+                height: 450,
+                type: 'heatmap',
+            },
+            dataLabels: {
+                enabled: false
+            },
+            //colors: colors,
+            xaxis: {
+                type: 'category',
+                categories: ['10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '01:00', '01:30']
+            },
+            title: {
+                text: 'HeatMap Chart (Different color shades for each series)'
+            },
+            grid: {
+                padding: {
+                    right: 20
+                }
+            }
+        };
+
         return (
             <div>
                 <table className="table table-striped">
@@ -243,7 +394,7 @@ export class Exercise extends Component<MyProps, MyStates> {
                                     onChange={() => {}}></input>
                                 </div>
                                 {ExerciseId === 0 ?
-                                <button 
+                                <button
                                     type="button"
                                     className="btn btn-primary float-start"
                                     onClick={() => this.createClick()}
@@ -264,6 +415,12 @@ export class Exercise extends Component<MyProps, MyStates> {
                         </div>
                     </div>
                 </div>
+                <Chart
+                    options={this.state.options}
+                    series={this.state.series}
+                    type="heatmap"
+                    height={200}
+                />
             </div>
         )
     }
