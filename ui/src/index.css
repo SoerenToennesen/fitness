@@ -60,3 +60,26 @@ body {
   margin-left: 80px;
 }
 
+.tableheader-and-sortbutton {
+  display: flex;
+}
+
+.tableheader {
+  position: relative;
+  top: 15px;
+  flex: 0 0 50%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.sortbutton {
+  position: relative;
+  top: 5px;
+  flex: 0 0 50%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+button:focus {
+  box-shadow: none !important;
+}

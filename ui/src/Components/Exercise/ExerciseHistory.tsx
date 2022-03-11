@@ -14,6 +14,9 @@ interface MyStates {
     targetExerciseLength: string,
     targetExerciseType: string,
     targetCaloriesBurned: number,
+    sortType: boolean,
+    sortExerciseTime: boolean,
+    sortCaloriesBurned: boolean,
 }
 
 export class ExerciseHistory extends Component<MyProps, MyStates> {
@@ -30,6 +33,9 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             targetExerciseLength: '',
             targetExerciseType: 'Running',
             targetCaloriesBurned: 0,
+            sortType: false,
+            sortExerciseTime: false,
+            sortCaloriesBurned: false,
         }
     }
 
@@ -115,6 +121,50 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
     imageUpload = (e: any) => {
     }
 
+    resetSorts(sortingField: string, asc: boolean) {
+        switch (sortingField) {
+            case 'exerciseType':
+                this.setState({
+                    sortType: asc,
+                    sortExerciseTime: false,
+                    sortCaloriesBurned: false,
+                });
+                break;
+            case 'exerciseLength':
+                this.setState({
+                    sortType: false,
+                    sortExerciseTime: asc,
+                    sortCaloriesBurned: false,
+                });
+                break;
+            case 'caloriesBurned':
+                this.setState({
+                    sortType: false,
+                    sortExerciseTime: false,
+                    sortCaloriesBurned: asc,
+                });
+                break;
+            default:
+                this.setState({
+                    sortType: false,
+                    sortExerciseTime: false,
+                    sortCaloriesBurned: false,
+                });
+        }
+    }
+
+    sortResult(prop: any, asc: boolean) {
+        var sortedData = this.state.exercises.sort(function(a,b) {
+            if (asc) {
+                return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
+            } else {
+                return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
+            }
+        });
+        this.setState({exercises: sortedData});
+        this.resetSorts(prop, asc);
+    }
+
     exerciseTable() {
         let exerciseMap : any = this.state.exercises;
         let title : String = this.state.title;
@@ -123,20 +173,72 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                 <h3 style={{paddingLeft: "5px"}}>{title}</h3>
                 <table className="table table-striped table-hover">
                     <thead>
-                    <tr>
-                        <th>
-                            Type
-                        </th>
-                        <th>
-                            Time & Length
-                        </th>
-                        <th>
-                            Calories burned
-                        </th>
-                        <th>
-                            Options
-                        </th>
-                    </tr>
+                        <tr>
+                            <th>
+                                {/*<input className="form-control m-2" onChange={this.changeExerciseTypeFilter} placeholder="Filter"/>*/}
+                                <div className="tableheader-and-sortbutton">
+                                    <div className="tableheader">
+                                        Type
+                                    </div>
+                                    <div className="sortbutton">
+                                        <button type="button" className="btn" onClick={() => this.sortResult("exerciseType", !this.state.sortType)}>
+                                            {this.state.sortType ? (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-down-square-fill" viewBox="0 0 16 16">
+                                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+                                                </svg>
+                                            ) : (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-up-square-fill" viewBox="0 0 16 16">
+                                                    <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                                                </svg>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                            </th>
+                            <th>
+                                <div className="tableheader-and-sortbutton">
+                                    <div className="tableheader">
+                                        Time & Length
+                                    </div>
+                                    <div className="sortbutton">
+                                        <button type="button" className="btn" style={{textAlign: "right"}} onClick={() => this.sortResult("exerciseLength", !this.state.sortExerciseTime)}>
+                                            {this.state.sortExerciseTime ? (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-down-square-fill" viewBox="0 0 16 16">
+                                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+                                                </svg>
+                                            ) : (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-up-square-fill" viewBox="0 0 16 16">
+                                                    <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                                                </svg>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                            </th>
+                            <th>
+                                <div className="tableheader-and-sortbutton">
+                                    <div className="tableheader">
+                                        Calories burned
+                                    </div>
+                                    <div className="sortbutton">
+                                        <button type="button" className="btn" onClick={() => this.sortResult("caloriesBurned", !this.state.sortCaloriesBurned)}>
+                                            {this.state.sortCaloriesBurned ? (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-down-square-fill" viewBox="0 0 16 16">
+                                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+                                                </svg>
+                                            ) : (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-up-square-fill" viewBox="0 0 16 16">
+                                                    <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                                                </svg>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                            </th>
+                            <th>
+                                Options
+                            </th>
+                        </tr>
                     </thead>
                     <tbody>
                     {exerciseMap.map((exe : any) =>
