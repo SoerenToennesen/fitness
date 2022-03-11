@@ -171,11 +171,11 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
         return (
             <div>
                 <h3 style={{paddingLeft: "5px"}}>{title}</h3>
+                <input className="form-control m-2" style={{maxWidth: "300px", position: "relative", left: "-10px", top: "20px"}} onChange={() => null} placeholder="Filter"/>
                 <table className="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>
-                                {/*<input className="form-control m-2" onChange={this.changeExerciseTypeFilter} placeholder="Filter"/>*/}
                                 <div className="tableheader-and-sortbutton">
                                     <div className="tableheader">
                                         Type
