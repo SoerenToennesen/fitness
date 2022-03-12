@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import Chart from "react-apexcharts";
-import {api_urls} from '../../Api_urls'
 
 interface MyProps {
 }

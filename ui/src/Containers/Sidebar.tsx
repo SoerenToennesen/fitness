@@ -2,16 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { NavLink } from "react-router-dom";
 import './css/Sidebar.css';
 import logo from "../Photos/logos/mainlogo2.png"
-import account_picture from "../Photos/users/defaultuser.png"
 import account_picture2 from "../Photos/users/mypicture.png"
-import { ReactTypical } from '@deadcoder0904/react-typical';
 
-// TODO: Make sure that when sidebar is closed,
-// then clicking on menus won't open up the submenus
 export function Sidebar(props: any) {
 
     const [inactive, setInactive] = useState(false);
-    const [alreadyLoaded, setAlreadyLoaded] = useState(false);
 
     useEffect(() => {
         if (inactive) {
@@ -25,40 +20,13 @@ export function Sidebar(props: any) {
     function search() {
         //empty function for now
     }
-    
-    const ReactTypicalOrNormal = () => {
-        setAlreadyLoaded(true);
-        if (!alreadyLoaded) {
-            return (
-                <h5>
-                    <ReactTypical wrapper="p" steps={[
-                        'Zero',
-                        300,
-                        'Zero excuses',
-                        300,
-                        'Zero Calorie',
-                        300,
-                        'Zero Calorie rule',
-                        300,
-                        'Zero Calorie Water',
-                    ]}/>
-                </h5>
-            );
-        } else {
-            return (
-                <h5>
-                    Menu
-                </h5>
-            )
-        }
-    }
 
     const menuItems = [
         {name: "Overview", exact: true, to: "/", iconClassName: "bi bi-speedometer2"},
         {name: "Nutrition", exact: true, to: "/nutrition", iconClassName: "bi bi-heart-fill",
             subMenus: [
                 {name: "History", to: "/nutrition/history"},
-                {name: "Dummy class", to: "/dummyclass"}
+                {name: "Spinner", to: "/spinner"}
             ]},
         {name: "Exercise", exact: true, to: "/exercise", iconClassName: "bi bi-earbuds",
             subMenus: [
@@ -70,9 +38,9 @@ export function Sidebar(props: any) {
     const MenuItem = (props: any) => {
         const { name, subMenus, iconClassName, onClick, to, exact } = props;
         const [expand, setExpand] = useState(false);
-        return(
+        return (
             <li onClick={props.onClick}>
-                <NavLink exact to={to} className="menu-item" onClick={() => setExpand(!expand)}>
+                <NavLink exact to={to} className="menu-item" onClick={() => !inactive ? setExpand(!expand) : null}>
                     <div className="menu-icon">
                         <i className={iconClassName} />
                     </div>
@@ -102,7 +70,9 @@ export function Sidebar(props: any) {
                     <img src={logo} alt="webscript" />
                 </div>
                 <div className="appname">
-                    <ReactTypicalOrNormal />
+                    <h5>
+                        Menu
+                    </h5>
                 </div>
                 <button className="toggle-bar-btn" onClick={() => setInactive(!inactive)}>
                     {inactive ?

@@ -6,7 +6,7 @@ interface MyProps {
 interface MyStates {
 }
 
-export class DummyClass extends Component<MyProps, MyStates> {
+export class SpinnerPage extends Component<MyProps, MyStates> {
 
     constructor(props: any) {
         super(props);
