@@ -5,7 +5,6 @@ import exercise_picture from "../../Photos/users/defaultuser.png"
 interface MyProps {
 }
 interface MyStates {
-    title: string,
     exercises: [],
     updateOrCreateModal: boolean,
     targetId: string,
@@ -17,6 +16,8 @@ interface MyStates {
     sortType: boolean,
     sortExerciseTime: boolean,
     sortCaloriesBurned: boolean,
+    filterExercises: string,
+    exercisesWithoutFilter: [],
 }
 
 export class ExerciseHistory extends Component<MyProps, MyStates> {
@@ -24,7 +25,6 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
     constructor(props: any) {
         super(props);
         this.state={
-            title: 'Full history',
             exercises: [],
             updateOrCreateModal: false,
             targetId: '',
@@ -36,6 +36,8 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             sortType: false,
             sortExerciseTime: false,
             sortCaloriesBurned: false,
+            filterExercises: '',
+            exercisesWithoutFilter: [],
         }
     }
 
@@ -43,8 +45,9 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
         fetch(api_urls.EXERCISE_URL)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
+                //console.log(data)
                 this.setState({exercises: data.exercises});
+                this.setState({exercisesWithoutFilter: data.exercises})
             })
     }
 
@@ -165,13 +168,37 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
         this.resetSorts(prop, asc);
     }
 
+    filterFunction(input: string) {
+        const filteredData: any = this.state.exercisesWithoutFilter.filter(
+            function(el: any) {
+                return el.exerciseType.toString().toLowerCase().includes(
+                        input.toString().trim().toLowerCase()
+                    ) ||
+                    el.exerciseLength.toString().toLowerCase().includes(
+                        input.toString().trim().toLowerCase()
+                    ) ||
+                    el.exerciseTime.toString().toLowerCase().includes(
+                        input.toString().trim().toLowerCase()
+                    ) ||
+                    el.caloriesBurned.toString().toLowerCase().includes(
+                        input.toString().trim().toLowerCase()
+                    )
+            }
+        );
+        this.setState({exercises: filteredData});
+    }
+
+    changeExerciseFilter = (e: any) => {
+        this.setState({filterExercises: e.target.value});
+        this.filterFunction(e.target.value);
+    }
+
     exerciseTable() {
         let exerciseMap : any = this.state.exercises;
-        let title : String = this.state.title;
         return (
             <div>
-                <h3 style={{paddingLeft: "5px"}}>{title}</h3>
-                <input className="form-control m-2" style={{maxWidth: "300px", position: "relative", left: "-10px", top: "20px"}} onChange={() => null} placeholder="Filter"/>
+                <div className="page-section-header">Full history</div>
+                <input className="form-control m-2" style={{maxWidth: "300px", position: "relative", left: "-10px", top: "20px"}} onChange={this.changeExerciseFilter} placeholder="Filter"/>
                 <table className="table table-striped table-hover">
                     <thead>
                         <tr>
