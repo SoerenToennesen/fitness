@@ -16,9 +16,6 @@ interface MyStates {
     series: any,
 }
 
-// TODO: Add a 'contribution' graph, like the one in github,
-// showcasing which days you've exercised with shades indicating
-// how much or how many sessions per day as well
 export class Exercise extends Component<MyProps, MyStates> {
 
     constructor(props: any) {
@@ -128,109 +125,11 @@ export class Exercise extends Component<MyProps, MyStates> {
         return generatedData;
     }
 
-    FilterFn() {
-        var ExerciseIdFilter = this.state.ExerciseIdFilter;
-        var ExerciseNameFilter = this.state.ExerciseNameFilter;
-
-        var filteredData = this.state.exercisesWithoutFilter.filter(
-            function(el: any) {
-                return el.ExerciseId.toString().toLowerCase().includes(
-                    ExerciseIdFilter.toString().trim().toLowerCase()
-                ) &&
-                el.ExerciseName.toString().toLowerCase().includes(
-                    ExerciseNameFilter.toString().trim().toLowerCase()
-                )
-            }
-        );
-        this.setState({exercises: filteredData});
-    }
-
-    sortResult(prop: any, asc: boolean) {
-        var sortedData = this.state.exercisesWithoutFilter.sort(function(a,b) {
-            if (asc) {
-                return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
-            } else {
-                return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
-            }
-        });
-        this.setState({exercises: sortedData});
-    }
-
-    changeExerciseIdFilter = (e: any) => {
-        this.setState({ExerciseIdFilter: e.target.value});
-        this.FilterFn();
-    }
-    changeExerciseNameFilter = (e: any) => {
-        this.setState({ExerciseNameFilter: e.target.value});
-        this.FilterFn();
-    }
-
     refreshList() {
-
     }
 
     componentDidMount() {
         this.refreshList();
-    }
-
-    createClick() {
-        fetch(api_urls.API_URL + 'exercise', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                ExerciseName: this.state.ExerciseName
-            })
-        })
-        .then(res => res.json())
-        .then((result) => {
-            alert(result);
-            this.refreshList();
-        }, (error) => {
-            alert('Failed');
-        })
-    }
-
-    updateClick() {
-        fetch(api_urls.API_URL + 'exercise', {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                ExerciseId: this.state.ExerciseId,
-                ExerciseName: this.state.ExerciseName
-            })
-        })
-        .then(res => res.json())
-        .then((result) => {
-            alert(result);
-            this.refreshList();
-        }, (error) => {
-            alert('Failed');
-        })
-    }
-
-    deleteClick(id: string) {
-        if (window.confirm('Are you sure?')) {
-            fetch(api_urls.API_URL + 'exercise/' + id, {
-                method: 'DELETE',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(res => res.json())
-            .then((result) => {
-                alert(result);
-                this.refreshList();
-            }, (error) => {
-                alert('Failed');
-            })
-        }
     }
 
     render() {
