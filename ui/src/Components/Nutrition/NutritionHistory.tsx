@@ -6,15 +6,17 @@ interface MyProps {
 }
 interface MyStates {
     nutritions: [],
-    breakfasts: [],
-    lunches: [],
-    dinners: [],
     updateOrCreateModal: boolean,
     targetId: string,
     targetDescription: string,
-    targetCalories: string,
     targetInjestionTime: string,
     targetNutritionType: string,
+    targetCalories: number,
+    sortType: boolean,
+    sortInjestionTime: boolean,
+    sortCalories: boolean,
+    filterNutritions: string,
+    nutritionsWithoutFilter: [],
 }
 
 export class NutritionHistory extends Component<MyProps, MyStates> {
@@ -23,15 +25,17 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         super(props);
         this.state={
             nutritions: [],
-            breakfasts: [],
-            lunches: [],
-            dinners: [],
             updateOrCreateModal: false,
             targetId: '',
             targetDescription: '',
-            targetCalories: '',
             targetInjestionTime: '',
-            targetNutritionType: 'Breakfast',
+            targetNutritionType: 'Running',
+            targetCalories: 0,
+            sortType: false,
+            sortInjestionTime: false,
+            sortCalories: false,
+            filterNutritions: '',
+            nutritionsWithoutFilter: [],
         }
     }
 
@@ -41,15 +45,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             .then(data => {
                 console.log(data)
                 this.setState({nutritions: data.nutritions});
-                this.setState({breakfasts: data.nutritions.filter(function (nut: any) {
-                        return nut.nutritionType === "BREAKFAST"
-                    })});
-                this.setState({lunches: data.nutritions.filter(function (nut: any) {
-                        return nut.nutritionType === "LUNCH"
-                    })});
-                this.setState({dinners: data.nutritions.filter(function (nut: any) {
-                        return nut.nutritionType === "DINNER"
-                    })});
+                this.setState({nutritionsWithoutFilter: data.nutritions})
             })
     }
 
@@ -124,37 +120,140 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
     imageUpload = (e: any) => {
     }
 
-    nutritionTypeTable(nutritionType: String) {
-        let nutritionMap : any = [];
-        let title : String = ""
-        switch (nutritionType) {
-            case "BREAKFAST":
-                nutritionMap = this.state.breakfasts;
-                title = "Breakfasts";
+    resetSorts(sortingField: string, asc: boolean) {
+        switch (sortingField) {
+            case 'nutritionType':
+                this.setState({
+                    sortType: asc,
+                    sortInjestionTime: false,
+                    sortCalories: false,
+                });
                 break;
-            case "LUNCH":
-                nutritionMap = this.state.lunches;
-                title = "Lunches";
+            case 'injestionTime':
+                this.setState({
+                    sortType: false,
+                    sortInjestionTime: asc,
+                    sortCalories: false,
+                });
                 break;
-            case "DINNER":
-                nutritionMap = this.state.dinners;
-                title = "Dinners";
+            case 'calories':
+                this.setState({
+                    sortType: false,
+                    sortInjestionTime: false,
+                    sortCalories: asc,
+                });
                 break;
+            default:
+                this.setState({
+                    sortType: false,
+                    sortInjestionTime: false,
+                    sortCalories: false,
+                });
         }
+    }
+
+    sortResult(prop: any, asc: boolean) {
+        var sortedData = this.state.nutritions.sort(function(a,b) {
+            if (asc) {
+                return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
+            } else {
+                return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
+            }
+        });
+        this.setState({nutritions: sortedData});
+        this.resetSorts(prop, asc);
+    }
+
+    filterFunction(input: string) {
+        const filteredData: any = this.state.nutritionsWithoutFilter.filter(
+            function(el: any) {
+                return el.nutritionType.toString().toLowerCase().includes(
+                        input.toString().trim().toLowerCase()
+                    ) ||
+                    el.injestionTime.toString().toLowerCase().includes(
+                        input.toString().trim().toLowerCase()
+                    ) ||
+                    el.calories.toString().toLowerCase().includes(
+                        input.toString().trim().toLowerCase()
+                    )
+            }
+        );
+        this.setState({nutritions: filteredData});
+    }
+
+    changeNutritionFilter = (e: any) => {
+        this.setState({filterNutritions: e.target.value});
+        this.filterFunction(e.target.value);
+    }
+
+    nutritionTable() {
+        let nutritionMap : any = this.state.nutritions;
         return (
             <div>
-                <h3 style={{paddingLeft: "5px"}}>{title}</h3>
+                <div className="page-section-header">Full history</div>
+                <input className="form-control m-2" style={{maxWidth: "300px", position: "relative", left: "-10px", top: "20px"}} onChange={this.changeNutritionFilter} placeholder="Filter"/>
                 <table className="table table-striped table-hover">
                     <thead>
                     <tr>
                         <th>
-                            Description
+                            <div className="tableheader-and-sortbutton">
+                                <div className="tableheader">
+                                    Type
+                                </div>
+                                <div className="sortbutton">
+                                    <button type="button" className="btn" onClick={() => this.sortResult("nutritionType", !this.state.sortType)}>
+                                        {this.state.sortType ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-down-square-fill" viewBox="0 0 16 16">
+                                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+                                            </svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-up-square-fill" viewBox="0 0 16 16">
+                                                <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
                         </th>
                         <th>
-                            Calories
+                            <div className="tableheader-and-sortbutton">
+                                <div className="tableheader">
+                                    Injestion time
+                                </div>
+                                <div className="sortbutton">
+                                    <button type="button" className="btn" style={{textAlign: "right"}} onClick={() => this.sortResult("injestionTime", !this.state.sortInjestionTime)}>
+                                        {this.state.sortInjestionTime ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-down-square-fill" viewBox="0 0 16 16">
+                                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+                                            </svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-up-square-fill" viewBox="0 0 16 16">
+                                                <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
                         </th>
                         <th>
-                            Injestion time
+                            <div className="tableheader-and-sortbutton">
+                                <div className="tableheader">
+                                    Calories
+                                </div>
+                                <div className="sortbutton">
+                                    <button type="button" className="btn" onClick={() => this.sortResult("calories", !this.state.sortCalories)}>
+                                        {this.state.sortCalories ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-down-square-fill" viewBox="0 0 16 16">
+                                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+                                            </svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-up-square-fill" viewBox="0 0 16 16">
+                                                <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
                         </th>
                         <th>
                             Options
@@ -164,9 +263,9 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                     <tbody>
                     {nutritionMap.map((nut : any) =>
                         <tr key={nut.id}>
-                            <td>{nut.description}</td>
-                            <td>{nut.calories}</td>
+                            <td>{nut.nutritionType}</td>
                             <td>{nut.injestionTime}</td>
+                            <td>{nut.calories}</td>
                             <td>
                                 <button
                                     type="button"
@@ -176,9 +275,8 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                                     onClick={() => {
                                         this.setState({updateOrCreateModal: false,
                                             targetId: nut.id,
-                                            targetDescription: nut.description,
-                                            targetCalories: nut.calories,
                                             targetInjestionTime: nut.injestionTime,
+                                            targetCalories: nut.calories,
                                             targetNutritionType: nut.nutritionType.charAt(0).toUpperCase() + nut.nutritionType.slice(1).toLowerCase(),
                                         });
                                     }}
@@ -231,11 +329,11 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                                         ></input>
                                     </div>
                                     <div className="input-group mb-3">
-                                        <span className="input-group-text">Calories</span>
+                                        <span className="input-group-text">Time</span>
                                         <input type="text" className="form-control"
-                                               placeholder={'Enter calories...'}
-                                               value={this.state.targetCalories}
-                                               onChange={(e) => this.setState({targetCalories: e.target.value})}
+                                               placeholder={'Enter time...'}
+                                               value={this.state.targetInjestionTime}
+                                               onChange={(e) => this.setState({targetInjestionTime: e.target.value})}
                                         ></input>
                                     </div>
                                     <div className="input-group mb-3">
@@ -247,26 +345,19 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                                             //onClick={(e) => this.setState({targetNutritionType: (e.target as HTMLInputElement).value})}
                                         >
                                             <option>
-                                                Breakfast
+                                                Running
                                             </option>
                                             <option>
-                                                Lunch
+                                                Biking
                                             </option>
                                             <option>
-                                                Dinner
+                                                Swimming
                                             </option>
                                             {/*{dropdownVals.map((val: any) =>
                                                 <option key={val.id}>
                                                     {val.targetVal}
                                                 </option>)}*/}
                                         </select>
-                                    </div>
-                                    <div className="input-group mb-3">
-                                        <span className="input-group-text">Injestion time</span>
-                                        <input type="date" className="form-control"
-                                               value={this.state.targetInjestionTime}
-                                               onChange={(e) => this.setState({targetInjestionTime: e.target.value})}
-                                        ></input>
                                     </div>
                                 </div>
                                 <div className="p-2 w-50 bd-highlight">
@@ -296,21 +387,19 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         return (
             <div>
                 <div className="page-header">Nutrition History</div>
-                {this.nutritionTypeTable("BREAKFAST")}
-                {this.nutritionTypeTable("LUNCH")}
-                {this.nutritionTypeTable("DINNER")}
+                {this.nutritionTable()}
                 <button
                     type="button"
-                    className="btn btn-primary m-2 float-end"
+                    className="btn btn-Fprimary m-2 float-end"
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal"
                     onClick={() =>
                         this.setState({updateOrCreateModal: true,
                             targetId: '',
                             targetDescription: '',
-                            targetCalories: '',
                             targetInjestionTime: '',
-                            targetNutritionType: 'Breakfast',
+                            targetCalories: 0,
+                            targetNutritionType: 'Running',
                         })
                     }
                 >

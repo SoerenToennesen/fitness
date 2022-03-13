@@ -64,7 +64,7 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             },
             body: JSON.stringify({
                 id: null,
-                description: this.state.targetType,
+                type: this.state.targetType,
                 caloriesBurned: this.state.targetCaloriesBurned,
                 exerciseTime: this.state.targetExerciseTime,
                 exerciseLength: this.state.targetExerciseLength,
@@ -88,7 +88,7 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             },
             body: JSON.stringify({
                 id: this.state.targetId,
-                description: this.state.targetType,
+                type: this.state.targetType,
                 caloriesBurned: this.state.targetCaloriesBurned,
                 exerciseTime: this.state.targetExerciseTime,
                 exerciseLength: this.state.targetExerciseLength,
@@ -329,9 +329,9 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                             <div className="d-flex flex-row bd-highlight mb-3">
                                 <div className="p-2 w-50 bd-highlight">
                                     <div className="input-group mb-3">
-                                        <span className="input-group-text">Description</span>
+                                        <span className="input-group-text">Type</span>
                                         <input type="text" className="form-control"
-                                               placeholder={'Enter description...'}
+                                               placeholder={'Enter type...'}
                                                value={this.state.targetType}
                                                onChange={(e) => this.setState({targetType: e.target.value})}
                                         ></input>
