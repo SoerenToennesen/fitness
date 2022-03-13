@@ -43,7 +43,6 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         fetch(api_urls.NUTRITION_URL)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 this.setState({nutritions: data.nutritions});
                 this.setState({nutritionsWithoutFilter: data.nutritions})
             })
@@ -191,6 +190,23 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         return (
             <div>
                 <div className="page-section-header">Full history</div>
+                <button
+                    type="button"
+                    className="btn btn-primary m-2 float-end"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    onClick={() =>
+                        this.setState({updateOrCreateModal: true,
+                            targetId: '',
+                            targetDescription: '',
+                            targetInjestionTime: '',
+                            targetCalories: 0,
+                            targetNutritionType: 'Running',
+                        })
+                    }
+                >
+                    Add nutrition
+                </button>
                 <input className="form-control m-2" style={{maxWidth: "300px", position: "relative", left: "-10px", top: "20px"}} onChange={this.changeNutritionFilter} placeholder="Filter"/>
                 <table className="table table-striped table-hover">
                     <thead>
@@ -388,23 +404,6 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             <div>
                 <div className="page-header">Nutrition History</div>
                 {this.nutritionTable()}
-                <button
-                    type="button"
-                    className="btn btn-Fprimary m-2 float-end"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                    onClick={() =>
-                        this.setState({updateOrCreateModal: true,
-                            targetId: '',
-                            targetDescription: '',
-                            targetInjestionTime: '',
-                            targetCalories: 0,
-                            targetNutritionType: 'Running',
-                        })
-                    }
-                >
-                    Add nutrition
-                </button>
                 {this.modalPopup()}
             </div>
         )

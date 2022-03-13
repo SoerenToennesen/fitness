@@ -198,6 +198,24 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
         return (
             <div>
                 <div className="page-section-header">Full history</div>
+                <button
+                    type="button"
+                    className="btn btn-primary m-2 float-end"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    onClick={() =>
+                        this.setState({updateOrCreateModal: true,
+                            targetId: '',
+                            targetType: '',
+                            targetExerciseTime: '',
+                            targetExerciseLength: '',
+                            targetCaloriesBurned: 0,
+                            targetExerciseType: 'Running',
+                        })
+                    }
+                >
+                    Add exercise
+                </button>
                 <input className="form-control m-2" style={{maxWidth: "300px", position: "relative", left: "-10px", top: "20px"}} onChange={this.changeExerciseFilter} placeholder="Filter"/>
                 <table className="table table-striped table-hover">
                     <thead>
@@ -403,24 +421,6 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             <div>
                 <div className="page-header">Exercise History</div>
                 {this.exerciseTable()}
-                <button
-                    type="button"
-                    className="btn btn-primary m-2 float-end"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                    onClick={() =>
-                        this.setState({updateOrCreateModal: true,
-                            targetId: '',
-                            targetType: '',
-                            targetExerciseTime: '',
-                            targetExerciseLength: '',
-                            targetCaloriesBurned: 0,
-                            targetExerciseType: 'Running',
-                        })
-                    }
-                >
-                    Add exercise
-                </button>
                 {this.modalPopup()}
             </div>
         )
