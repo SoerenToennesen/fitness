@@ -293,7 +293,7 @@ export class Account extends Component<MyProps, MyStates> {
                                 <div className="p-2 w-50 bd-highlight">
                                     <img height="100px"
                                          src={account_picture}
-                                         alt="account image"/>
+                                         alt="AccountPicture"/>
                                     <input className="m-2" type="file" onChange={this.imageUpload}/>
                                 </div>
                             </div>

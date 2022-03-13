@@ -76,7 +76,6 @@ export class Nutrition extends Component<MyProps, MyStates> {
         fetch(api_urls.NUTRITION_URL)
             .then(response => response.json())
             .then(data => {
-                console.log('nutrition data', data);
                 this.setState({nutritions: data.nutritions});
                 this.setState({breakfasts: data.nutritions.filter(function (nut: any) {
                         return nut.nutritionType === "BREAKFAST"

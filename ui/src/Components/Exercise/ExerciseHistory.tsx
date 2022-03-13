@@ -435,7 +435,7 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                                 <div className="p-2 w-50 bd-highlight">
                                     <img height="100px"
                                          src={exercise_picture}
-                                         alt="exercise image"/>
+                                         alt="ExercisePicture"/>
                                     <input className="m-2" type="file" onChange={this.imageUpload}/>
                                 </div>
                             </div>

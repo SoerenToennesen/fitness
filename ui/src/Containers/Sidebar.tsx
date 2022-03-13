@@ -15,7 +15,7 @@ export function Sidebar(props: any) {
             })
         }
         props.onCollapse(inactive);
-    }, [inactive])
+    }, [inactive, props])
 
     function search() {
         //empty function for now
@@ -36,7 +36,7 @@ export function Sidebar(props: any) {
     ];
 
     const MenuItem = (props: any) => {
-        const { name, subMenus, iconClassName, onClick, to, exact } = props;
+        const { name, subMenus, iconClassName, to } = props;
         const [expand, setExpand] = useState(false);
         return (
             <li onClick={props.onClick}>
