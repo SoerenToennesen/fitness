@@ -14,6 +14,7 @@ interface MyStates {
     targetExerciseType: string,
     targetCaloriesBurned: number,
     sortType: boolean,
+    sortExerciseLength: boolean
     sortExerciseTime: boolean,
     sortCaloriesBurned: boolean,
     filterExercises: string,
@@ -34,6 +35,7 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             targetExerciseType: 'Running',
             targetCaloriesBurned: 0,
             sortType: false,
+            sortExerciseLength: false,
             sortExerciseTime: false,
             sortCaloriesBurned: false,
             filterExercises: '',
@@ -243,10 +245,30 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                             <th>
                                 <div className="tableheader-and-sortbutton">
                                     <div className="tableheader">
-                                        Time & Length
+                                        Length
                                     </div>
                                     <div className="sortbutton">
-                                        <button type="button" className="btn" style={{textAlign: "right"}} onClick={() => this.sortResult("exerciseLength", !this.state.sortExerciseTime)}>
+                                        <button type="button" className="btn" style={{textAlign: "right"}} onClick={() => this.sortResult("exerciseLength", !this.state.sortExerciseLength)}>
+                                            {this.state.sortExerciseLength ? (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-down-square-fill" viewBox="0 0 16 16">
+                                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+                                                </svg>
+                                            ) : (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-up-square-fill" viewBox="0 0 16 16">
+                                                    <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                                                </svg>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                            </th>
+                            <th>
+                                <div className="tableheader-and-sortbutton">
+                                    <div className="tableheader">
+                                        Time
+                                    </div>
+                                    <div className="sortbutton">
+                                        <button type="button" className="btn" style={{textAlign: "right"}} onClick={() => this.sortResult("exerciseTime", !this.state.sortExerciseTime)}>
                                             {this.state.sortExerciseTime ? (
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-down-square-fill" viewBox="0 0 16 16">
                                                     <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
@@ -289,7 +311,8 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                     {exerciseMap.map((exe : any) =>
                         <tr key={exe.id}>
                             <td>{exe.exerciseType}</td>
-                            <td>{exe.exerciseLength}, {exe.exerciseTime}</td>
+                            <td>{exe.exerciseLength + ' minutes'}</td>
+                            <td>{exe.exerciseTime}</td>
                             <td>{exe.caloriesBurned}</td>
                             <td>
                                 <button
@@ -390,7 +413,7 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                                         <input type="date" className="form-control"
                                                value={this.state.targetExerciseLength}
                                                onChange={(e) => this.setState({targetExerciseLength: e.target.value})}
-                                        ></input>
+                                        />
                                     </div>
                                 </div>
                                 <div className="p-2 w-50 bd-highlight">
