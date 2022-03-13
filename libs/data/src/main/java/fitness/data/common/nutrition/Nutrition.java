@@ -3,7 +3,7 @@ package fitness.data.common.nutrition;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -14,10 +14,9 @@ public class Nutrition {
     private int calories;
     //private Macro macros;
     //private Micro micros;
-    //TODO: Figure out how to change below to LocalDate and deserialize it with RabbitMQ
-    private String injestionTime;
+    private LocalDateTime injestionTime;
     private NutritionType nutritionType;
-
+    
     public enum NutritionType {
         BREAKFAST,
         LUNCH,

@@ -16,7 +16,8 @@ public class Exercise {
     private int caloriesBurned;
     private ExerciseType exerciseType;
 
-    // Make this a class each, that have information about how much each exercise burns, etc.
+    // TODO: Make this a class each, that have information about how much each exercise burns, etc.
+    // Definitely don't have this an enum, as the applicatoin needs to allowed adding customized types
     public enum ExerciseType {
         RUNNING,
         BIKING,

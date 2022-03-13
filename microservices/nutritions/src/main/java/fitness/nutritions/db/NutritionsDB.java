@@ -2,90 +2,43 @@ package fitness.nutritions.db;
 
 import fitness.data.common.nutrition.Nutrition;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static fitness.data.common.Generators.*;
+
 public class NutritionsDB {
 
-    private Map<UUID, Nutrition> nutritions = new HashMap<UUID, Nutrition>() {{
-        put(UUID.fromString("1f3426cc-9c98-11ec-b909-0242ac120002"), new Nutrition(
-            UUID.fromString("1f3426cc-9c98-11ec-b909-0242ac120002"),
-            "Oats with milk",
-            300,
-            "LocalDate.of(1885, Month.OCTOBER, 7)",
-            Nutrition.NutritionType.BREAKFAST,
-            150,
-            30,
-            50,
-            10,
-            9,
-            6,
-            3,
-            4,
-            6,
-            2,
-            10
-        ));
-        put(UUID.fromString("3f63bcdc-9c98-11ec-b909-0242ac120002"), new Nutrition(
-            UUID.fromString("3f63bcdc-9c98-11ec-b909-0242ac120002"),
-            "Rugbrød with hummus",
-            100,
-            "LocalDate.of(1885, Month.OCTOBER, 7)",
-            Nutrition.NutritionType.LUNCH,
-            120,
-            10,
-            30,
-            40,
-            19,
-            16,
-            13,
-            14,
-            16,
-            12,
-            3
-        ));
-        put(UUID.fromString("1c08fb4c-9e61-11ec-b909-0242ac120002"), new Nutrition(
-            UUID.fromString("1c08fb4c-9e61-11ec-b909-0242ac120002"),
-            "Pizza slice",
-            450,
-            "LocalDate.of(1885, Month.OCTOBER, 7)",
-            Nutrition.NutritionType.LUNCH,
-            200,
-            50,
-            20,
-            3,
-            4,
-            3,
-            5,
-            2,
-            4,
-            9,
-            3
-        ));
-        put(UUID.fromString("2507b54e-9e61-11ec-b909-0242ac120002"), new Nutrition(
-            UUID.fromString("2507b54e-9e61-11ec-b909-0242ac120002"),
-            "Wraps",
-            1000,
-            "LocalDate.of(1885, Month.OCTOBER, 7)",
-            Nutrition.NutritionType.DINNER,
-            550,
-            100,
-            120,
-            50,
-            14,
-            59,
-            38,
-            23,
-            45,
-            14,
-            100
-        ));
+    private Map<UUID, Nutrition> nutritions = new HashMap<>();
 
-    }};
-
-    public NutritionsDB() {}
+    public NutritionsDB() {
+        // Generate some random data
+        Random random = new Random();
+        for (int i = 0; i < 100; i++) {
+            UUID uuid = UUID.randomUUID();
+            nutritions.put(
+                    uuid,
+                    new Nutrition(
+                            uuid,
+                            getRandomDescription(random, "abcdefg ", random.nextInt(20 - 8 + 1) + 20),
+                            50 + random.nextInt(1000 - 50 + 1),
+                            getRandomLocalDateTime(random),
+                            getRandomEnum(Nutrition.NutritionType.class, random),
+                            15 + random.nextInt(400 - 15 + 1),
+                            10 + random.nextInt(100 - 10 + 1),
+                            10 + random.nextInt(100 - 10 + 1),
+                            5 + random.nextInt(20 - 5 + 1),
+                            5 + random.nextInt(20 - 5 + 1),
+                            5 + random.nextInt(20 - 5 + 1),
+                            5 + random.nextInt(20 - 5 + 1),
+                            5 + random.nextInt(20 - 5 + 1),
+                            5 + random.nextInt(20 - 5 + 1),
+                            5 + random.nextInt(20 - 5 + 1),
+                            5 + random.nextInt(20 - 5 + 1)
+                    )
+            );
+        }
+    }
 
     public List<Nutrition> getNutritions() {
         return nutritions.values().stream().collect(Collectors.toList());
