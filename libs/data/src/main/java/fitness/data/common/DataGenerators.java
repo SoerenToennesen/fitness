@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Random;
 
-public class Generators {
+public class DataGenerators {
 
     public static LocalDate getRandomDate(Random random) {
         int randomYear = 2010 + random.nextInt(2021 - 2010 + 1);

@@ -5,7 +5,7 @@ import fitness.data.common.exercise.Exercise;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fitness.data.common.Generators.*;
+import static fitness.data.common.DataGenerators.*;
 
 public class ExercisesDB {
 
