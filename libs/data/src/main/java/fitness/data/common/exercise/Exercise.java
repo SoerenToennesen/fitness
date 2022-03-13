@@ -11,8 +11,7 @@ import java.util.UUID;
 public class Exercise {
     private UUID id;
     private String description;
-    //TODO: Figure out how to change below to LocalDate and deserialize it with RabbitMQ
-    private String exerciseTime;
+    private LocalDateTime exerciseTime;
     private int exerciseLength; // in minutes
     private int caloriesBurned;
     private ExerciseType exerciseType;

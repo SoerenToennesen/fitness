@@ -53,7 +53,7 @@ public class ExercisesDB {
                     new Exercise(
                             uuid,
                             generateString(random, "abcdefg ", random.nextInt(20 - 8 + 1) + 20),
-                            "getRandomLocalDateTime(random)",
+                            getRandomLocalDateTime(random),
                             15 + random.nextInt(180 - 15 + 1),
                             50 + random.nextInt(1000 - 50 + 1),
                             randomExerciseType(Exercise.ExerciseType.class, random)
