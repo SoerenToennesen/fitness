@@ -131,6 +131,7 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             case 'exerciseType':
                 this.setState({
                     sortType: asc,
+                    sortExerciseLength: false,
                     sortExerciseTime: false,
                     sortCaloriesBurned: false,
                 });
@@ -138,6 +139,15 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             case 'exerciseLength':
                 this.setState({
                     sortType: false,
+                    sortExerciseLength: asc,
+                    sortExerciseTime: false,
+                    sortCaloriesBurned: false,
+                });
+                break;
+            case 'exerciseTime':
+                this.setState({
+                    sortType: false,
+                    sortExerciseLength: false,
                     sortExerciseTime: asc,
                     sortCaloriesBurned: false,
                 });
@@ -145,6 +155,7 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             case 'caloriesBurned':
                 this.setState({
                     sortType: false,
+                    sortExerciseLength: false,
                     sortExerciseTime: false,
                     sortCaloriesBurned: asc,
                 });
@@ -152,6 +163,7 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             default:
                 this.setState({
                     sortType: false,
+                    sortExerciseLength: false,
                     sortExerciseTime: false,
                     sortCaloriesBurned: false,
                 });
@@ -159,10 +171,14 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
     }
 
     sortResult(prop: any, asc: boolean) {
+        var isNumber = false
+        if (prop === 'exerciseLength') isNumber = true;
         var sortedData = this.state.exercises.sort(function(a,b) {
             if (asc) {
+                if (isNumber) return (parseInt(a[prop]) > parseInt(b[prop])) ? 1 : ((parseInt(a[prop]) < parseInt(b[prop])) ? -1 : 0);
                 return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
             } else {
+                if (isNumber) return (parseInt(b[prop]) > parseInt(a[prop])) ? 1 : ((parseInt(b[prop]) < parseInt(a[prop])) ? -1 : 0);
                 return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
             }
         });
