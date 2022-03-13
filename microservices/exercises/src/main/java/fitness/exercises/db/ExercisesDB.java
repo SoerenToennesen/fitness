@@ -3,49 +3,65 @@ package fitness.exercises.db;
 import fitness.data.common.exercise.Exercise;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ExercisesDB {
 
-    private Map<UUID, Exercise> exercises = new HashMap<UUID, Exercise>() {{
-        put(UUID.fromString("df5e9d12-9f1b-11ec-b909-0242ac120002"), new Exercise(
-            UUID.fromString("df5e9d12-9f1b-11ec-b909-0242ac120002"),
-            "Relaxed evening stroll",
-            "LocalDate.of(1885, Month.OCTOBER, 7)",
-            "30 minutes",
-                100,
-            Exercise.ExerciseType.RUNNING
-        ));
-        put(UUID.fromString("e4d286d2-9f1b-11ec-b909-0242ac120002"), new Exercise(
-            UUID.fromString("e4d286d2-9f1b-11ec-b909-0242ac120002"),
-            "Competition",
-            "LocalDate.of(1885, Month.OCTOBER, 7)",
-            "10 minutes",
-                150,
-            Exercise.ExerciseType.SWIMMING
-        ));
-        put(UUID.fromString("ea8ae0b0-9f1b-11ec-b909-0242ac120002"), new Exercise(
-            UUID.fromString("ea8ae0b0-9f1b-11ec-b909-0242ac120002"),
-            "Solo",
-            "LocalDate.of(1885, Month.OCTOBER, 7)",
-            "2 hours",
-                500,
-            Exercise.ExerciseType.POWERLIFTING
-        ));
-        put(UUID.fromString("f0f93bcc-9f1b-11ec-b909-0242ac120002"), new Exercise(
-            UUID.fromString("f0f93bcc-9f1b-11ec-b909-0242ac120002"),
-            "Crossfit with friends",
-            "LocalDate.of(1885, Month.OCTOBER, 7)",
-            "1 hour",
-                200,
-            Exercise.ExerciseType.CROSSFIT
-        ));
+    private LocalDate getRandomDate(Random random) {
+        int randomYear = 2010 + random.nextInt(2021 - 2010 + 1);
+        int randomMonth = 1 + random.nextInt(12 - 1 + 1);
+        int randomDay = 1 + random.nextInt(randomMonth == 2 ? 28 : 30 - 1 + 1);
+        return LocalDate.of(randomYear, randomMonth, randomDay);
+    }
 
-    }};
+    private LocalTime getRandomTime(Random random) {
+        int randomHour = 0 + random.nextInt(23 - 0 + 1);
+        int randomMinute = 0 + random.nextInt(59 - 0 + 1);
+        return LocalTime.of(randomHour, randomMinute, 0, 0);
+    }
 
-    public ExercisesDB() {}
+    private LocalDateTime getRandomLocalDateTime(Random random) {
+        return LocalDateTime.of(getRandomDate(random), getRandomTime(random));
+    }
+
+    public static String generateString(Random random, String characters, int length) {
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++) {
+            text[i] = characters.charAt(random.nextInt(characters.length()));
+        }
+        return new String(text);
+    }
+
+    private <T extends Enum<?>> T randomExerciseType(Class<T> clazz, Random random) {
+        int x = random.nextInt(clazz.getEnumConstants().length);
+        return clazz.getEnumConstants()[x];
+    }
+
+    private Map<UUID, Exercise> exercises = new HashMap<>();
+
+    public ExercisesDB() {
+        // Generate some random data
+        Random random = new Random();
+        for (int i = 0; i < 100; i++) {
+            UUID uuid = UUID.randomUUID();
+            exercises.put(
+                    uuid,
+                    new Exercise(
+                            uuid,
+                            generateString(random, "abcdefg ", random.nextInt(20 - 8 + 1) + 20),
+                            "getRandomLocalDateTime(random)",
+                            15 + random.nextInt(180 - 15 + 1),
+                            50 + random.nextInt(1000 - 50 + 1),
+                            randomExerciseType(Exercise.ExerciseType.class, random)
+                    )
+            );
+        }
+        int x = 0;
+    }
 
     public List<Exercise> getExercises() {
         return exercises.values().stream().collect(Collectors.toList());

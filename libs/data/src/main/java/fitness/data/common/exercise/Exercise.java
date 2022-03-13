@@ -3,6 +3,7 @@ package fitness.data.common.exercise;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -12,7 +13,7 @@ public class Exercise {
     private String description;
     //TODO: Figure out how to change below to LocalDate and deserialize it with RabbitMQ
     private String exerciseTime;
-    private String exerciseLength;
+    private int exerciseLength; // in minutes
     private int caloriesBurned;
     private ExerciseType exerciseType;
 
