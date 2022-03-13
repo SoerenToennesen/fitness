@@ -50,6 +50,8 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                 //console.log(data)
                 this.setState({exercises: data.exercises});
                 this.setState({exercisesWithoutFilter: data.exercises})
+            }, (error) => {
+                console.log('Backend services probably not started up.\nError message: ' + error);
             })
     }
 

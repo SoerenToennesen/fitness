@@ -101,8 +101,7 @@ export class Exercise extends Component<MyProps, MyStates> {
         return generatedData;
     }
 
-    refreshList() {
-    }
+    refreshList() {}
 
     componentDidMount() {
         this.refreshList();

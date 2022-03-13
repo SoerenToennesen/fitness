@@ -51,6 +51,8 @@ export class Account extends Component<MyProps, MyStates> {
                 this.setState({admins: data.accounts.filter(function (acc: any) {
                     return acc.accountType === "ADMIN"
                 })});
+            }, (error) => {
+                console.log('Backend services probably not started up.\nError message: ' + error);
             })
     }
 

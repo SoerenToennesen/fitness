@@ -45,6 +45,8 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             .then(data => {
                 this.setState({nutritions: data.nutritions});
                 this.setState({nutritionsWithoutFilter: data.nutritions})
+            }, (error) => {
+                console.log('Backend services probably not started up.\nError message: ' + error);
             })
     }
 
