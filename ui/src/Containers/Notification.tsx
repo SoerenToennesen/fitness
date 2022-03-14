@@ -2,18 +2,34 @@ import React from 'react';
 import { Snackbar, makeStyles } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        top: theme.spacing(10),
-        "& .MuiPaper-root": {
-            border:'1px solid green',
-            borderRadius: '10px',
-        }
-    },
-}))
-
 export default function Notification(props: any) {
+    const useStyles = makeStyles(theme => ({
+        root: {
+            top: theme.spacing(10),
+            "& .MuiPaper-root": {
+                border: `1px solid ${borderColor}`,
+                borderRadius: '10px',
+            }
+        },
+    }))
     const { notify, setNotify } = props;
+    var borderColor = '';
+    switch (notify.type) {
+        case 'success':
+            borderColor = 'green';
+            break;
+        case 'warning':
+            borderColor = 'orange';
+            break;
+        case 'error':
+            borderColor = 'Coral';
+            break;
+        case 'info':
+            borderColor = 'DeepSkyBlue';
+            break;
+        default:
+            borderColor = 'black';
+    }
     const classes = useStyles();
     const handleClose = () => {
         setNotify({
@@ -21,6 +37,7 @@ export default function Notification(props: any) {
             isOpen: false,
         })
     }
+
     return (
         <Snackbar
             className={classes.root}

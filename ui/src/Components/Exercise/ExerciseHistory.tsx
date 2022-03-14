@@ -121,6 +121,9 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             }, (error) => {
                 alert('Error:' + error);
             })
+        this.setState({
+            notify: {isOpen: true, message: 'Updated successfully', type: 'success'}
+        });
     }
 
     deleteClick(id: string) {
@@ -139,6 +142,9 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             }, (error) => {
                 alert('Error' + error);
             })
+        this.setState({
+            notify: {isOpen: true, message: 'Deleted successfully', type: 'success'}
+        });
     }
 
     imageUpload = (e: any) => {
