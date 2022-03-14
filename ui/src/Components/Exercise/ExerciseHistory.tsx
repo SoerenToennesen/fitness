@@ -115,7 +115,9 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             .then(() => {
                 this.refreshList();
             }, (error) => {
-                alert("Error: " + error);
+                this.setState({
+                    notify: {isOpen: true, message: 'Creation failed [insert failure message from backend] ' + error, type: 'error'}
+                });
             })
         this.setState({
             notify: {isOpen: true, message: 'Created successfully', type: 'success'}
@@ -151,7 +153,9 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             .then(() => {
                 this.refreshList();
             }, (error) => {
-                alert('Error:' + error);
+                this.setState({
+                    notify: {isOpen: true, message: 'Update failed [insert failure message from backend] ' + error, type: 'error'}
+                });
             })
         this.setState({
             notify: {isOpen: true, message: 'Updated successfully', type: 'success'}
@@ -186,7 +190,9 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             .then(() => {
                 this.refreshList();
             }, (error) => {
-                alert('Error' + error);
+                this.setState({
+                    notify: {isOpen: true, message: 'Deletion failed [insert failure message from backend] ' + error, type: 'error'}
+                });
             })
         this.setState({
             notify: {isOpen: true, message: 'Deleted successfully', type: 'success'}
