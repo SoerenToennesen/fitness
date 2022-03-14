@@ -1,7 +1,13 @@
 import React, {Component} from 'react';
 import {api_urls} from '../../Api_urls'
 import exercise_picture from "../../Photos/users/defaultuser.png"
+import Notification from "../../Containers/Notification";
 
+interface MyNotification {
+    isOpen: boolean,
+    message: string,
+    type: string,
+}
 interface MyProps {
 }
 interface MyStates {
@@ -19,6 +25,7 @@ interface MyStates {
     sortCaloriesBurned: boolean,
     filterExercises: string,
     exercisesWithoutFilter: [],
+    notify: MyNotification,
 }
 
 export class ExerciseHistory extends Component<MyProps, MyStates> {
@@ -40,7 +47,13 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             sortCaloriesBurned: false,
             filterExercises: '',
             exercisesWithoutFilter: [],
+            notify: {isOpen: false, message: '', type: ''},
         }
+        this.updateNotify=this.updateNotify.bind(this);
+    }
+
+    updateNotify(nextState: any) {
+        this.setState({notify: nextState});
     }
 
     refreshList() {
@@ -81,6 +94,9 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             }, (error) => {
                 alert("Error: " + error);
             })
+        this.setState({
+            notify: {isOpen: true, message: 'Submitted successfully', type: 'success'}
+        });
     }
 
     updateClick() {
@@ -463,6 +479,10 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                 <div className="page-header">Exercise History</div>
                 {this.exerciseTable()}
                 {this.modalPopup()}
+                <Notification
+                    notify={this.state.notify}
+                    setNotify={this.updateNotify}
+                />
             </div>
         )
     }
