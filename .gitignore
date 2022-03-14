@@ -30,3 +30,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### npm ###
+/ui/node_modules/
+/ui/build/

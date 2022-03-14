@@ -14,7 +14,7 @@ public class ExercisesDB {
     public ExercisesDB() {
         // Generate some random data
         Random random = new Random();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             UUID uuid = UUID.randomUUID();
             exercises.put(
                     uuid,
