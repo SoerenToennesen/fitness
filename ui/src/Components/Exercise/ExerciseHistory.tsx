@@ -118,7 +118,7 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                 alert("Error: " + error);
             })
         this.setState({
-            notify: {isOpen: true, message: 'Submitted successfully', type: 'success'}
+            notify: {isOpen: true, message: 'Created successfully', type: 'success'}
         });
     }
 

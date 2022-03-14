@@ -1,7 +1,20 @@
 import React, {Component} from 'react';
 import {api_urls} from '../../Api_urls'
 import nutrition_picture from "../../Photos/users/defaultuser.png"
+import Notification from "../../Containers/Notification";
+import ConfirmationModal from "../../Containers/ConfirmationModal";
 
+interface MyNotification {
+    isOpen: boolean,
+    message: string,
+    type: string,
+}
+interface MyConfirmationModal {
+    isOpen: boolean,
+    title: string,
+    subTitle: string,
+    onConfirm: () => void,
+}
 interface MyProps {
 }
 interface MyStates {
@@ -17,6 +30,8 @@ interface MyStates {
     sortCalories: boolean,
     filterNutritions: string,
     nutritionsWithoutFilter: [],
+    notify: MyNotification,
+    confirmModal: MyConfirmationModal,
 }
 
 export class NutritionHistory extends Component<MyProps, MyStates> {
@@ -36,7 +51,11 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             sortCalories: false,
             filterNutritions: '',
             nutritionsWithoutFilter: [],
+            notify: {isOpen: false, message: '', type: ''},
+            confirmModal: {isOpen: false, title: '', subTitle: '', onConfirm: () => {}},
         }
+        this.updateNotify=this.updateNotify.bind(this);
+        this.updateConfirmModal=this.updateConfirmModal.bind(this);
     }
 
     refreshList() {
@@ -48,6 +67,14 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             }, (error) => {
                 console.log('Backend services probably not started up.\nError message: ' + error);
             })
+    }
+
+    updateNotify(nextState: any) {
+        this.setState({notify: nextState});
+    }
+
+    updateConfirmModal(nextState: any) {
+        this.setState({confirmModal: nextState});
     }
 
     componentDidMount() {
@@ -69,12 +96,24 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 nutritionType: this.state.targetNutritionType.toUpperCase(),
             })
         })
-            .then(res => res.json())
+            .then(res => {
+                res.json();
+                if (res.status !== 200) {
+                    this.setState({
+                        notify: {isOpen: true, message: 'Creation failed [insert failure message from backend]', type: 'error'}
+                    });
+                    // TODO: Figure out how to return from this, without trigger the other .then()'s
+                    // return;
+                }
+            })
             .then(() => {
                 this.refreshList();
             }, (error) => {
                 alert("Error: " + error);
             })
+        this.setState({
+            notify: {isOpen: true, message: 'Created successfully', type: 'success'}
+        });
     }
 
     updateClick() {
@@ -92,16 +131,33 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 nutritionType: this.state.targetNutritionType.toUpperCase(),
             })
         })
-            .then(res => res.json())
+            .then(res => {
+                res.json();
+                if (res.status !== 200) {
+                    this.setState({
+                        notify: {isOpen: true, message: 'Update failed [insert failure message from backend]', type: 'error'}
+                    });
+                    // TODO: Figure out how to return from this, without trigger the other .then()'s
+                    // return;
+                }
+            })
             .then(() => {
                 this.refreshList();
             }, (error) => {
                 alert('Error:' + error);
             })
+        this.setState({
+            notify: {isOpen: true, message: 'Updated successfully', type: 'success'}
+        });
     }
 
     deleteClick(id: string) {
-        (window.confirm('Are you sure?')) &&
+        this.setState({
+            confirmModal: {
+                ...this.state.confirmModal,
+                isOpen: false,
+            }
+        })
         fetch(api_urls.NUTRITION_URL, {
             method: 'DELETE',
             headers: {
@@ -110,12 +166,24 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             },
             body: id
         })
-            .then(res => res.json())
+            .then(res => {
+                res.json();
+                if (res.status !== 200) {
+                    this.setState({
+                        notify: {isOpen: true, message: 'Deletion failed [insert failure message from backend]', type: 'error'}
+                    });
+                    // TODO: Figure out how to return from this, without trigger the other .then()'s
+                    // return;
+                }
+            })
             .then(() => {
                 this.refreshList();
             }, (error) => {
                 alert('Error' + error);
             })
+        this.setState({
+            notify: {isOpen: true, message: 'Deleted successfully', type: 'success'}
+        });
     }
 
     imageUpload = (e: any) => {
@@ -308,7 +376,14 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                                     type="button"
                                     className="btn btn-light mr-1"
                                     onClick={() => {
-                                        this.deleteClick(nut.id);
+                                        this.setState({
+                                            confirmModal: {
+                                                isOpen: true,
+                                                title: 'Do you want to delete nutrition ' + nut.nutritionType + ' at ' + nut.injestionTime + '?',
+                                                subTitle: 'This will permanently delete this record.',
+                                                onConfirm: () => {this.deleteClick(nut.id)}
+                                            }
+                                        });
                                     }}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
@@ -407,6 +482,14 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 <div className="page-header">Nutrition History</div>
                 {this.nutritionTable()}
                 {this.modalPopup()}
+                <Notification
+                    notify={this.state.notify}
+                    setNotify={this.updateNotify}
+                />
+                <ConfirmationModal
+                    confirmModal={this.state.confirmModal}
+                    setConfirmModal={this.updateConfirmModal}
+                />
             </div>
         )
     }
