@@ -88,7 +88,16 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                 exerciseType: this.state.targetExerciseType.toUpperCase(),
             })
         })
-            .then(res => res.json())
+            .then(res => {
+                res.json();
+                if (res.status !== 200) {
+                    this.setState({
+                        notify: {isOpen: true, message: 'Creation failed [insert failure message from backend]', type: 'error'}
+                    });
+                    // TODO: Figure out how to return from this, without trigger the other .then()'s
+                    // return;
+                }
+            })
             .then(() => {
                 this.refreshList();
             }, (error) => {
@@ -115,7 +124,16 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                 exerciseType: this.state.targetExerciseType.toUpperCase(),
             })
         })
-            .then(res => res.json())
+            .then(res => {
+                res.json();
+                if (res.status !== 200) {
+                    this.setState({
+                        notify: {isOpen: true, message: 'Update failed [insert failure message from backend]', type: 'error'}
+                    });
+                    // TODO: Figure out how to return from this, without trigger the other .then()'s
+                    // return;
+                }
+            })
             .then(() => {
                 this.refreshList();
             }, (error) => {
@@ -136,7 +154,16 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             },
             body: id
         })
-            .then(res => res.json())
+            .then(res => {
+                res.json();
+                if (res.status !== 200) {
+                    this.setState({
+                        notify: {isOpen: true, message: 'Deletion failed [insert failure message from backend]', type: 'error'}
+                    });
+                    // TODO: Figure out how to return from this, without trigger the other .then()'s
+                    // return;
+                }
+            })
             .then(() => {
                 this.refreshList();
             }, (error) => {
