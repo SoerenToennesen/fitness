@@ -2,11 +2,18 @@ import React, {Component} from 'react';
 import {api_urls} from '../../Api_urls'
 import exercise_picture from "../../Photos/users/defaultuser.png"
 import Notification from "../../Containers/Notification";
+import ConfirmationModal from "../../Containers/ConfirmationModal";
 
 interface MyNotification {
     isOpen: boolean,
     message: string,
     type: string,
+}
+interface MyConfirmationModal {
+    isOpen: boolean,
+    title: string,
+    subTitle: string,
+    onConfirm: () => void,
 }
 interface MyProps {
 }
@@ -26,6 +33,7 @@ interface MyStates {
     filterExercises: string,
     exercisesWithoutFilter: [],
     notify: MyNotification,
+    confirmModal: MyConfirmationModal,
 }
 
 export class ExerciseHistory extends Component<MyProps, MyStates> {
@@ -48,12 +56,18 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             filterExercises: '',
             exercisesWithoutFilter: [],
             notify: {isOpen: false, message: '', type: ''},
+            confirmModal: {isOpen: false, title: '', subTitle: '', onConfirm: () => {}},
         }
         this.updateNotify=this.updateNotify.bind(this);
+        this.updateConfirmModal=this.updateConfirmModal.bind(this);
     }
 
     updateNotify(nextState: any) {
         this.setState({notify: nextState});
+    }
+
+    updateConfirmModal(nextState: any) {
+        this.setState({confirmModal: nextState});
     }
 
     refreshList() {
@@ -145,7 +159,12 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
     }
 
     deleteClick(id: string) {
-        (window.confirm('Are you sure?')) &&
+        this.setState({
+            confirmModal: {
+                ...this.state.confirmModal,
+                isOpen: false,
+            }
+        })
         fetch(api_urls.EXERCISE_URL, {
             method: 'DELETE',
             headers: {
@@ -406,7 +425,14 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                                     type="button"
                                     className="btn btn-light mr-1"
                                     onClick={() => {
-                                        this.deleteClick(exe.id);
+                                        this.setState({
+                                            confirmModal: {
+                                                isOpen: true,
+                                                title: 'Do you want to delete exercise ' + exe.exerciseType + ' for ' + exe.exerciseLength + ' minutes at ' + exe.exerciseTime + '?',
+                                                subTitle: 'This will permanently delete this record.',
+                                                onConfirm: () => {this.deleteClick(exe.id)}
+                                            }
+                                        });
                                     }}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
@@ -515,6 +541,10 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                 <Notification
                     notify={this.state.notify}
                     setNotify={this.updateNotify}
+                />
+                <ConfirmationModal
+                    confirmModal={this.state.confirmModal}
+                    setConfirmModal={this.updateConfirmModal}
                 />
             </div>
         )
