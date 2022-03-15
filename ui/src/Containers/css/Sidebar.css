@@ -61,9 +61,19 @@
     transform: translateY(0%);
 }
 
+.side-bar .top-section .toggle-bar-btn:hover {
+    color: var(--text-sidebar-compliment);
+    background: var(--bg-sidebar-accent-hover);
+}
+
 .side-bar.inactive .top-section .toggle-bar-btn {
     right: -50px;
     color: var(--bg-sidebar);
+}
+
+.side-bar.inactive .top-section .toggle-bar-btn:hover {
+    color: var(--text-sidebar-compliment);
+    background: var(--bg-sidebar-accent-hover);
 }
 
 .side-bar .search-controller {
@@ -117,6 +127,10 @@
 .side-bar .main-menu .menu-item.active {
     background: var(--bg-sidebar-accent);
     border-radius: 5px;
+    color: var(--text-sidebar-compliment);
+}
+
+.side-bar .main-menu .menu-item.subactive {
     color: var(--text-sidebar-compliment);
 }
 
