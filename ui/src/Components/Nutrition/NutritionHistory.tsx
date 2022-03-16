@@ -66,38 +66,6 @@ interface MyStates {
     dataLoaded: boolean,
 }
 
-const initialModalData = {
-    title: 'nutrition',
-    inputTexts: [
-        {type: 'Calories', placeholder: 'Enter calories...', input: ''},
-        {type: 'Description', placeholder: 'Enter description...', input: ''},
-        {type: 'Carbohydrates', placeholder: 'Enter carbohydrates...', input: ''},
-        {type: 'Fats', placeholder: 'Enter fats...', input: ''},
-        {type: 'Proteins', placeholder: 'Enter proteins...', input: ''},
-        {type: 'Folate', placeholder: 'Enter folate...', input: ''},
-        {type: 'Iron', placeholder: 'Enter iron...', input: ''},
-        {type: 'Vitamin B6', placeholder: 'Enter vitamin B6...', input: ''},
-        {type: 'Vitamin B12', placeholder: 'Enter vitamin B12...', input: ''},
-        {type: 'Vitamin C', placeholder: 'Enter vitamin C...', input: ''},
-        {type: 'Vitamin D', placeholder: 'Enter vitamin D...', input: ''},
-        {type: 'Zinc', placeholder: 'Enter zinc...', input: ''},
-    ],
-    inputDropdowns: [
-        {options: [
-                {id: '1', value: 'Running'},
-                {id: '2', value: 'Swimming'},
-                {id: '3', value: 'Biking'},
-                {id: '4', value: 'Powerlifting'},
-            ], placeholder: 'Select a nutrition type...', input: ''},
-    ],
-    inputImage: {
-        src: default_nutrition_image,
-        alt: 'Default nutrition image'
-    },
-    buttonTitle: '',
-    createOrUpdateClicked: false
-}
-
 export class NutritionHistory extends Component<MyProps, MyStates> {
 
     constructor(props: any) {
@@ -114,7 +82,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             sortCalories: false,
             filterNutritions: '',
             nutritionsWithoutFilter: [],
-            modalData: initialModalData,
+            modalData: this.resetModalData(),
             notify: {isOpen: false, message: '', type: ''},
             confirmModal: {isOpen: false, title: '', subTitle: '', onConfirm: () => {}},
             dataLoaded: true,
@@ -122,6 +90,40 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         this.updateNotify=this.updateNotify.bind(this);
         this.updateConfirmModal=this.updateConfirmModal.bind(this);
         this.updateModalData=this.updateModalData.bind(this);
+    }
+
+    resetModalData() {
+        return {
+            title: 'nutrition',
+            inputTexts: [
+                {type: 'Calories', placeholder: 'Enter calories...', input: ''},
+                {type: 'Description', placeholder: 'Enter description...', input: ''},
+                {type: 'Carbohydrates', placeholder: 'Enter carbohydrates...', input: ''},
+                {type: 'Fats', placeholder: 'Enter fats...', input: ''},
+                {type: 'Proteins', placeholder: 'Enter proteins...', input: ''},
+                {type: 'Folate', placeholder: 'Enter folate...', input: ''},
+                {type: 'Iron', placeholder: 'Enter iron...', input: ''},
+                {type: 'Vitamin B6', placeholder: 'Enter vitamin B6...', input: ''},
+                {type: 'Vitamin B12', placeholder: 'Enter vitamin B12...', input: ''},
+                {type: 'Vitamin C', placeholder: 'Enter vitamin C...', input: ''},
+                {type: 'Vitamin D', placeholder: 'Enter vitamin D...', input: ''},
+                {type: 'Zinc', placeholder: 'Enter zinc...', input: ''},
+            ],
+            inputDropdowns: [
+                {options: [
+                        {id: '1', value: 'Running'},
+                        {id: '2', value: 'Swimming'},
+                        {id: '3', value: 'Biking'},
+                        {id: '4', value: 'Powerlifting'},
+                    ], placeholder: 'Select a nutrition type...', input: ''},
+            ],
+            inputImage: {
+                src: default_nutrition_image,
+                alt: 'Default nutrition image'
+            },
+            buttonTitle: '',
+            createOrUpdateClicked: false
+        };
     }
 
     refreshList() {
@@ -148,6 +150,16 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
 
     updateModalData(nextState: any) {
         this.setState({modalData: nextState});
+        if (nextState.createOrUpdateClicked) {
+            switch (nextState.buttonTitle) {
+                case 'Create':
+                    this.createClick(nextState);
+                    break;
+                case 'Update':
+                    this.updateClick(nextState);
+                    break;
+            }
+        }
     }
 
     componentDidMount() {
@@ -155,7 +167,6 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
     }
 
     createClick(modalData: any) {
-        return;
         fetch(api_urls.NUTRITION_URL, {
             method: 'POST',
             headers: {
@@ -165,10 +176,10 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             body: JSON.stringify({
                 id: null,
 
-                calories: this.state.modalData.inputTexts[0].input,
-                description: this.state.modalData.inputTexts[1].input,
+                calories: modalData.inputTexts[0].input,
+                description: modalData.inputTexts[1].input,
 
-                nutritionType: this.state.modalData.inputDropdowns[0].input,
+                nutritionType: modalData.inputDropdowns[0].input,
 
                 // TODO: Priority to add injestion time
             })
@@ -193,12 +204,11 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         // TODO: Make the below into a resetState function that update also uses
         this.setState({
             notify: {isOpen: true, message: 'Created successfully', type: 'success'},
-            modalData: initialModalData
+            modalData: this.resetModalData()
         });
     }
 
-    updateClick() {
-        if (!this.state.modalData.createOrUpdateClicked) return;
+    updateClick(modalData: any) {
         fetch(api_urls.NUTRITION_URL, {
             method: 'PUT',
             headers: {
@@ -208,10 +218,10 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             body: JSON.stringify({
                 id: null,
 
-                calories: this.state.modalData.inputTexts[0].input,
-                description: this.state.modalData.inputTexts[1].input,
+                calories: modalData.inputTexts[0].input,
+                description: modalData.inputTexts[1].input,
 
-                nutritionType: this.state.modalData.inputDropdowns[0].input,
+                nutritionType: modalData.inputDropdowns[0].input,
 
                 // TODO: Priority to add injestion time
             })
@@ -235,7 +245,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             })
         this.setState({
             notify: {isOpen: true, message: 'Updated successfully', type: 'success'},
-            modalData: initialModalData
+            modalData: this.resetModalData()
         });
     }
 
@@ -273,7 +283,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             })
         this.setState({
             notify: {isOpen: true, message: 'Deleted successfully', type: 'success'},
-            modalData: initialModalData
+            modalData: this.resetModalData()
         });
     }
 
@@ -409,7 +419,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                     data-bs-target="#exampleModal"
                     onClick={() =>
                         this.setState({
-                            modalData: {...this.state.modalData, buttonTitle: 'Create'},
+                            modalData: {...this.resetModalData(), buttonTitle: 'Create'},
                             targetId: '',
                             targetDescription: '',
                             targetInjestionTime: '',
@@ -499,83 +509,6 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         )
     }
 
-    modalPopup() {
-        return (
-            <div className="modal fade" id="exampleModal" tabIndex={-1} aria-hidden="true">
-                <div className="modal-dialog modal-lg modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">
-                                Edit nutrition
-                            </h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
-                        </div>
-                        <div className="modal-body">
-                            <div className="d-flex flex-row bd-highlight mb-3">
-                                <div className="p-2 w-50 bd-highlight">
-                                    <div className="input-group mb-3">
-                                        <span className="input-group-text">Description</span>
-                                        <input type="text" className="form-control"
-                                               placeholder={'Enter description...'}
-                                               value={this.state.targetDescription}
-                                               onChange={(e) => this.setState({targetDescription: e.target.value})}
-                                        ></input>
-                                    </div>
-                                    <div className="input-group mb-3">
-                                        <span className="input-group-text">Time</span>
-                                        <input type="text" className="form-control"
-                                               placeholder={'Enter time...'}
-                                               value={this.state.targetInjestionTime}
-                                               onChange={(e) => this.setState({targetInjestionTime: e.target.value})}
-                                        ></input>
-                                    </div>
-                                    <div className="input-group mb-3">
-                                        <span className="input-group-text">Title</span>
-                                        <select className="form-select"
-                                                placeholder={'Select an nutrition type...'}
-                                                value={this.state.targetNutritionType}
-                                                onChange={(e) => this.setState({targetNutritionType: e.target.value})}
-                                            //onClick={(e) => this.setState({targetNutritionType: (e.target as HTMLInputElement).value})}
-                                        >
-                                            <option>
-                                                Running
-                                            </option>
-                                            <option>
-                                                Biking
-                                            </option>
-                                            <option>
-                                                Swimming
-                                            </option>
-                                            {/*{dropdownVals.map((val: any) =>
-                                                <option key={val.id}>
-                                                    {val.targetVal}
-                                                </option>)}*/}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="p-2 w-50 bd-highlight">
-                                    <img height="100px"
-                                         src={default_nutrition_image}
-                                         alt="NutritionPicture"/>
-                                    <input className="m-2" type="file" onChange={this.imageUpload}/>
-                                </div>
-                            </div>
-                            <button
-                                type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModal"
-                                className="btn btn-primary float-start data-bs-dismiss"
-                                onClick={(modalData: any) => this.state.modalData.buttonTitle === 'Create' ? this.createClick(modalData) : this.updateClick()}
-                            >
-                                {this.state.modalData.buttonTitle === 'Create' ? 'Create' : 'Update'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
     render() {
         return (
             <div>
@@ -583,11 +516,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 {this.nutritionTable()}
                 <AddUpdateModal
                     modalData={this.state.modalData}
-                    setModalData={
-                        //(modalData: any) => console.log('amitest', modalData)
-                        (modalData: any) => this.updateModalData(modalData)
-                        //(modalData: any) => modalData.createOrUpdateClicked ? this.createClick(modalData) : null}
-                    }
+                    setModalData={(modalData: any) => this.updateModalData(modalData)}
                 />
                 <Notification
                     notify={this.state.notify}
