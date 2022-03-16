@@ -1,21 +1,14 @@
 import React, {Component} from 'react';
 import {api_urls} from '../../Api_urls'
-import exercise_picture from "../../Photos/users/defaultuser.png"
+import default_exercise_image from "../../Photos/nutritions/defaultexercise.png";
 import Notification from "../../Containers/Notification";
 import ConfirmationModal from "../../Containers/ConfirmationModal";
 import Spinner from "../../Containers/Spinner";
+import {MyNotification} from "../../Containers/interfaces/NotificationInterface";
+import {MyConfirmationModal} from "../../Containers/interfaces/ConfirmationModalInterface";
+import {MyModalData} from "../../Containers/interfaces/AddUpdateModalInterface";
+import AddUpdateModal from "../../Containers/AddUpdateModal";
 
-interface MyNotification {
-    isOpen: boolean,
-    message: string,
-    type: string,
-}
-interface MyConfirmationModal {
-    isOpen: boolean,
-    title: string,
-    subTitle: string,
-    onConfirm: () => void,
-}
 interface MyProps {
 }
 interface MyStates {
@@ -33,6 +26,7 @@ interface MyStates {
     sortCaloriesBurned: boolean,
     filterExercises: string,
     exercisesWithoutFilter: [],
+    modalData: MyModalData,
     notify: MyNotification,
     confirmModal: MyConfirmationModal,
     dataLoaded: boolean,
@@ -57,20 +51,18 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             sortCaloriesBurned: false,
             filterExercises: '',
             exercisesWithoutFilter: [],
+            modalData: this.resetModalData(),
             notify: {isOpen: false, message: '', type: ''},
             confirmModal: {isOpen: false, title: '', subTitle: '', onConfirm: () => {}},
             dataLoaded: true,
         }
         this.updateNotify=this.updateNotify.bind(this);
         this.updateConfirmModal=this.updateConfirmModal.bind(this);
+        this.updateModalData=this.updateModalData.bind(this);
     }
 
-    updateNotify(nextState: any) {
-        this.setState({notify: nextState});
-    }
-
-    updateConfirmModal(nextState: any) {
-        this.setState({confirmModal: nextState});
+    componentDidMount() {
+        this.refreshList();
     }
 
     refreshList() {
@@ -87,11 +79,56 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             })
     }
 
-    componentDidMount() {
-        this.refreshList();
+    resetModalData() {
+        return {
+            title: 'exercise',
+            inputTexts: [
+                {type: 'Exercise length', placeholder: 'Enter exercise length...', input: ''},
+                {type: 'Calories burned', placeholder: 'Enter calories burned...', input: ''},
+                {type: 'Description', placeholder: 'Enter description...', input: ''},
+            ],
+            inputDropdowns: [
+                {
+                    options: [
+                        {id: '1', value: 'Running'},
+                        {id: '2', value: 'Swimming'},
+                        {id: '3', value: 'Biking'},
+                        {id: '4', value: 'Powerlifting'},
+                    ], placeholder: 'Select an exercise type...', input: ''
+                },
+            ],
+            inputImage: {
+                src: default_exercise_image,
+                alt: 'Default exercise image'
+            },
+            buttonTitle: '',
+            createOrUpdateClicked: false
+        };
     }
 
-    createClick() {
+    updateModalData(nextState: any) {
+        this.setState({modalData: nextState});
+        if (nextState.createOrUpdateClicked) {
+            switch (nextState.buttonTitle) {
+                case 'Create':
+                    this.createClick(nextState);
+                    break;
+                case 'Update':
+                    this.updateClick(nextState);
+                    break;
+            }
+        }
+    }
+
+    updateNotify(nextState: any) {
+        this.setState({notify: nextState});
+    }
+
+    updateConfirmModal(nextState: any) {
+        this.setState({confirmModal: nextState});
+    }
+
+    createClick(modalData: any) {
         fetch(api_urls.EXERCISE_URL, {
             method: 'POST',
             headers: {
@@ -100,36 +137,31 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
             },
             body: JSON.stringify({
                 id: null,
-                type: this.state.targetType,
-                caloriesBurned: this.state.targetCaloriesBurned,
-                exerciseTime: this.state.targetExerciseTime,
-                exerciseLength: this.state.targetExerciseLength,
-                exerciseType: this.state.targetExerciseType.toUpperCase(),
+                exerciseLength: modalData.inputTexts[0].input,
+                caloriesBurned: modalData.inputTexts[1].input,
+                description: modalData.inputTexts[2].input,
+                exerciseType: modalData.inputDropdowns[0].input,
             })
         })
             .then(res => {
                 res.json();
-                if (res.status !== 200) {
-                    this.setState({
-                        notify: {isOpen: true, message: 'Creation failed [insert failure message from backend]', type: 'error'}
-                    });
-                    // TODO: Figure out how to return from this, without trigger the other .then()'s
-                    // return;
-                }
             })
             .then(() => {
                 this.refreshList();
             }, (error) => {
                 this.setState({
-                    notify: {isOpen: true, message: 'Creation failed [insert failure message from backend] ' + error, type: 'error'}
+                    notify: {isOpen: true, message: 'Creation failed [insert failure message from backend] ' + error, type: 'error'},
+                    modalData: this.resetModalData()
                 });
             })
+        // TODO: Make the below into a resetState function that update also uses
         this.setState({
-            notify: {isOpen: true, message: 'Created successfully', type: 'success'}
+            notify: {isOpen: true, message: 'Created successfully', type: 'success'},
+            modalData: this.resetModalData()
         });
     }
 
-    updateClick() {
+    updateClick(modalData: any) {
         fetch(api_urls.EXERCISE_URL, {
             method: 'PUT',
             headers: {
@@ -137,33 +169,27 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id: this.state.targetId,
-                type: this.state.targetType,
-                caloriesBurned: this.state.targetCaloriesBurned,
-                exerciseTime: this.state.targetExerciseTime,
-                exerciseLength: this.state.targetExerciseLength,
-                exerciseType: this.state.targetExerciseType.toUpperCase(),
+                id: null,
+                exerciseLength: modalData.inputTexts[0].input,
+                caloriesBurned: modalData.inputTexts[1].input,
+                description: modalData.inputTexts[2].input,
+                exerciseType: modalData.inputDropdowns[0].input,
             })
         })
             .then(res => {
                 res.json();
-                if (res.status !== 200) {
-                    this.setState({
-                        notify: {isOpen: true, message: 'Update failed [insert failure message from backend]', type: 'error'}
-                    });
-                    // TODO: Figure out how to return from this, without trigger the other .then()'s
-                    // return;
-                }
             })
             .then(() => {
                 this.refreshList();
             }, (error) => {
                 this.setState({
-                    notify: {isOpen: true, message: 'Update failed [insert failure message from backend] ' + error, type: 'error'}
+                    notify: {isOpen: true, message: 'Update failed [insert failure message from backend] ' + error, type: 'error'},
+                    modalData: this.resetModalData()
                 });
             })
         this.setState({
-            notify: {isOpen: true, message: 'Updated successfully', type: 'success'}
+            notify: {isOpen: true, message: 'Updated successfully', type: 'success'},
+            modalData: this.resetModalData()
         });
     }
 
@@ -184,13 +210,6 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
         })
             .then(res => {
                 res.json();
-                if (res.status !== 200) {
-                    this.setState({
-                        notify: {isOpen: true, message: 'Deletion failed [insert failure message from backend]', type: 'error'}
-                    });
-                    // TODO: Figure out how to return from this, without trigger the other .then()'s
-                    // return;
-                }
             })
             .then(() => {
                 this.refreshList();
@@ -202,9 +221,6 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
         this.setState({
             notify: {isOpen: true, message: 'Deleted successfully', type: 'success'}
         });
-    }
-
-    imageUpload = (e: any) => {
     }
 
     resetSorts(sortingField: string, asc: boolean) {
@@ -308,12 +324,8 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModal"
                             onClick={() => {
-                                this.setState({updateOrCreateModal: false,
-                                    targetId: exe.id,
-                                    targetExerciseTime: exe.exerciseTime,
-                                    targetExerciseLength: exe.exerciseLength,
-                                    targetCaloriesBurned: exe.caloriesBurned,
-                                    targetExerciseType: exe.exerciseType.charAt(0).toUpperCase() + exe.exerciseType.slice(1).toLowerCase(),
+                                this.setState({
+                                    modalData: {...this.state.modalData, buttonTitle: 'Update'}
                                 });
                             }}
                         >
@@ -357,13 +369,8 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal"
                     onClick={() =>
-                        this.setState({updateOrCreateModal: true,
-                            targetId: '',
-                            targetType: '',
-                            targetExerciseTime: '',
-                            targetExerciseLength: '',
-                            targetCaloriesBurned: 0,
-                            targetExerciseType: 'Running',
+                        this.setState({
+                            modalData: {...this.resetModalData(), buttonTitle: 'Create'}
                         })
                     }
                 >
@@ -468,96 +475,15 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
         )
     }
 
-    modalPopup() {
-        return (
-            <div className="modal fade" id="exampleModal" tabIndex={-1} aria-hidden="true">
-                <div className="modal-dialog modal-lg modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">
-                                Edit exercise
-                            </h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
-                        </div>
-                        <div className="modal-body">
-                            <div className="d-flex flex-row bd-highlight mb-3">
-                                <div className="p-2 w-50 bd-highlight">
-                                    <div className="input-group mb-3">
-                                        <span className="input-group-text">Type</span>
-                                        <input type="text" className="form-control"
-                                               placeholder={'Enter type...'}
-                                               value={this.state.targetType}
-                                               onChange={(e) => this.setState({targetType: e.target.value})}
-                                        ></input>
-                                    </div>
-                                    <div className="input-group mb-3">
-                                        <span className="input-group-text">Time</span>
-                                        <input type="text" className="form-control"
-                                               placeholder={'Enter time...'}
-                                               value={this.state.targetExerciseTime}
-                                               onChange={(e) => this.setState({targetExerciseTime: e.target.value})}
-                                        ></input>
-                                    </div>
-                                    <div className="input-group mb-3">
-                                        <span className="input-group-text">Title</span>
-                                        <select className="form-select"
-                                                placeholder={'Select an exercise type...'}
-                                                value={this.state.targetExerciseType}
-                                                onChange={(e) => this.setState({targetExerciseType: e.target.value})}
-                                            //onClick={(e) => this.setState({targetExerciseType: (e.target as HTMLInputElement).value})}
-                                        >
-                                            <option>
-                                                Running
-                                            </option>
-                                            <option>
-                                                Biking
-                                            </option>
-                                            <option>
-                                                Swimming
-                                            </option>
-                                            {/*{dropdownVals.map((val: any) =>
-                                                <option key={val.id}>
-                                                    {val.targetVal}
-                                                </option>)}*/}
-                                        </select>
-                                    </div>
-                                    <div className="input-group mb-3">
-                                        <span className="input-group-text">Length</span>
-                                        <input type="date" className="form-control"
-                                               value={this.state.targetExerciseLength}
-                                               onChange={(e) => this.setState({targetExerciseLength: e.target.value})}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="p-2 w-50 bd-highlight">
-                                    <img height="100px"
-                                         src={exercise_picture}
-                                         alt="ExercisePicture"/>
-                                    <input className="m-2" type="file" onChange={this.imageUpload}/>
-                                </div>
-                            </div>
-                            <button
-                                type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModal"
-                                className="btn btn-primary float-start data-bs-dismiss"
-                                onClick={() => this.state.updateOrCreateModal ? this.createClick() : this.updateClick()}
-                            >
-                                {this.state.updateOrCreateModal ? 'Create' : 'Update'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
     render() {
         return (
             <div>
                 <div className="page-header">Exercise History</div>
                 {this.exerciseTable()}
-                {this.modalPopup()}
+                <AddUpdateModal
+                    modalData={this.state.modalData}
+                    setModalData={(modalData: any) => this.updateModalData(modalData)}
+                />
                 <Notification
                     notify={this.state.notify}
                     setNotify={this.updateNotify}

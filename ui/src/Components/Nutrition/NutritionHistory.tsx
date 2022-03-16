@@ -12,11 +12,6 @@ import {MyNotification} from "../../Containers/interfaces/NotificationInterface"
 interface MyProps {}
 interface MyStates {
     nutritions: [],
-    targetId: string,
-    targetDescription: string,
-    targetInjestionTime: string,
-    targetNutritionType: string,
-    targetCalories: number,
     sortType: boolean,
     sortInjestionTime: boolean,
     sortCalories: boolean,
@@ -34,11 +29,6 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         super(props);
         this.state={
             nutritions: [],
-            targetId: '',
-            targetDescription: '',
-            targetInjestionTime: '',
-            targetNutritionType: 'Running',
-            targetCalories: 0,
             sortType: false,
             sortInjestionTime: false,
             sortCalories: false,
@@ -52,6 +42,24 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         this.updateNotify=this.updateNotify.bind(this);
         this.updateConfirmModal=this.updateConfirmModal.bind(this);
         this.updateModalData=this.updateModalData.bind(this);
+    }
+
+    componentDidMount() {
+        this.refreshList();
+    }
+
+    refreshList() {
+        this.setState({dataLoaded: false})
+        fetch(api_urls.NUTRITION_URL)
+            .then(response => response.json())
+            .then(data => {
+                this.setState({nutritions: data.nutritions});
+                this.setState({nutritionsWithoutFilter: data.nutritions})
+                this.setState({dataLoaded: true})
+            }, (error) => {
+                console.log('Backend services probably not started up.\nError message: ' + error);
+                this.setState({dataLoaded: true})
+            })
     }
 
     resetModalData() {
@@ -73,10 +81,10 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             ],
             inputDropdowns: [
                 {options: [
-                        {id: '1', value: 'Running'},
-                        {id: '2', value: 'Swimming'},
-                        {id: '3', value: 'Biking'},
-                        {id: '4', value: 'Powerlifting'},
+                        {id: '1', value: 'Breakfast'},
+                        {id: '2', value: 'Lunch'},
+                        {id: '3', value: 'Dinner'},
+                        {id: '4', value: 'Snack'},
                     ], placeholder: 'Select a nutrition type...', input: ''},
             ],
             inputImage: {
@@ -86,28 +94,6 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             buttonTitle: '',
             createOrUpdateClicked: false
         };
-    }
-
-    refreshList() {
-        this.setState({dataLoaded: false})
-        fetch(api_urls.NUTRITION_URL)
-            .then(response => response.json())
-            .then(data => {
-                this.setState({nutritions: data.nutritions});
-                this.setState({nutritionsWithoutFilter: data.nutritions})
-                this.setState({dataLoaded: true})
-            }, (error) => {
-                console.log('Backend services probably not started up.\nError message: ' + error);
-                this.setState({dataLoaded: true})
-            })
-    }
-
-    updateNotify(nextState: any) {
-        this.setState({notify: nextState});
-    }
-
-    updateConfirmModal(nextState: any) {
-        this.setState({confirmModal: nextState});
     }
 
     updateModalData(nextState: any) {
@@ -124,8 +110,12 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         }
     }
 
-    componentDidMount() {
-        this.refreshList();
+    updateNotify(nextState: any) {
+        this.setState({notify: nextState});
+    }
+
+    updateConfirmModal(nextState: any) {
+        this.setState({confirmModal: nextState});
     }
 
     createClick(modalData: any) {
@@ -137,30 +127,21 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             },
             body: JSON.stringify({
                 id: null,
-
                 calories: modalData.inputTexts[0].input,
                 description: modalData.inputTexts[1].input,
-
                 nutritionType: modalData.inputDropdowns[0].input,
-
                 // TODO: Priority to add injestion time
             })
         })
             .then(res => {
                 res.json();
-                if (res.status !== 200) {
-                    this.setState({
-                        notify: {isOpen: true, message: 'Creation failed [insert failure message from backend]', type: 'error'}
-                    });
-                    // TODO: Figure out how to return from this, without trigger the other .then()'s
-                    // return;
-                }
             })
             .then(() => {
                 this.refreshList();
             }, (error) => {
                 this.setState({
-                    notify: {isOpen: true, message: 'Creation failed [insert failure message from backend] ' + error, type: 'error'}
+                    notify: {isOpen: true, message: 'Creation failed [insert failure message from backend] ' + error, type: 'error'},
+                    modalData: this.resetModalData()
                 });
             })
         // TODO: Make the below into a resetState function that update also uses
@@ -179,30 +160,20 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             },
             body: JSON.stringify({
                 id: null,
-
                 calories: modalData.inputTexts[0].input,
                 description: modalData.inputTexts[1].input,
-
                 nutritionType: modalData.inputDropdowns[0].input,
-
-                // TODO: Priority to add injestion time
             })
         })
             .then(res => {
                 res.json();
-                if (res.status !== 200) {
-                    this.setState({
-                        notify: {isOpen: true, message: 'Update failed [insert failure message from backend]', type: 'error'}
-                    });
-                    // TODO: Figure out how to return from this, without trigger the other .then()'s
-                    // return;
-                }
             })
             .then(() => {
                 this.refreshList();
             }, (error) => {
                 this.setState({
-                    notify: {isOpen: true, message: 'Update failed [insert failure message from backend] ' + error, type: 'error'}
+                    notify: {isOpen: true, message: 'Update failed [insert failure message from backend] ' + error, type: 'error'},
+                    modalData: this.resetModalData()
                 });
             })
         this.setState({
@@ -228,13 +199,6 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         })
             .then(res => {
                 res.json();
-                if (res.status !== 200) {
-                    this.setState({
-                        notify: {isOpen: true, message: 'Deletion failed [insert failure message from backend]', type: 'error'}
-                    });
-                    // TODO: Figure out how to return from this, without trigger the other .then()'s
-                    // return;
-                }
             })
             .then(() => {
                 this.refreshList();
@@ -245,7 +209,6 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             })
         this.setState({
             notify: {isOpen: true, message: 'Deleted successfully', type: 'success'},
-            modalData: this.resetModalData()
         });
     }
 
@@ -333,11 +296,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                         data-bs-target="#exampleModal"
                         onClick={() => {
                             this.setState({
-                                modalData: {...this.state.modalData, buttonTitle: 'Update'},
-                                targetId: nut.id,
-                                targetInjestionTime: nut.injestionTime,
-                                targetCalories: nut.calories,
-                                targetNutritionType: nut.nutritionType.charAt(0).toUpperCase() + nut.nutritionType.slice(1).toLowerCase(),
+                                modalData: {...this.state.modalData, buttonTitle: 'Update'}
                             });
                         }}
                     >
@@ -381,12 +340,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                     data-bs-target="#exampleModal"
                     onClick={() =>
                         this.setState({
-                            modalData: {...this.resetModalData(), buttonTitle: 'Create'},
-                            targetId: '',
-                            targetDescription: '',
-                            targetInjestionTime: '',
-                            targetCalories: 0,
-                            targetNutritionType: 'Running',
+                            modalData: {...this.resetModalData(), buttonTitle: 'Create'}
                         })
                     }
                 >
