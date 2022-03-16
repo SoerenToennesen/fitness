@@ -5,49 +5,11 @@ import Notification from "../../Containers/Notification";
 import ConfirmationModal from "../../Containers/ConfirmationModal";
 import AddUpdateModal from "../../Containers/AddUpdateModal";
 import Spinner from "../../Containers/Spinner";
+import {MyModalData} from "../../Containers/interfaces/AddUpdateModalInterface";
+import {MyConfirmationModal} from "../../Containers/interfaces/ConfirmationModalInterface";
+import {MyNotification} from "../../Containers/interfaces/NotificationInterface";
 
-interface MyOption {
-    id: string,
-    value: string,
-}
-interface MyOptions extends Array<MyOption>{}
-interface MyNutritionInputText {
-    type: string,
-    placeholder: string,
-    input: string,
-}
-interface MyNutritionInputTexts extends Array<MyNutritionInputText>{}
-interface MyNutritionDropdown {
-    options: MyOptions,
-    placeholder: string,
-    input: string,
-}
-interface MyNutritionDropdowns extends Array<MyNutritionDropdown>{}
-interface MyImage {
-    src: any,
-    alt: string,
-}
-interface MyModalData {
-    title: string,
-    inputTexts: MyNutritionInputTexts,
-    inputDropdowns: MyNutritionDropdowns,
-    inputImage: MyImage,
-    buttonTitle: string,
-    createOrUpdateClicked: boolean,
-}
-interface MyNotification {
-    isOpen: boolean,
-    message: string,
-    type: string,
-}
-interface MyConfirmationModal {
-    isOpen: boolean,
-    title: string,
-    subTitle: string,
-    onConfirm: () => void,
-}
-interface MyProps {
-}
+interface MyProps {}
 interface MyStates {
     nutritions: [],
     targetId: string,
