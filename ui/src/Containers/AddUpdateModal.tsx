@@ -15,9 +15,10 @@ function InputText(props: any) {
                     <input type="text" className="form-control"
                         placeholder={inputText.placeholder}
                         value={inputText.input}
-                        onChange={(e) =>
-                            setInputTexts({...inputTexts, input: e.target.value})
-                        }
+                        onChange={(e) => {
+                            inputTexts[inputTexts.findIndex((x: any) => x.type === inputText.type)].input = e.target.value;
+                            setInputTexts(inputTexts);
+                        }}
                     ></input>
                 </div>
             )}
@@ -36,9 +37,10 @@ function InputDropdown(props: any) {
                         className="form-select"
                         placeholder={inputDropdown.placeholder}
                         value={inputDropdown.input}
-                        onChange={(e) =>
-                            setInputDropdowns({...inputDropdowns, input: e.target.value})
-                        }
+                        onChange={(e) => {
+                            inputDropdowns[inputDropdowns.findIndex((x: any) => x.input === inputDropdown.input)].input = e.target.value;
+                            setInputDropdowns(inputDropdowns)
+                        }}
                     >
                         {inputDropdown.options.map((option: any) =>
                             <option key={option.id}>
@@ -63,7 +65,7 @@ function InputImage(props: any) {
                 className="m-2"
                 type="file"
                 onChange={(e) =>
-                    setInputImage({...inputImage}) // TODO: Image upload & set function
+                    setInputImage(inputImage) // TODO: Image upload & set function
                 }
             />
         </div>

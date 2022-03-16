@@ -154,8 +154,8 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         this.refreshList();
     }
 
-    createClick() {
-        if (!this.state.modalData.createOrUpdateClicked) return;
+    createClick(modalData: any) {
+        return;
         fetch(api_urls.NUTRITION_URL, {
             method: 'POST',
             headers: {
@@ -273,37 +273,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             })
         this.setState({
             notify: {isOpen: true, message: 'Deleted successfully', type: 'success'},
-            modalData: {
-                title: 'Nutrition',
-                inputTexts: [
-                    {type: 'Calories', placeholder: 'Enter calories...', input: ''},
-                    {type: 'Description', placeholder: 'Enter description...', input: ''},
-                    {type: 'Carbohydrates', placeholder: 'Enter carbohydrates...', input: ''},
-                    {type: 'Fats', placeholder: 'Enter fats...', input: ''},
-                    {type: 'Proteins', placeholder: 'Enter proteins...', input: ''},
-                    {type: 'Folate', placeholder: 'Enter folate...', input: ''},
-                    {type: 'Iron', placeholder: 'Enter iron...', input: ''},
-                    {type: 'Vitamin B6', placeholder: 'Enter vitamin B6...', input: ''},
-                    {type: 'Vitamin B12', placeholder: 'Enter vitamin B12...', input: ''},
-                    {type: 'Vitamin C', placeholder: 'Enter vitamin C...', input: ''},
-                    {type: 'Vitamin D', placeholder: 'Enter vitamin D...', input: ''},
-                    {type: 'Zinc', placeholder: 'Enter zinc...', input: ''},
-                ],
-                inputDropdowns: [
-                    {options: [
-                        {id: '1', value: 'Running'},
-                        {id: '2', value: 'Swimming'},
-                        {id: '3', value: 'Biking'},
-                        {id: '4', value: 'Powerlifting'},
-                    ], placeholder: 'Select a nutrition type...', input: ''},
-                ],
-                inputImage: {
-                    src: default_nutrition_image,
-                    alt: 'Default nutrition image'
-                },
-                buttonTitle: '',
-                createOrUpdateClicked: false
-            }
+            modalData: initialModalData
         });
     }
 
@@ -595,7 +565,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                                 data-bs-toggle="modal"
                                 data-bs-target="#exampleModal"
                                 className="btn btn-primary float-start data-bs-dismiss"
-                                onClick={() => this.state.modalData.buttonTitle === 'Create' ? this.createClick() : this.updateClick()}
+                                onClick={(modalData: any) => this.state.modalData.buttonTitle === 'Create' ? this.createClick(modalData) : this.updateClick()}
                             >
                                 {this.state.modalData.buttonTitle === 'Create' ? 'Create' : 'Update'}
                             </button>
@@ -613,7 +583,11 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 {this.nutritionTable()}
                 <AddUpdateModal
                     modalData={this.state.modalData}
-                    setModalData={this.state.modalData.buttonTitle === 'Create' ? this.createClick() : this.updateClick()}
+                    setModalData={
+                        //(modalData: any) => console.log('amitest', modalData)
+                        (modalData: any) => this.updateModalData(modalData)
+                        //(modalData: any) => modalData.createOrUpdateClicked ? this.createClick(modalData) : null}
+                    }
                 />
                 <Notification
                     notify={this.state.notify}
