@@ -2,9 +2,7 @@ import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@material-ui/core';
 
 export default function ConfirmationModal(props: any) {
-
     const { confirmModal, setConfirmModal } = props;
-
     return (
         <Dialog
             open={confirmModal.isOpen}

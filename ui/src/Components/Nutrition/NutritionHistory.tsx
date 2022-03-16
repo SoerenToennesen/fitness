@@ -3,8 +3,21 @@ import {api_urls} from '../../Api_urls'
 import nutrition_picture from "../../Photos/users/defaultuser.png"
 import Notification from "../../Containers/Notification";
 import ConfirmationModal from "../../Containers/ConfirmationModal";
+import AddUpdateModal from "../../Containers/AddUpdateModal";
 import {Spinner} from "../../Containers/Spinner";
 
+interface MyImage {
+    src: string,
+    alt: string,
+}
+interface MyModalData {
+    title: string,
+    inputTexts: [],
+    inputDropdowns: [],
+    inputImage: MyImage,
+    buttonTitle: string,
+    createOrUpdateClicked: boolean,
+}
 interface MyNotification {
     isOpen: boolean,
     message: string,
@@ -20,7 +33,6 @@ interface MyProps {
 }
 interface MyStates {
     nutritions: [],
-    updateOrCreateModal: boolean,
     targetId: string,
     targetDescription: string,
     targetInjestionTime: string,
@@ -31,6 +43,7 @@ interface MyStates {
     sortCalories: boolean,
     filterNutritions: string,
     nutritionsWithoutFilter: [],
+    modalData: MyModalData,
     notify: MyNotification,
     confirmModal: MyConfirmationModal,
     dataLoaded: boolean,
@@ -42,7 +55,6 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         super(props);
         this.state={
             nutritions: [],
-            updateOrCreateModal: false,
             targetId: '',
             targetDescription: '',
             targetInjestionTime: '',
@@ -53,12 +65,24 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             sortCalories: false,
             filterNutritions: '',
             nutritionsWithoutFilter: [],
+            modalData: {
+                title: 'Nutrition',
+                inputTexts: [],
+                inputDropdowns: [],
+                inputImage: {
+                    src: '',
+                    alt: ''
+                },
+                buttonTitle: '',
+                createOrUpdateClicked: false
+            },
             notify: {isOpen: false, message: '', type: ''},
             confirmModal: {isOpen: false, title: '', subTitle: '', onConfirm: () => {}},
             dataLoaded: true,
         }
         this.updateNotify=this.updateNotify.bind(this);
         this.updateConfirmModal=this.updateConfirmModal.bind(this);
+        this.updateModalData=this.updateModalData.bind(this);
     }
 
     refreshList() {
@@ -83,11 +107,16 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         this.setState({confirmModal: nextState});
     }
 
+    updateModalData(nextState: any) {
+        this.setState({modalData: nextState});
+    }
+
     componentDidMount() {
         this.refreshList();
     }
 
     createClick() {
+        if (!this.state.modalData.createOrUpdateClicked) return;
         fetch(api_urls.NUTRITION_URL, {
             method: 'POST',
             headers: {
@@ -119,12 +148,25 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                     notify: {isOpen: true, message: 'Creation failed [insert failure message from backend] ' + error, type: 'error'}
                 });
             })
+        // TODO: Make the below into a resetState function that update also uses
         this.setState({
-            notify: {isOpen: true, message: 'Created successfully', type: 'success'}
+            notify: {isOpen: true, message: 'Created successfully', type: 'success'},
+            modalData: {
+                title: 'Nutrition',
+                inputTexts: [],
+                inputDropdowns: [],
+                inputImage: {
+                    src: '',
+                    alt: ''
+                },
+                buttonTitle: '',
+                createOrUpdateClicked: false
+            }
         });
     }
 
     updateClick() {
+        if (!this.state.modalData.createOrUpdateClicked) return;
         fetch(api_urls.NUTRITION_URL, {
             method: 'PUT',
             headers: {
@@ -157,7 +199,18 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 });
             })
         this.setState({
-            notify: {isOpen: true, message: 'Updated successfully', type: 'success'}
+            notify: {isOpen: true, message: 'Updated successfully', type: 'success'},
+            modalData: {
+                title: 'Nutrition',
+                inputTexts: [],
+                inputDropdowns: [],
+                inputImage: {
+                    src: '',
+                    alt: ''
+                },
+                buttonTitle: '',
+                createOrUpdateClicked: false
+            }
         });
     }
 
@@ -281,7 +334,8 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                         data-bs-toggle="modal"
                         data-bs-target="#exampleModal"
                         onClick={() => {
-                            this.setState({updateOrCreateModal: false,
+                            this.setState({
+                                modalData: {...this.state.modalData, buttonTitle: 'Update'},
                                 targetId: nut.id,
                                 targetInjestionTime: nut.injestionTime,
                                 targetCalories: nut.calories,
@@ -328,7 +382,8 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal"
                     onClick={() =>
-                        this.setState({updateOrCreateModal: true,
+                        this.setState({
+                            modalData: {...this.state.modalData, buttonTitle: 'Create'},
                             targetId: '',
                             targetDescription: '',
                             targetInjestionTime: '',
@@ -484,9 +539,9 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                                 data-bs-toggle="modal"
                                 data-bs-target="#exampleModal"
                                 className="btn btn-primary float-start data-bs-dismiss"
-                                onClick={() => this.state.updateOrCreateModal ? this.createClick() : this.updateClick()}
+                                onClick={() => this.state.modalData.buttonTitle === 'Create' ? this.createClick() : this.updateClick()}
                             >
-                                {this.state.updateOrCreateModal ? 'Create' : 'Update'}
+                                {this.state.modalData.buttonTitle === 'Create' ? 'Create' : 'Update'}
                             </button>
                         </div>
                     </div>
@@ -500,7 +555,10 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             <div>
                 <div className="page-header">Nutrition History</div>
                 {this.nutritionTable()}
-                {this.modalPopup()}
+                <AddUpdateModal
+                    modalData={this.state.modalData}
+                    setModalData={this.state.modalData.buttonTitle === 'Create' ? this.createClick() : this.updateClick()}
+                />
                 <Notification
                     notify={this.state.notify}
                     setNotify={this.updateNotify}
