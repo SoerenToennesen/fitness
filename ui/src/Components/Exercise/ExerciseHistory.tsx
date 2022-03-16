@@ -3,7 +3,7 @@ import {api_urls} from '../../Api_urls'
 import exercise_picture from "../../Photos/users/defaultuser.png"
 import Notification from "../../Containers/Notification";
 import ConfirmationModal from "../../Containers/ConfirmationModal";
-import {Spinner} from "../../Containers/Spinner";
+import Spinner from "../../Containers/Spinner";
 
 interface MyNotification {
     isOpen: boolean,

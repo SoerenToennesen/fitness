@@ -1,10 +1,9 @@
 import React from 'react';
-import nutrition_picture from "../Photos/users/defaultuser.png";
 
 // TODO: Implement me
-//imageUpload = (e: any) => {
-//
-//}
+function imageUpload(props: any) {
+
+}
 
 function InputText(props: any) {
     const { inputTexts, setInputTexts } = props;
@@ -41,7 +40,7 @@ function InputDropdown(props: any) {
                             setInputDropdowns({...inputDropdowns, input: e.target.value})
                         }
                     >
-                        {inputDropdowns.options.map((option: any) =>
+                        {inputDropdown.options.map((option: any) =>
                             <option key={option.id}>
                                 {option.value}
                             </option>)
@@ -71,6 +70,7 @@ function InputImage(props: any) {
     );
 }
 
+// TODO: Add date input
 export default function AddUpdateModal(props: any) {
     const { modalData, setModalData } = props;
     return (
@@ -79,7 +79,7 @@ export default function AddUpdateModal(props: any) {
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title">
-                            {modalData.title}
+                            {modalData.buttonTitle + ' ' + modalData.title}
                         </h5>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
                     </div>
@@ -104,7 +104,8 @@ export default function AddUpdateModal(props: any) {
                             type="button"
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModal"
-                            className="btn btn-primary float-start data-bs-dismiss"
+                            className="btn btn-primary float-end data-bs-dismiss"
+                            style={{alignItems: 'right'}}
                             onClick={() => // TODO: we might be able to not do anything here (as everything is already set)
                                 setModalData({...modalData, createOrUpdateClicked: true}) // TODO: createClick or updateClick from caller class depending on this.state.updateOrCreateModal
                             }

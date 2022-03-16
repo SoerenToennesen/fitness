@@ -27,7 +27,7 @@ public class Nutrition {
     //TODO: Make this into a Macro class
     private int carbohydrates;
     private int fats;
-    private int protein;
+    private int proteins;
 
     //TODO: Make this into a Micro class
     private int calcium;

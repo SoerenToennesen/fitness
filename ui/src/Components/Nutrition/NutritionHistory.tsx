@@ -1,19 +1,36 @@
 import React, {Component} from 'react';
 import {api_urls} from '../../Api_urls'
-import nutrition_picture from "../../Photos/users/defaultuser.png"
+import default_nutrition_image from "../../Photos/nutritions/defaultnutrition.svg"
 import Notification from "../../Containers/Notification";
 import ConfirmationModal from "../../Containers/ConfirmationModal";
 import AddUpdateModal from "../../Containers/AddUpdateModal";
-import {Spinner} from "../../Containers/Spinner";
+import Spinner from "../../Containers/Spinner";
 
+interface MyOption {
+    id: string,
+    value: string,
+}
+interface MyOptions extends Array<MyOption>{}
+interface MyNutritionInputText {
+    type: string,
+    placeholder: string,
+    input: string,
+}
+interface MyNutritionInputTexts extends Array<MyNutritionInputText>{}
+interface MyNutritionDropdown {
+    options: MyOptions,
+    placeholder: string,
+    input: string,
+}
+interface MyNutritionDropdowns extends Array<MyNutritionDropdown>{}
 interface MyImage {
-    src: string,
+    src: any,
     alt: string,
 }
 interface MyModalData {
     title: string,
-    inputTexts: [],
-    inputDropdowns: [],
+    inputTexts: MyNutritionInputTexts,
+    inputDropdowns: MyNutritionDropdowns,
     inputImage: MyImage,
     buttonTitle: string,
     createOrUpdateClicked: boolean,
@@ -49,6 +66,38 @@ interface MyStates {
     dataLoaded: boolean,
 }
 
+const initialModalData = {
+    title: 'nutrition',
+    inputTexts: [
+        {type: 'Calories', placeholder: 'Enter calories...', input: ''},
+        {type: 'Description', placeholder: 'Enter description...', input: ''},
+        {type: 'Carbohydrates', placeholder: 'Enter carbohydrates...', input: ''},
+        {type: 'Fats', placeholder: 'Enter fats...', input: ''},
+        {type: 'Proteins', placeholder: 'Enter proteins...', input: ''},
+        {type: 'Folate', placeholder: 'Enter folate...', input: ''},
+        {type: 'Iron', placeholder: 'Enter iron...', input: ''},
+        {type: 'Vitamin B6', placeholder: 'Enter vitamin B6...', input: ''},
+        {type: 'Vitamin B12', placeholder: 'Enter vitamin B12...', input: ''},
+        {type: 'Vitamin C', placeholder: 'Enter vitamin C...', input: ''},
+        {type: 'Vitamin D', placeholder: 'Enter vitamin D...', input: ''},
+        {type: 'Zinc', placeholder: 'Enter zinc...', input: ''},
+    ],
+    inputDropdowns: [
+        {options: [
+                {id: '1', value: 'Running'},
+                {id: '2', value: 'Swimming'},
+                {id: '3', value: 'Biking'},
+                {id: '4', value: 'Powerlifting'},
+            ], placeholder: 'Select a nutrition type...', input: ''},
+    ],
+    inputImage: {
+        src: default_nutrition_image,
+        alt: 'Default nutrition image'
+    },
+    buttonTitle: '',
+    createOrUpdateClicked: false
+}
+
 export class NutritionHistory extends Component<MyProps, MyStates> {
 
     constructor(props: any) {
@@ -65,17 +114,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             sortCalories: false,
             filterNutritions: '',
             nutritionsWithoutFilter: [],
-            modalData: {
-                title: 'Nutrition',
-                inputTexts: [],
-                inputDropdowns: [],
-                inputImage: {
-                    src: '',
-                    alt: ''
-                },
-                buttonTitle: '',
-                createOrUpdateClicked: false
-            },
+            modalData: initialModalData,
             notify: {isOpen: false, message: '', type: ''},
             confirmModal: {isOpen: false, title: '', subTitle: '', onConfirm: () => {}},
             dataLoaded: true,
@@ -125,10 +164,13 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             },
             body: JSON.stringify({
                 id: null,
-                description: this.state.targetDescription,
-                calories: this.state.targetCalories,
-                injestionTime: this.state.targetInjestionTime,
-                nutritionType: this.state.targetNutritionType.toUpperCase(),
+
+                calories: this.state.modalData.inputTexts[0].input,
+                description: this.state.modalData.inputTexts[1].input,
+
+                nutritionType: this.state.modalData.inputDropdowns[0].input,
+
+                // TODO: Priority to add injestion time
             })
         })
             .then(res => {
@@ -151,17 +193,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         // TODO: Make the below into a resetState function that update also uses
         this.setState({
             notify: {isOpen: true, message: 'Created successfully', type: 'success'},
-            modalData: {
-                title: 'Nutrition',
-                inputTexts: [],
-                inputDropdowns: [],
-                inputImage: {
-                    src: '',
-                    alt: ''
-                },
-                buttonTitle: '',
-                createOrUpdateClicked: false
-            }
+            modalData: initialModalData
         });
     }
 
@@ -174,11 +206,14 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id: this.state.targetId,
-                description: this.state.targetDescription,
-                calories: this.state.targetCalories,
-                injestionTime: this.state.targetInjestionTime,
-                nutritionType: this.state.targetNutritionType.toUpperCase(),
+                id: null,
+
+                calories: this.state.modalData.inputTexts[0].input,
+                description: this.state.modalData.inputTexts[1].input,
+
+                nutritionType: this.state.modalData.inputDropdowns[0].input,
+
+                // TODO: Priority to add injestion time
             })
         })
             .then(res => {
@@ -200,17 +235,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             })
         this.setState({
             notify: {isOpen: true, message: 'Updated successfully', type: 'success'},
-            modalData: {
-                title: 'Nutrition',
-                inputTexts: [],
-                inputDropdowns: [],
-                inputImage: {
-                    src: '',
-                    alt: ''
-                },
-                buttonTitle: '',
-                createOrUpdateClicked: false
-            }
+            modalData: initialModalData
         });
     }
 
@@ -247,7 +272,38 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 });
             })
         this.setState({
-            notify: {isOpen: true, message: 'Deleted successfully', type: 'success'}
+            notify: {isOpen: true, message: 'Deleted successfully', type: 'success'},
+            modalData: {
+                title: 'Nutrition',
+                inputTexts: [
+                    {type: 'Calories', placeholder: 'Enter calories...', input: ''},
+                    {type: 'Description', placeholder: 'Enter description...', input: ''},
+                    {type: 'Carbohydrates', placeholder: 'Enter carbohydrates...', input: ''},
+                    {type: 'Fats', placeholder: 'Enter fats...', input: ''},
+                    {type: 'Proteins', placeholder: 'Enter proteins...', input: ''},
+                    {type: 'Folate', placeholder: 'Enter folate...', input: ''},
+                    {type: 'Iron', placeholder: 'Enter iron...', input: ''},
+                    {type: 'Vitamin B6', placeholder: 'Enter vitamin B6...', input: ''},
+                    {type: 'Vitamin B12', placeholder: 'Enter vitamin B12...', input: ''},
+                    {type: 'Vitamin C', placeholder: 'Enter vitamin C...', input: ''},
+                    {type: 'Vitamin D', placeholder: 'Enter vitamin D...', input: ''},
+                    {type: 'Zinc', placeholder: 'Enter zinc...', input: ''},
+                ],
+                inputDropdowns: [
+                    {options: [
+                        {id: '1', value: 'Running'},
+                        {id: '2', value: 'Swimming'},
+                        {id: '3', value: 'Biking'},
+                        {id: '4', value: 'Powerlifting'},
+                    ], placeholder: 'Select a nutrition type...', input: ''},
+                ],
+                inputImage: {
+                    src: default_nutrition_image,
+                    alt: 'Default nutrition image'
+                },
+                buttonTitle: '',
+                createOrUpdateClicked: false
+            }
         });
     }
 
@@ -529,7 +585,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                                 </div>
                                 <div className="p-2 w-50 bd-highlight">
                                     <img height="100px"
-                                         src={nutrition_picture}
+                                         src={default_nutrition_image}
                                          alt="NutritionPicture"/>
                                     <input className="m-2" type="file" onChange={this.imageUpload}/>
                                 </div>

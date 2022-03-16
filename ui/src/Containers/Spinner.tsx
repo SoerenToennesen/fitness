@@ -1,7 +1,7 @@
 import React, {  } from 'react';
 import './css/Spinner.css';
 
-export function Spinner() {
+export default function Spinner() {
     return (
         <div
             className="running"

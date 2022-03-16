@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Spinner} from "../Containers/Spinner";
+import Spinner from "../Containers/Spinner";
 
 interface MyProps {
 }
