@@ -12,9 +12,6 @@ import CRUDTable from "../../Containers/CRUDTable";
 
 interface MyProps {}
 interface MyStates {
-    sortType: boolean,
-    sortInjestionTime: boolean,
-    sortCalories: boolean,
     tableDataWithoutFilter: [],
     table: MyTable,
     modalData: MyModalData,
@@ -27,9 +24,6 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
     constructor(props: any) {
         super(props);
         this.state={
-            sortType: false,
-            sortInjestionTime: false,
-            sortCalories: false,
             tableDataWithoutFilter: [],
             table: {
                 title: 'Full history',
@@ -272,30 +266,38 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         switch (sortingField) {
             case 'nutritionType':
                 this.setState({
-                    sortType: asc,
-                    sortInjestionTime: false,
-                    sortCalories: false,
+                    table: {...this.state.table, headers: [
+                        {field: 'Type', sortDirection: asc, dataField: 'nutritionType'},
+                        {field: 'Injestion time', sortDirection: false, dataField: 'injestionTime'},
+                        {field: 'Calories', sortDirection: false, dataField: 'calories'},
+                    ]},
                 });
                 break;
             case 'injestionTime':
                 this.setState({
-                    sortType: false,
-                    sortInjestionTime: asc,
-                    sortCalories: false,
+                    table: {...this.state.table, headers: [
+                        {field: 'Type', sortDirection: false, dataField: 'nutritionType'},
+                        {field: 'Injestion time', sortDirection: asc, dataField: 'injestionTime'},
+                        {field: 'Calories', sortDirection: false, dataField: 'calories'},
+                    ]},
                 });
                 break;
             case 'calories':
                 this.setState({
-                    sortType: false,
-                    sortInjestionTime: false,
-                    sortCalories: asc,
+                    table: {...this.state.table, headers: [
+                        {field: 'Type', sortDirection: false, dataField: 'nutritionType'},
+                        {field: 'Injestion time', sortDirection: false, dataField: 'injestionTime'},
+                        {field: 'Calories', sortDirection: asc, dataField: 'calories'},
+                    ]},
                 });
                 break;
             default:
                 this.setState({
-                    sortType: false,
-                    sortInjestionTime: false,
-                    sortCalories: false,
+                    table: {...this.state.table, headers: [
+                        {field: 'Type', sortDirection: false, dataField: 'nutritionType'},
+                        {field: 'Injestion time', sortDirection: false, dataField: 'injestionTime'},
+                        {field: 'Calories', sortDirection: false, dataField: 'calories'},
+                    ]},
                 });
         }
     }
