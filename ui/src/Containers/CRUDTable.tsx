@@ -17,7 +17,7 @@ function TableHeaders(props: any) {
                                 type="button"
                                 className="btn"
                                 onClick={() => {
-                                    setSort({sortField: header.dataField, sortDirection: !header.sortDirection}); //TODO: Generalize this
+                                    setSort({sortField: header.dataField, sortDirection: !header.sortDirection});
                                     tableHeaders[tableHeaders.findIndex((x: any) => x.dataField === header.dataField)].sortDirection = !header.sortDirection;
                                 }}
                             >

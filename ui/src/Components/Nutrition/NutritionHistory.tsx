@@ -55,7 +55,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         this.updateModalData=this.updateModalData.bind(this);
         this.updateTable=this.updateTable.bind(this);
         this.updateCreateUpdateDelete=this.updateCreateUpdateDelete.bind(this);
-        this.sortResult=this.sortResult.bind(this);
+        this.updateSort=this.updateSort.bind(this);
     }
 
     componentDidMount() {
@@ -300,11 +300,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         }
     }
 
-    sortFieldToDataField() {
-
-    }
-
-    sortResult(props: any) {
+    updateSort(props: any) {
         var sortedData = this.state.table.data.sort(function(a,b) {
             if (props.sortDirection) {
                 return (a[props.sortField] > b[props.sortField]) ? 1 : ((a[props.sortField] < b[props.sortField]) ? -1 : 0);
@@ -346,12 +342,11 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                     setTable={this.updateTable}
                     setCreateUpdateDelete={this.updateCreateUpdateDelete}
                     setFilter={this.changeNutritionFilter}
-                    setSort={this.sortResult}
+                    setSort={this.updateSort}
                 />
                 <AddUpdateModal
                     modalData={this.state.modalData}
                     setModalData={this.updateModalData}
-                    //setModalData={(modalData: any) => this.updateModalData(modalData)}
                 />
                 <Notification
                     notify={this.state.notify}
