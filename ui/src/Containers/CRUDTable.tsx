@@ -15,8 +15,8 @@ function TableHeaders(props: any) {
     return (
         <thead>
         <tr>
-            {tableHeaders.map((header: any) =>
-                <th>
+            {tableHeaders.map((header: any, i: number) =>
+                <th key={i}>
                     <div className="tableheader-and-sortbutton">
                         <div className="tableheader">
                             {header.field}
@@ -58,8 +58,10 @@ function TableData(props: any) {
         <tbody>
             {tableData.map((data : any) =>
                 <tr key={data.id}>
-                    {tableHeaders.map((header: any) =>
-                        <td>{findValueByPrefix(data, header.dataField)}</td>
+                    {tableHeaders.map((header: any, i: number) =>
+                        <td key={i}>
+                            {findValueByPrefix(data, header.dataField)}
+                        </td>
                     )}
                     <td>
                         <button
@@ -131,7 +133,13 @@ export default function CRUDTable(props: any) {
                         setCreateUpdateDelete={(nextState: any) => setCreateUpdateDelete(nextState)}
                     />
                     :
-                    <Spinner />
+                    <tbody>
+                        <tr>
+                            <td style={{background: "#fff", border: 'none'}}>
+                                <Spinner />
+                            </td>
+                        </tr>
+                    </tbody>
                 }
             </table>
         </div>

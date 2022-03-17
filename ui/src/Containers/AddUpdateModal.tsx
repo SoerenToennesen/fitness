@@ -7,8 +7,8 @@ function InputText(props: any) {
     const { inputTexts, setInputTexts } = props;
     return (
         <div>
-            {inputTexts.map((inputText: any) =>
-                <div className="input-group mb-3">
+            {inputTexts.map((inputText: any, i: number) =>
+                <div className="input-group mb-3" key={i}>
                     <span className="input-group-text">{inputText.type}</span>
                     <input type="text" className="form-control"
                         placeholder={inputText.placeholder}
@@ -28,8 +28,8 @@ function InputDropdown(props: any) {
     const { inputDropdowns, setInputDropdowns } = props;
     return (
         <div>
-            {inputDropdowns.map((inputDropdown: any) =>
-                <div className="input-group mb-3">
+            {inputDropdowns.map((inputDropdown: any, i: number) =>
+                <div className="input-group mb-3" key={i}>
                     <span className="input-group-text">Title</span>
                     <select
                         className="form-select"
