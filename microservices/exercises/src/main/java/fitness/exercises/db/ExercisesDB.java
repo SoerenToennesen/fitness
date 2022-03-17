@@ -20,11 +20,11 @@ public class ExercisesDB {
                     uuid,
                     new Exercise(
                             uuid,
-                            getRandomDescription(random, "abcdefg ", random.nextInt(20 - 8 + 1) + 20),
-                            getRandomLocalDateTime(random),
                             15 + random.nextInt(180 - 15 + 1),
                             50 + random.nextInt(1000 - 50 + 1),
-                            getRandomEnum(Exercise.ExerciseType.class, random)
+                            getRandomDescription(random, "abcdefg ", random.nextInt(20 - 8 + 1) + 20),
+                            getRandomEnum(Exercise.ExerciseType.class, random),
+                            getRandomLocalDateTime(random)
                     )
             );
         }
