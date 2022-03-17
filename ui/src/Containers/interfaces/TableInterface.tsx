@@ -1,6 +1,7 @@
 
 interface MyHeader {
     field: string,
+    dataField: string,
     sortDirection: boolean,
 }
 interface MyHeaders extends Array<MyHeader>{}

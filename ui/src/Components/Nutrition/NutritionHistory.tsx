@@ -36,9 +36,9 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 addTitle: 'Add nutrition',
                 filter: '',
                 headers: [
-                    {field: 'Type', sortDirection: false},
-                    {field: 'Injestion time', sortDirection: false},
-                    {field: 'Calories', sortDirection: false},
+                    {field: 'Type', sortDirection: false, dataField: 'nutritionType'},
+                    {field: 'Injestion time', sortDirection: false, dataField: 'injestionTime'},
+                    {field: 'Calories', sortDirection: false, dataField: 'calories'},
                 ],
                 sortField: '',
                 dataLoaded: false,
@@ -298,6 +298,10 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                     sortCalories: false,
                 });
         }
+    }
+
+    sortFieldToDataField() {
+
     }
 
     sortResult(props: any) {

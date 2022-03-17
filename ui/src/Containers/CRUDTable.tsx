@@ -2,7 +2,7 @@ import React from 'react';
 import Spinner from "./Spinner";
 
 function TableHeaders(props: any) {
-    const { tableHeaders, setTableHeaders, setSort } = props;
+    const { tableHeaders, setSort } = props;
     return (
         <thead>
         <tr>
@@ -17,9 +17,8 @@ function TableHeaders(props: any) {
                                 type="button"
                                 className="btn"
                                 onClick={() => {
-                                    setSort({sortField: 'nutritionType', sortDirection: !header.sortDirection}); //TODO: Generalize this
-                                    //tableHeaders[tableHeaders.findIndex((x: any) => x.sortField === header.sortField)].sortDirection = !header.sortDirection;
-                                    //setTableHeaders({...tableHeaders});
+                                    setSort({sortField: header.dataField, sortDirection: !header.sortDirection}); //TODO: Generalize this
+                                    tableHeaders[tableHeaders.findIndex((x: any) => x.dataField === header.dataField)].sortDirection = !header.sortDirection;
                                 }}
                             >
                                 {header.sortDirection ? (
@@ -113,7 +112,6 @@ export default function CRUDTable(props: any) {
             <table className="table table-striped table-hover">
                 <TableHeaders
                     tableHeaders={table.headers}
-                    setTableHeaders={(nextState: any) => setTable({...table, headers: nextState})}
                     setSort={(nextState: any) => setSort({sortField: nextState.sortField, sortDirection: nextState.sortDirection})}
                 />
                 {table.dataLoaded ?
