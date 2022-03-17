@@ -1,6 +1,15 @@
 import React from 'react';
 import Spinner from "./Spinner";
 
+function findValueByPrefix(object: any, prefix: any) {
+    for (var property in object) {
+        if (object.hasOwnProperty(property) &&
+            property.toString().startsWith(prefix)) {
+            return object[property];
+        }
+    }
+}
+
 function TableHeaders(props: any) {
     const { tableHeaders, setSort } = props;
     return (
@@ -44,14 +53,14 @@ function TableHeaders(props: any) {
 }
 
 function TableData(props: any) {
-    const { tableData, setCreateUpdateDelete } = props;
+    const { tableData, tableHeaders, setCreateUpdateDelete } = props;
     return (
         <tbody>
             {tableData.map((data : any) =>
                 <tr key={data.id}>
-                    <td>{data.nutritionType}</td> {/*//TODO: generalize this*/}
-                    <td>{data.injestionTime}</td>
-                    <td>{data.calories}</td>
+                    {tableHeaders.map((header: any) =>
+                        <td>{findValueByPrefix(data, header.dataField)}</td>
+                    )}
                     <td>
                         <button
                             type="button"
@@ -117,6 +126,7 @@ export default function CRUDTable(props: any) {
                 {table.dataLoaded ?
                     <TableData
                         tableData={table.data}
+                        tableHeaders={table.headers}
                         setTableData={(nextState: any) => setTable({...table, data: nextState})}
                         setCreateUpdateDelete={(nextState: any) => setCreateUpdateDelete(nextState)}
                     />
