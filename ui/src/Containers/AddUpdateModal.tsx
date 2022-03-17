@@ -1,9 +1,7 @@
 import React from 'react';
 
 // TODO: Implement me
-function imageUpload(props: any) {
-
-}
+//function imageUpload(props: any) {}
 
 function InputText(props: any) {
     const { inputTexts, setInputTexts } = props;

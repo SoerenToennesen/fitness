@@ -8,6 +8,8 @@ import Spinner from "../../Containers/Spinner";
 import {MyModalData} from "../../Containers/interfaces/AddUpdateModalInterface";
 import {MyConfirmationModal} from "../../Containers/interfaces/ConfirmationModalInterface";
 import {MyNotification} from "../../Containers/interfaces/NotificationInterface";
+import {MyTable} from "../../Containers/interfaces/TableInterface";
+import CRUDTable from "../../Containers/CRUDTable";
 
 interface MyProps {}
 interface MyStates {
@@ -17,6 +19,7 @@ interface MyStates {
     sortCalories: boolean,
     filterNutritions: string,
     nutritionsWithoutFilter: [],
+    table: MyTable,
     modalData: MyModalData,
     notify: MyNotification,
     confirmModal: MyConfirmationModal,
@@ -34,6 +37,20 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             sortCalories: false,
             filterNutritions: '',
             nutritionsWithoutFilter: [],
+            table: {
+                title: 'Full history',
+                addTitle: 'Add nutrition',
+                filter: '',
+                headers: [
+                    {type: 'Type', sortDirection: false},
+                    {type: 'Injestion time', sortDirection: false},
+                    {type: 'Calories', sortDirection: false},
+                ],
+                sortField: '',
+                dataLoaded: false,
+                data: [],
+                createOrUpdate: '',
+            },
             modalData: this.resetModalData(),
             notify: {isOpen: false, message: '', type: ''},
             confirmModal: {isOpen: false, title: '', subTitle: '', onConfirm: () => {}},
@@ -42,6 +59,8 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         this.updateNotify=this.updateNotify.bind(this);
         this.updateConfirmModal=this.updateConfirmModal.bind(this);
         this.updateModalData=this.updateModalData.bind(this);
+        this.updateTable=this.updateTable.bind(this);
+        this.updateCreateUpdateDelete=this.updateCreateUpdateDelete.bind(this);
     }
 
     componentDidMount() {
@@ -54,6 +73,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             .then(response => response.json())
             .then(data => {
                 this.setState({nutritions: data.nutritions});
+                this.setState({table: {...this.state.table, data: data.nutritions, dataLoaded: true}})
                 this.setState({nutritionsWithoutFilter: data.nutritions})
                 this.setState({dataLoaded: true})
             }, (error) => {
@@ -61,6 +81,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 this.setState({dataLoaded: true})
             })
     }
+
 
     resetModalData() {
         return {
@@ -94,6 +115,35 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             buttonTitle: '',
             createOrUpdateClicked: false
         };
+    }
+
+    updateTable(nextState: any) {
+        this.setState({table: nextState});
+    }
+
+    updateCreateUpdateDelete(nextState: any) {
+        switch (nextState.choice) {
+            case 'Create':
+                this.setState({
+                    modalData: {...this.resetModalData(), buttonTitle: 'Create'}
+                })
+                break;
+            case 'Update':
+                this.setState({
+                    modalData: {...this.resetModalData(), buttonTitle: 'Update'}
+                })
+                break;
+            case 'Delete':
+                this.setState({
+                    confirmModal: {
+                        isOpen: true,
+                        title: 'Do you want to delete nutrition ' + nextState.data.nutritionType + ' at ' + nextState.data.injestionTime + '?',
+                        subTitle: 'This will permanently delete this record.',
+                        onConfirm: () => {this.deleteClick(nextState.data.id)}
+                    }
+                });
+                break;
+        }
     }
 
     updateModalData(nextState: any) {
@@ -212,9 +262,6 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         });
     }
 
-    imageUpload = (e: any) => {
-    }
-
     resetSorts(sortingField: string, asc: boolean) {
         switch (sortingField) {
             case 'nutritionType':
@@ -256,6 +303,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             }
         });
         this.setState({nutritions: sortedData});
+        this.setState({table: {...this.state.table, data: sortedData}})
         this.resetSorts(prop, asc);
     }
 
@@ -274,6 +322,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             }
         );
         this.setState({nutritions: filteredData});
+        this.setState({table: {...this.state.table, data: filteredData}})
     }
 
     changeNutritionFilter = (e: any) => {
@@ -431,10 +480,16 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         return (
             <div>
                 <div className="page-header">Nutrition History</div>
-                {this.nutritionTable()}
+                {/*{this.nutritionTable()}*/}
+                <CRUDTable
+                    table={this.state.table}
+                    setTable={this.updateTable}
+                    setCreateUpdateDelete={this.updateCreateUpdateDelete}
+                />
                 <AddUpdateModal
                     modalData={this.state.modalData}
-                    setModalData={(modalData: any) => this.updateModalData(modalData)}
+                    setModalData={this.updateModalData}
+                    //setModalData={(modalData: any) => this.updateModalData(modalData)}
                 />
                 <Notification
                     notify={this.state.notify}
