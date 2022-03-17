@@ -2,7 +2,7 @@ import React from 'react';
 import Spinner from "./Spinner";
 
 function TableHeaders(props: any) {
-    const { tableHeaders, setTableHeaders } = props;
+    const { tableHeaders, setTableHeaders, setSort } = props;
     return (
         <thead>
         <tr>
@@ -10,15 +10,16 @@ function TableHeaders(props: any) {
                 <th>
                     <div className="tableheader-and-sortbutton">
                         <div className="tableheader">
-                            {header.type}
+                            {header.field}
                         </div>
                         <div className="sortbutton">
                             <button
                                 type="button"
                                 className="btn"
-                                onClick={(e) => {
-                                    tableHeaders[tableHeaders.findIndex((x: any) => x.sortField === header.sortField)].sortDirection = !header.sortDirection;
-                                    setTableHeaders({...tableHeaders, sortField: 'nutritionType'});
+                                onClick={() => {
+                                    setSort({sortField: 'nutritionType', sortDirection: !header.sortDirection}); //TODO: Generalize this
+                                    //tableHeaders[tableHeaders.findIndex((x: any) => x.sortField === header.sortField)].sortDirection = !header.sortDirection;
+                                    //setTableHeaders({...tableHeaders});
                                 }}
                             >
                                 {header.sortDirection ? (
@@ -35,7 +36,7 @@ function TableHeaders(props: any) {
                     </div>
                 </th>
             )}
-            <th style={{width: '110px'}}>
+            <th style={{width: '120px'}}>
                 Options
             </th>
         </tr>
@@ -66,7 +67,7 @@ function TableData(props: any) {
                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                 <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                             </svg>
-                        </button>
+                        </button>{' '}
                         <button
                             type="button"
                             className="btn btn-light mr-1"
@@ -86,7 +87,7 @@ function TableData(props: any) {
 }
 
 export default function CRUDTable(props: any) {
-    const { table, setTable, setCreateUpdateDelete } = props;
+    const { table, setTable, setCreateUpdateDelete, setFilter, setSort } = props;
     return (
         <div>
             <div className="page-section-header">{table.title}</div>
@@ -106,14 +107,14 @@ export default function CRUDTable(props: any) {
                 style={{maxWidth: "300px", position: "relative", left: "-10px", top: "20px"}}
                 placeholder="Filter"
                 onChange={(e) => {
-                    table.filter = e.target.value;
-                    setTable(...table);
+                    setFilter(e.target.value);
                 }}
             />
             <table className="table table-striped table-hover">
                 <TableHeaders
                     tableHeaders={table.headers}
                     setTableHeaders={(nextState: any) => setTable({...table, headers: nextState})}
+                    setSort={(nextState: any) => setSort({sortField: nextState.sortField, sortDirection: nextState.sortDirection})}
                 />
                 {table.dataLoaded ?
                     <TableData

@@ -1,6 +1,6 @@
 
 interface MyHeader {
-    type: string,
+    field: string,
     sortDirection: boolean,
 }
 interface MyHeaders extends Array<MyHeader>{}
@@ -14,4 +14,6 @@ export interface MyTable {
     dataLoaded: boolean,
     data: [],
     createOrUpdate: string,
+
+    sortDirection: boolean,
 }
