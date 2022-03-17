@@ -40,7 +40,7 @@ public class MessageQueue {
                 Event event = new Gson().fromJson(message, Event.class);
 
                 if (eventType.equals(event.getType())) {
-                    System.out.println("[x] handle event " + message);
+                    System.out.println("[x] Handle event " + message);
                     handler.accept(event);
                 }
             };

@@ -92,6 +92,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 {type: 'Carbohydrates', placeholder: 'Enter carbohydrates...', input: ''},
                 {type: 'Fats', placeholder: 'Enter fats...', input: ''},
                 {type: 'Proteins', placeholder: 'Enter proteins...', input: ''},
+                {type: 'Calcium', placeholder: 'Enter calcium...', input: ''},
                 {type: 'Folate', placeholder: 'Enter folate...', input: ''},
                 {type: 'Iron', placeholder: 'Enter iron...', input: ''},
                 {type: 'Vitamin B6', placeholder: 'Enter vitamin B6...', input: ''},
@@ -169,6 +170,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
     }
 
     createClick(modalData: any) {
+        // TODO: Fix this POST call
         fetch(api_urls.NUTRITION_URL, {
             method: 'POST',
             headers: {
@@ -179,6 +181,17 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 id: null,
                 calories: modalData.inputTexts[0].input,
                 description: modalData.inputTexts[1].input,
+                carbohydrates: modalData.inputTexts[2].input,
+                fats: modalData.inputTexts[3].input,
+                proteins: modalData.inputTexts[4].input,
+                calcium: modalData.inputTexts[5].input,
+                folate: modalData.inputTexts[6].input,
+                iron: modalData.inputTexts[7].input,
+                vitaminB6: modalData.inputTexts[8].input,
+                vitaminB12: modalData.inputTexts[9].input,
+                vitaminC: modalData.inputTexts[10].input,
+                vitaminD: modalData.inputTexts[11].input,
+                zinc: modalData.inputTexts[12].input,
                 nutritionType: modalData.inputDropdowns[0].input,
                 // TODO: Priority to add injestion time
             })

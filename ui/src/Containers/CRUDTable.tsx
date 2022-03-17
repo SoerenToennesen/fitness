@@ -35,7 +35,7 @@ function TableHeaders(props: any) {
                     </div>
                 </th>
             )}
-            <th>
+            <th style={{width: '110px'}}>
                 Options
             </th>
         </tr>
