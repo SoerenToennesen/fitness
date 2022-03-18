@@ -50,6 +50,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         this.updateTable=this.updateTable.bind(this);
         this.updateCreateUpdateDelete=this.updateCreateUpdateDelete.bind(this);
         this.updateSort=this.updateSort.bind(this);
+        this.filterFunction=this.filterFunction.bind(this);
     }
 
     componentDidMount() {
@@ -110,17 +111,12 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
     }
 
     updateCreateUpdateDelete(nextState: any) {
+
+        this.setState({
+            modalData: {...this.resetModalData(), buttonTitle: nextState}
+        })
+
         switch (nextState.choice) {
-            case 'Create':
-                this.setState({
-                    modalData: {...this.resetModalData(), buttonTitle: 'Create'}
-                })
-                break;
-            case 'Update':
-                this.setState({
-                    modalData: {...this.resetModalData(), buttonTitle: 'Update'}
-                })
-                break;
             case 'Delete':
                 this.setState({
                     confirmModal: {
@@ -131,6 +127,10 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                     }
                 });
                 break;
+            default:
+                this.setState({
+                    modalData: {...this.resetModalData(), buttonTitle: nextState.choice}
+                })
         }
     }
 
@@ -331,19 +331,20 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         this.setState({table: {...this.state.table, data: filteredData}})
     }
 
-    changeNutritionFilter = (input: string) => {
-        this.filterFunction(input);
-    }
-
     render() {
         return (
             <div>
+                {/*<Table
+                    title={'Full history'}
+                    setTable={this.updateTable}
+                    setCreateUpdateDelete={this.updateCreateUpdateDelete}
+                />*/}
                 <div className="page-header">Nutrition History</div>
                 <CRUDTable
                     table={this.state.table}
                     setTable={this.updateTable}
                     setCreateUpdateDelete={this.updateCreateUpdateDelete}
-                    setFilter={this.changeNutritionFilter}
+                    setFilter={this.filterFunction}
                     setSort={this.updateSort}
                 />
                 <AddUpdateModal
