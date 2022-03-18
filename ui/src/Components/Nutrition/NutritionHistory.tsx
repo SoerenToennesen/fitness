@@ -9,7 +9,7 @@ import {MyConfirmationModal} from "../../Containers/interfaces/ConfirmationModal
 import {MyNotification} from "../../Containers/interfaces/NotificationInterface";
 import {MyTable} from "../../Containers/interfaces/TableInterface";
 import CRUDTable from "../../Containers/CRUDTable";
-import {deleteRest, updateRest} from "../../Containers/actions/RestCalls";
+import {createRest, deleteRest, updateRest} from "../../Containers/actions/RestCalls";
 
 interface MyProps {}
 interface MyStates {
@@ -140,14 +140,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
     updateModalData(nextState: any) {
         this.setState({modalData: nextState});
         if (nextState.createOrUpdateClicked) {
-            switch (nextState.buttonTitle) {
-                case 'Create':
-                    this.createClick(nextState);
-                    break;
-                case 'Update':
-                    this.updateClick(nextState);
-                    break;
-            }
+            this.createUpdateClick(nextState);
         }
     }
 
@@ -159,53 +152,8 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
         this.setState({confirmModal: nextState});
     }
 
-    createClick(modalData: any) {
-        // TODO: Fix this POST call
-        fetch(api_urls.NUTRITION_URL, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                id: null,
-                calories: modalData.inputTexts[0].input,
-                description: modalData.inputTexts[1].input,
-                carbohydrates: modalData.inputTexts[2].input,
-                fats: modalData.inputTexts[3].input,
-                proteins: modalData.inputTexts[4].input,
-                calcium: modalData.inputTexts[5].input,
-                folate: modalData.inputTexts[6].input,
-                iron: modalData.inputTexts[7].input,
-                vitaminB6: modalData.inputTexts[8].input,
-                vitaminB12: modalData.inputTexts[9].input,
-                vitaminC: modalData.inputTexts[10].input,
-                vitaminD: modalData.inputTexts[11].input,
-                zinc: modalData.inputTexts[12].input,
-                nutritionType: modalData.inputDropdowns[0].input,
-                // TODO: Priority to add injestion time
-            })
-        })
-            .then(res => {
-                res.json();
-            })
-            .then(() => {
-                this.refreshList();
-            }, (error) => {
-                this.setState({
-                    notify: {isOpen: true, message: 'Creation failed [insert failure message from backend] ' + error, type: 'error'},
-                    modalData: this.generateModalData(null)
-                });
-            })
-        // TODO: Make the below into a resetState function that update also uses
-        this.setState({
-            notify: {isOpen: true, message: 'Created successfully', type: 'success'},
-            modalData: this.generateModalData(null)
-        });
-    }
-
-    updateClick(modalData: any) {
-        const body = {
+    getRestBody(modalData: any) {
+        return ({
             id: modalData.id,
             calories: modalData.inputTexts[0].input,
             description: modalData.inputTexts[1].input,
@@ -221,21 +169,40 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             vitaminD: modalData.inputTexts[11].input,
             zinc: modalData.inputTexts[12].input,
             nutritionType: modalData.inputDropdowns[0].input,
-        }
-        const returnMessage = updateRest(api_urls.NUTRITION_URL, body);
-        this.setState(returnMessage);
-        if (returnMessage.notify.type === 'success') {
-            const index = this.state.table.data.findIndex((obj => obj['id'] === modalData.id));
-            this.setState({
-                table: {
-                    ...this.state.table, data: [
-                        ...this.state.table.data.slice(0, index),
-                        body,
-                        ...this.state.table.data.slice(index+1)
-                    ] as []
-                }
-            })
-        }
+            }
+        )
+    }
+
+    createUpdateClick(modalData: any) {
+        const body = this.getRestBody(modalData);
+        (modalData.buttonTitle === 'Create' ?
+            createRest(api_urls.NUTRITION_URL, body) :
+            updateRest(api_urls.NUTRITION_URL, body))
+        .then((returnMessage: any) => {
+            this.setState(returnMessage);
+            if (returnMessage.notify.type === 'success') {
+                const index = this.state.table.data.findIndex((obj => obj['id'] === modalData.id));
+                //Below is purely to update the table without refreshing the entire table visually.
+                //Cleaner code could just be this.refreshList(), but that wouldn't achieve the same viusally.
+                this.setState(modalData.buttonTitle === 'Create' ? {
+                    table: {
+                        ...this.state.table, data: [
+                            ...this.state.table.data.slice(this.state.table.data.length, this.state.table.data.length),
+                            body,
+                            ...this.state.table.data.slice(0)
+                        ] as []
+                    }
+                } : {
+                    table: {
+                        ...this.state.table, data: [
+                            ...this.state.table.data.slice(0, index),
+                            body,
+                            ...this.state.table.data.slice(index + 1)
+                        ] as []
+                    }
+                })
+            }
+        });
     }
 
     deleteClick(id: string) {
@@ -245,15 +212,19 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 isOpen: false,
             }
         })
-        const returnMessage = deleteRest(api_urls.NUTRITION_URL, id);
-        this.setState(returnMessage);
-        if (returnMessage.notify.type === 'success') {
-            this.setState({
-                table: {
-                    ...this.state.table, data: this.state.table.data.filter((x: any) => {return x.id !== id}) as any
-                }
-            })
-        }
+        deleteRest(api_urls.NUTRITION_URL, id).then((returnMessage: any) => {
+            this.setState(returnMessage);
+            if (returnMessage.notify.type === 'success') {
+                this.setState( {
+                    table: {
+                        ...this.state.table,
+                        data: this.state.table.data.filter((x: any) => {
+                            return x.id !== id
+                        }) as any
+                    }
+                })
+            }
+        })
     }
 
     resetSorts(sortingField: string, asc: boolean) {
