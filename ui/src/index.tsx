@@ -9,7 +9,7 @@ import {Account} from './Components/Account';
 import {Navbar, NavItem} from './Containers/Navbar';
 import {Sidebar} from './Containers/Sidebar';
 import { DropdownMenu } from './Containers/Dropdown';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
 
 import { ReactComponent as BellIcon } from './Photos/bell.svg';
 import { ReactComponent as MessengerIcon } from './Photos/messenger.svg';
@@ -18,45 +18,75 @@ import { ReactComponent as CaretIcon } from './Photos/caret.svg';
 import {NutritionHistory} from "./Components/Nutrition/NutritionHistory";
 import {ExerciseHistory} from "./Components/Exercise/ExerciseHistory";
 import {SpinnerPage} from "./Components/SpinnerPage";
+import SignIn, {SignUp} from "./Components/SignIn";
 
-// possible UI inspiration:
-// https://dribbble.com/shots/6463346-Nutrition-Page-Fitness-Web-Application-Design
 function App() {
 
   const [inactive, setInactive] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSignIn, setIsSignIn] = useState(true);
+
+  function updateLogin(setLogin: boolean) {
+    setIsLoggedIn(setLogin);
+  }
+
+  function updateIsSignIn(isSignIn: boolean) {
+    setIsSignIn(isSignIn);
+  }
 
   return (
     <BrowserRouter>
+        {isLoggedIn ? (
+            <div>
+                <Sidebar onCollapse={(inactive: any) => {
+                    setInactive(inactive);
+                }} />
+                <div className={`container-navbar ${inactive ? "inactive" : ""}`}>
+                    <Navbar>
+                        <NavItem icon={<PlusIcon />} />
+                        <NavItem icon={<BellIcon />} />
+                        <NavItem icon={<MessengerIcon />} />
+                        <NavItem icon={<CaretIcon />}>
+                            <DropdownMenu />
+                        </NavItem>
+                    </Navbar>
+                </div>
 
-        <Sidebar onCollapse={(inactive: any) => {
-          setInactive(inactive);
-        }} />
-
-        <div className={`container-navbar ${inactive ? "inactive" : ""}`}>
-          <Navbar>
-            <NavItem icon={<PlusIcon />} />
-            <NavItem icon={<BellIcon />} />
-            <NavItem icon={<MessengerIcon />} />
-
-            <NavItem icon={<CaretIcon />}>
-              <DropdownMenu />
-            </NavItem>
-          </Navbar>
+                <div className={`container ${inactive ? "inactive" : ""}`}>
+                    <Switch>
+                        <Route exact path="/signin">
+                            <Redirect to="/" />
+                        </Route>
+                        <Route exact path="/" component={Overview} />
+                        <Route exact path="/nutrition" component={Nutrition} />
+                        <Route exact path="/exercise" component={Exercise} />
+                        <Route exact path="/account" component={Account} />
+                        <Route exact path="/exercise/history" component={ExerciseHistory}/>
+                        <Route exact path="/nutrition/history" component={NutritionHistory}/>
+                        <Route exact path="/spinner" component={SpinnerPage}/>
+                        <Route render={() => <Redirect to={{pathname: "/"}} />} />
+                    </Switch>
+                </div>
+            </div>
+        ) :
+        <div>
+            <Switch>
+                <Route exact path="/signin">
+                  {isSignIn ? (
+                    <SignIn
+                        setIsLoggedIn={updateLogin}
+                        setSignIn={updateIsSignIn}
+                    />
+                  ) : (
+                    <SignUp
+                        setSignIn={updateIsSignIn}
+                    />
+                  )}
+                </Route>
+                <Route render={() => <Redirect to={{pathname: "/signin"}} />} />
+            </Switch>
         </div>
-
-        <div className={`container ${inactive ? "inactive" : ""}`}>
-          <Switch>
-            <Route exact path="/">
-              <Overview />
-            </Route>
-            <Route exact path="/nutrition" component={Nutrition} />
-            <Route exact path="/exercise" component={Exercise} />
-            <Route exact path="/account" component={Account} />
-            <Route exact path="/exercise/history" component={ExerciseHistory}/>
-            <Route exact path="/nutrition/history" component={NutritionHistory}/>
-            <Route exact path="/spinner" component={SpinnerPage}/>
-          </Switch>
-        </div>
+        }
     </BrowserRouter>
   );
 }

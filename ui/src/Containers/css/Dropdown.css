@@ -2,77 +2,77 @@
 
 
 .dropdown {
-    position: absolute;
-    top: calc(var(--nav-size) * 1.05);
-    width: 250px;
-    transform: translateX(-45%);
-    background-color: var(--bg-navbar);
-    border: var(--border);
-    border-radius: var(--border-radius);
-    padding: 0.25rem;
-    overflow: hidden;
-    transition: height var(--speed) ease;
-  }
+  position: absolute;
+  top: calc(var(--nav-size) * 1.05);
+  width: 250px;
+  transform: translateX(-45%);
+  background-color: var(--bg-navbar);
+  border: var(--border);
+  border-radius: var(--border-radius);
+  padding: 0.25rem;
+  overflow: hidden;
+  transition: height var(--speed) ease;
+}
   
-  .menu {
-    width: 100%;
-  }
-  
-  .menu-item {
-    height: 50px;
-    display: flex;
-    align-items: center;
-    border-radius: var(--border-radius);
-    transition: background var(--speed);
-    padding: 0.5rem;
-  }
-  
-  .menu-item .icon-button {
-    margin-right: 0.5rem;
-  }
-  
-  
-  .menu-item .icon-button:hover {
-    filter: none;
-  }
-  
-  .menu-item:hover {
-    background-color: #CCCCCC;
-  }
-  
-  .icon-right {
-    margin-left: auto;
-  }
-  
-  /* CSSTransition classes  */
-  .menu-primary-enter {
-    position: absolute;
-    transform: translateX(-110%);
-  }
-  .menu-primary-enter-active {
-    transform: translateX(0%);
-    transition: all var(--speed) ease;
-  }
-  .menu-primary-exit {
-    position: absolute;
-  }
-  .menu-primary-exit-active {
-    transform: translateX(-110%);
-    transition: all var(--speed) ease;
-  }
-  
-  
-  .menu-secondary-enter {
-    transform: translateX(110%);
-  }
-  .menu-secondary-enter-active {
-    transform: translateX(0%);
-    transition: all var(--speed) ease;
-  }
-  .menu-secondary-exit {
-  
-  }
-  .menu-secondary-exit-active {
-    transform: translateX(110%);
-    transition: all var(--speed) ease;
-  }
+.menu {
+  width: 100%;
+}
+
+.menu-item {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--border-radius);
+  transition: background var(--speed);
+  padding: 0.5rem;
+}
+
+.menu-item .icon-button {
+  margin-right: 0.5rem;
+}
+
+
+.menu-item .icon-button:hover {
+  filter: none;
+}
+
+.menu-item:hover {
+  background-color: #CCCCCC;
+}
+
+.icon-right {
+  margin-left: auto;
+}
+
+/* CSSTransition classes  */
+.menu-primary-enter {
+  position: absolute;
+  transform: translateX(-110%);
+}
+.menu-primary-enter-active {
+  transform: translateX(0%);
+  transition: all var(--speed) ease;
+}
+.menu-primary-exit {
+  position: absolute;
+}
+.menu-primary-exit-active {
+  transform: translateX(-110%);
+  transition: all var(--speed) ease;
+}
+
+
+.menu-secondary-enter {
+  transform: translateX(110%);
+}
+.menu-secondary-enter-active {
+  transform: translateX(0%);
+  transition: all var(--speed) ease;
+}
+.menu-secondary-exit {
+
+}
+.menu-secondary-exit-active {
+  transform: translateX(110%);
+  transition: all var(--speed) ease;
+}
