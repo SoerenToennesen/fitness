@@ -70,7 +70,7 @@ function TableData(props: any) {
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModal"
                             onClick={() => {
-                                setCreateUpdateDelete({choice: 'Update', data: null});
+                                setCreateUpdateDelete({choice: 'Update', data: data});
                             }}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">

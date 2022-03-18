@@ -41,7 +41,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 createOrUpdate: '',
                 sortDirection: false,
             },
-            modalData: this.resetModalData(),
+            modalData: this.generateModalData(null),
             notify: {isOpen: false, message: '', type: ''},
             confirmModal: {isOpen: false, title: '', subTitle: '', onConfirm: () => {}},
         }
@@ -72,24 +72,24 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
     }
 
 
-    resetModalData() {
+    generateModalData(data: any) {
         return {
-            id: '',
+            id: data === null ? '' : data.id,
             title: 'nutrition',
             inputTexts: [
-                {type: 'Calories', placeholder: 'Enter calories...', input: ''},
-                {type: 'Description', placeholder: 'Enter description...', input: ''},
-                {type: 'Carbohydrates', placeholder: 'Enter carbohydrates...', input: ''},
-                {type: 'Fats', placeholder: 'Enter fats...', input: ''},
-                {type: 'Proteins', placeholder: 'Enter proteins...', input: ''},
-                {type: 'Calcium', placeholder: 'Enter calcium...', input: ''},
-                {type: 'Folate', placeholder: 'Enter folate...', input: ''},
-                {type: 'Iron', placeholder: 'Enter iron...', input: ''},
-                {type: 'Vitamin B6', placeholder: 'Enter vitamin B6...', input: ''},
-                {type: 'Vitamin B12', placeholder: 'Enter vitamin B12...', input: ''},
-                {type: 'Vitamin C', placeholder: 'Enter vitamin C...', input: ''},
-                {type: 'Vitamin D', placeholder: 'Enter vitamin D...', input: ''},
-                {type: 'Zinc', placeholder: 'Enter zinc...', input: ''},
+                {type: 'Calories', placeholder: 'Enter calories...', input: data === null ? '' : data.calories},
+                {type: 'Description', placeholder: 'Enter description...', input: data === null ? '' : data.description},
+                {type: 'Carbohydrates', placeholder: 'Enter carbohydrates...', input: data === null ? '' : data.carbohydrates},
+                {type: 'Fats', placeholder: 'Enter fats...', input: data === null ? '' : data.fats},
+                {type: 'Proteins', placeholder: 'Enter proteins...', input: data === null ? '' : data.proteins},
+                {type: 'Calcium', placeholder: 'Enter calcium...', input: data === null ? '' : data.calcium},
+                {type: 'Folate', placeholder: 'Enter folate...', input: data === null ? '' : data.folate},
+                {type: 'Iron', placeholder: 'Enter iron...', input: data === null ? '' : data.iron},
+                {type: 'Vitamin B6', placeholder: 'Enter vitamin B6...', input: data === null ? '' : data.vitaminB6},
+                {type: 'Vitamin B12', placeholder: 'Enter vitamin B12...', input: data === null ? '' : data.vitaminB12},
+                {type: 'Vitamin C', placeholder: 'Enter vitamin C...', input: data === null ? '' : data.vitaminC},
+                {type: 'Vitamin D', placeholder: 'Enter vitamin D...', input: data === null ? '' : data.vitaminD},
+                {type: 'Zinc', placeholder: 'Enter zinc...', input: data === null ? '' : data.zinc},
             ],
             inputDropdowns: [
                 {options: [
@@ -97,7 +97,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                         {id: '2', value: 'Lunch'},
                         {id: '3', value: 'Dinner'},
                         {id: '4', value: 'Snack'},
-                    ], placeholder: 'Select a nutrition type...', input: ''},
+                    ], placeholder: 'Select a nutrition type...', input: data === null ? '' : data.nutritionType[0].toUpperCase() + data.nutritionType.slice(1).toLowerCase()},
             ],
             inputImage: {
                 src: default_nutrition_image,
@@ -114,6 +114,16 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
 
     updateCreateUpdateDelete(nextState: any) {
         switch (nextState.choice) {
+            case 'Create':
+                this.setState({
+                    modalData: {...this.generateModalData(null), buttonTitle: nextState.choice}
+                });
+                break;
+            case 'Update':
+                this.setState({
+                    modalData: {...this.generateModalData(nextState.data), buttonTitle: nextState.choice}
+                });
+                break;
             case 'Delete':
                 this.setState({
                     confirmModal: {
@@ -124,10 +134,6 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                     }
                 });
                 break;
-            default:
-                this.setState({
-                    modalData: {...this.resetModalData(), buttonTitle: nextState.choice}
-                })
         }
     }
 
@@ -188,13 +194,13 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
             }, (error) => {
                 this.setState({
                     notify: {isOpen: true, message: 'Creation failed [insert failure message from backend] ' + error, type: 'error'},
-                    modalData: this.resetModalData()
+                    modalData: this.generateModalData(null)
                 });
             })
         // TODO: Make the below into a resetState function that update also uses
         this.setState({
             notify: {isOpen: true, message: 'Created successfully', type: 'success'},
-            modalData: this.resetModalData()
+            modalData: this.generateModalData(null)
         });
     }
 
