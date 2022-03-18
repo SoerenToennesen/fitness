@@ -63,6 +63,10 @@ export function SignUp(props: any) {
                 <button type="button" className="btnLogin" onClick={() => setSignIn(true)}>
                     Sign up
                 </button>
+                {' '}
+                <button type="button" className="btnLogin" onClick={() => setSignIn(true)}>
+                    Back
+                </button>
             </div>
         </div>
     )
