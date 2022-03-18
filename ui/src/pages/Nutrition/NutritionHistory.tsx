@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {api_urls} from '../../Api_urls'
 import default_nutrition_image from "../../Photos/nutritions/defaultnutrition.svg"
-import Notification from "../../Containers/Notification";
-import ConfirmationModal from "../../Containers/ConfirmationModal";
-import AddUpdateModal from "../../Containers/AddUpdateModal";
-import {MyModalData} from "../../Containers/interfaces/AddUpdateModalInterface";
-import {MyConfirmationModal} from "../../Containers/interfaces/ConfirmationModalInterface";
-import {MyNotification} from "../../Containers/interfaces/NotificationInterface";
-import {MyTable} from "../../Containers/interfaces/TableInterface";
-import CRUDTable from "../../Containers/CRUDTable";
-import {createRest, deleteRest, updateRest} from "../../Containers/actions/RestCalls";
+import Notification from "../../components/Notification";
+import ConfirmationModal from "../../components/ConfirmationModal";
+import AddUpdateModal from "../../components/AddUpdateModal";
+import {MyModalData} from "../../components/interfaces/AddUpdateModalInterface";
+import {MyConfirmationModal} from "../../components/interfaces/ConfirmationModalInterface";
+import {MyNotification} from "../../components/interfaces/NotificationInterface";
+import {MyTable} from "../../components/interfaces/TableInterface";
+import CRUDTable from "../../components/CRUDTable";
+import {createRest, deleteRest, updateRest} from "../../components/actions/RestCalls";
 
 interface MyProps {}
 interface MyStates {

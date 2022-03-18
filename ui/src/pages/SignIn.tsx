@@ -1,6 +1,6 @@
 import React from "react";
 import MainLogo from "../Photos/logos/mainlogo2.png";
-import '../Containers/css/SignInUp.css';
+import '../components/css/SignInUp.css';
 
 export default function SignIn(props: any) {
     const { setIsLoggedIn, setSignIn } = props;

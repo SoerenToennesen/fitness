@@ -2,23 +2,23 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
-import {Overview} from './Components/Overview';
-import {Nutrition} from './Components/Nutrition/Nutrition';
-import {Exercise} from './Components/Exercise/Exercise';
-import {Account} from './Components/Account';
-import {Navbar, NavItem} from './Containers/Navbar';
-import {Sidebar} from './Containers/Sidebar';
-import { DropdownMenu } from './Containers/Dropdown';
+import {Overview} from './pages/Overview';
+import {Nutrition} from './pages/Nutrition/Nutrition';
+import {Exercise} from './pages/Exercise/Exercise';
+import {Account} from './pages/Account';
+import {Navbar, NavItem} from './components/Navbar';
+import {Sidebar} from './components/Sidebar';
+import { DropdownMenu } from './components/Dropdown';
 import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
 
 import { ReactComponent as BellIcon } from './Photos/bell.svg';
 import { ReactComponent as MessengerIcon } from './Photos/messenger.svg';
 import { ReactComponent as PlusIcon } from './Photos/plus.svg';
 import { ReactComponent as CaretIcon } from './Photos/caret.svg';
-import {NutritionHistory} from "./Components/Nutrition/NutritionHistory";
-import {ExerciseHistory} from "./Components/Exercise/ExerciseHistory";
-import {SpinnerPage} from "./Components/SpinnerPage";
-import SignIn, {SignUp} from "./Components/SignIn";
+import {NutritionHistory} from "./pages/Nutrition/NutritionHistory";
+import {ExerciseHistory} from "./pages/Exercise/ExerciseHistory";
+import {SpinnerPage} from "./pages/SpinnerPage";
+import SignIn, {SignUp} from "./pages/SignIn";
 
 function App() {
 

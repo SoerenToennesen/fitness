@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {api_urls} from '../../Api_urls'
 import default_exercise_image from "../../Photos/nutritions/defaultexercise.png";
-import Notification from "../../Containers/Notification";
-import ConfirmationModal from "../../Containers/ConfirmationModal";
-import Spinner from "../../Containers/Spinner";
-import {MyNotification} from "../../Containers/interfaces/NotificationInterface";
-import {MyConfirmationModal} from "../../Containers/interfaces/ConfirmationModalInterface";
-import {MyModalData} from "../../Containers/interfaces/AddUpdateModalInterface";
-import AddUpdateModal from "../../Containers/AddUpdateModal";
+import Notification from "../../components/Notification";
+import ConfirmationModal from "../../components/ConfirmationModal";
+import Spinner from "../../components/Spinner";
+import {MyNotification} from "../../components/interfaces/NotificationInterface";
+import {MyConfirmationModal} from "../../components/interfaces/ConfirmationModalInterface";
+import {MyModalData} from "../../components/interfaces/AddUpdateModalInterface";
+import AddUpdateModal from "../../components/AddUpdateModal";
 
 interface MyProps {
 }
