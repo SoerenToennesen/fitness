@@ -63,7 +63,7 @@ function InputImage(props: any) {
                 className="m-2"
                 type="file"
                 onChange={(e) =>
-                    setInputImage(inputImage) // TODO: Image upload & set function
+                    setInputImage(inputImage)
                 }
             />
         </div>
@@ -106,8 +106,8 @@ export default function AddUpdateModal(props: any) {
                             data-bs-target="#exampleModal"
                             className="btn btn-primary float-end data-bs-dismiss"
                             style={{alignItems: 'right'}}
-                            onClick={() => // TODO: we might be able to not do anything here (as everything is already set)
-                                setModalData({...modalData, createOrUpdateClicked: true}) // TODO: createClick or updateClick from caller class depending on this.state.updateOrCreateModal
+                            onClick={() =>
+                                setModalData({...modalData, createOrUpdateClicked: true})
                             }
                         >
                             {modalData.buttonTitle}

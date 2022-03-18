@@ -9,7 +9,7 @@ import {MyConfirmationModal} from "../../Containers/interfaces/ConfirmationModal
 import {MyNotification} from "../../Containers/interfaces/NotificationInterface";
 import {MyTable} from "../../Containers/interfaces/TableInterface";
 import CRUDTable from "../../Containers/CRUDTable";
-import {deleteRest} from "../../Containers/actions/RestCalls";
+import {deleteRest, updateRest} from "../../Containers/actions/RestCalls";
 
 interface MyProps {}
 interface MyStates {
@@ -74,6 +74,7 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
 
     resetModalData() {
         return {
+            id: '',
             title: 'nutrition',
             inputTexts: [
                 {type: 'Calories', placeholder: 'Enter calories...', input: ''},
@@ -198,34 +199,37 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
     }
 
     updateClick(modalData: any) {
-        fetch(api_urls.NUTRITION_URL, {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                id: null,
-                calories: modalData.inputTexts[0].input,
-                description: modalData.inputTexts[1].input,
-                nutritionType: modalData.inputDropdowns[0].input,
+        const body = {
+            id: modalData.id,
+            calories: modalData.inputTexts[0].input,
+            description: modalData.inputTexts[1].input,
+            carbohydrates: modalData.inputTexts[2].input,
+            fats: modalData.inputTexts[3].input,
+            proteins: modalData.inputTexts[4].input,
+            calcium: modalData.inputTexts[5].input,
+            folate: modalData.inputTexts[6].input,
+            iron: modalData.inputTexts[7].input,
+            vitaminB6: modalData.inputTexts[8].input,
+            vitaminB12: modalData.inputTexts[9].input,
+            vitaminC: modalData.inputTexts[10].input,
+            vitaminD: modalData.inputTexts[11].input,
+            zinc: modalData.inputTexts[12].input,
+            nutritionType: modalData.inputDropdowns[0].input,
+        }
+        const returnMessage = updateRest(api_urls.NUTRITION_URL, body);
+        this.setState(returnMessage);
+        if (returnMessage.notify.type === 'success') {
+            const index = this.state.table.data.findIndex((obj => obj['id'] === modalData.id));
+            this.setState({
+                table: {
+                    ...this.state.table, data: [
+                        ...this.state.table.data.slice(0, index),
+                        body,
+                        ...this.state.table.data.slice(index+1)
+                    ] as []
+                }
             })
-        })
-            .then(res => {
-                res.json();
-            })
-            .then(() => {
-                this.refreshList();
-            }, (error) => {
-                this.setState({
-                    notify: {isOpen: true, message: 'Update failed [insert failure message from backend] ' + error, type: 'error'},
-                    modalData: this.resetModalData()
-                });
-            })
-        this.setState({
-            notify: {isOpen: true, message: 'Updated successfully', type: 'success'},
-            modalData: this.resetModalData()
-        });
+        }
     }
 
     deleteClick(id: string) {

@@ -3,18 +3,24 @@ import CRUDTable from "./CRUDTable";
 import AddUpdateModal from "./AddUpdateModal";
 import Notification from "./Notification";
 import ConfirmationModal from "./ConfirmationModal";
-import {createClick, updateClick} from "./actions/RestCalls";
+import {createRest, updateRest} from "./actions/RestCalls";
 
 //TODO: Implement this file to replace
 
 function updateModalData(nextState: any) {
+    const body = {
+        id: nextState.buttonTitle === 'Create' ? null : nextState.id,
+        calories: nextState.inputTexts[0].input,
+        description: nextState.inputTexts[1].input,
+        nutritionType: nextState.inputDropdowns[0].input,
+    }
     if (nextState.createOrUpdateClicked) {
         switch (nextState.buttonTitle) {
             case 'Create':
-                createClick(nextState);
+                createRest('endpoint', body);
                 break;
             case 'Update':
-                updateClick(nextState);
+                updateRest('endpoint', body);
                 break;
         }
     }

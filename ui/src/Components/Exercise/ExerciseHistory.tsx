@@ -81,6 +81,7 @@ export class ExerciseHistory extends Component<MyProps, MyStates> {
 
     resetModalData() {
         return {
+            id: '',
             title: 'exercise',
             inputTexts: [
                 {type: 'Exercise length', placeholder: 'Enter exercise length...', input: ''},

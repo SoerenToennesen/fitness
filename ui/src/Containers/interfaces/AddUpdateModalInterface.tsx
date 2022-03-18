@@ -25,6 +25,7 @@ interface MyImage {
 }
 
 export interface MyModalData {
+    id: string,
     title: string,
     inputTexts: MyNutritionInputTexts,
     inputDropdowns: MyNutritionDropdowns,

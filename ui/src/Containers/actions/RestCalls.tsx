@@ -2,7 +2,7 @@ import {api_urls} from "../../Api_urls";
 
 //TODO: Implement this file to replace
 
-export function createClick(modalData: any) {
+export function createRest(URL: string, body: any) {
     // TODO: Fix this POST call
     fetch(api_urls.NUTRITION_URL, {
         method: 'POST',
@@ -10,24 +10,7 @@ export function createClick(modalData: any) {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            id: null,
-            calories: modalData.inputTexts[0].input,
-            description: modalData.inputTexts[1].input,
-            carbohydrates: modalData.inputTexts[2].input,
-            fats: modalData.inputTexts[3].input,
-            proteins: modalData.inputTexts[4].input,
-            calcium: modalData.inputTexts[5].input,
-            folate: modalData.inputTexts[6].input,
-            iron: modalData.inputTexts[7].input,
-            vitaminB6: modalData.inputTexts[8].input,
-            vitaminB12: modalData.inputTexts[9].input,
-            vitaminC: modalData.inputTexts[10].input,
-            vitaminD: modalData.inputTexts[11].input,
-            zinc: modalData.inputTexts[12].input,
-            nutritionType: modalData.inputDropdowns[0].input,
-            // TODO: Priority to add injestion time
-        })
+        body: JSON.stringify(body)
     })
         .then(res => {
             res.json();
@@ -42,37 +25,33 @@ export function createClick(modalData: any) {
     });
 }
 
-export function updateClick(modalData: any) {
-    fetch(api_urls.NUTRITION_URL, {
+export function updateRest(URL: string, body: any) {
+    var returnMessage = {
+        notify: {isOpen: true, message: 'Updated successfully', type: 'success'},
+    }
+    fetch(URL, {
         method: 'PUT',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            id: null,
-            calories: modalData.inputTexts[0].input,
-            description: modalData.inputTexts[1].input,
-            nutritionType: modalData.inputDropdowns[0].input,
-        })
+        body: JSON.stringify(body)
     })
         .then(res => {
             res.json();
         }, (error) => {
-            return ({
-                notify: {isOpen: true, message: 'Update failed [insert failure message from backend] ' + error, type: 'error'},
-            });
+            returnMessage = {
+                notify: {isOpen: true, message: 'Update failed [insert failure message from backend] ' + error, type: 'error'}
+            };
         })
-    return ({
-        notify: {isOpen: true, message: 'Updated successfully', type: 'success'},
-    });
+    return returnMessage;
 }
 
 export function deleteRest(URL: string, id: string) {
     var returnMessage = {
         notify: {isOpen: true, message: 'Deleted successfully', type: 'success'},
     }
-    fetch(api_urls.NUTRITION_URL, {
+    fetch(URL, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json',
