@@ -9,6 +9,7 @@ import {MyConfirmationModal} from "../../Containers/interfaces/ConfirmationModal
 import {MyNotification} from "../../Containers/interfaces/NotificationInterface";
 import {MyTable} from "../../Containers/interfaces/TableInterface";
 import CRUDTable from "../../Containers/CRUDTable";
+import {deleteRest} from "../../Containers/actions/RestCalls";
 
 interface MyProps {}
 interface MyStates {
@@ -111,11 +112,6 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
     }
 
     updateCreateUpdateDelete(nextState: any) {
-
-        this.setState({
-            modalData: {...this.resetModalData(), buttonTitle: nextState}
-        })
-
         switch (nextState.choice) {
             case 'Delete':
                 this.setState({
@@ -239,27 +235,15 @@ export class NutritionHistory extends Component<MyProps, MyStates> {
                 isOpen: false,
             }
         })
-        fetch(api_urls.NUTRITION_URL, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: id
-        })
-            .then(res => {
-                res.json();
+        const returnMessage = deleteRest(api_urls.NUTRITION_URL, id);
+        this.setState(returnMessage);
+        if (returnMessage.notify.type === 'success') {
+            this.setState({
+                table: {
+                    ...this.state.table, data: this.state.table.data.filter((x: any) => {return x.id !== id}) as any
+                }
             })
-            .then(() => {
-                this.refreshList();
-            }, (error) => {
-                this.setState({
-                    notify: {isOpen: true, message: 'Deletion failed [insert failure message from backend] ' + error, type: 'error'}
-                });
-            })
-        this.setState({
-            notify: {isOpen: true, message: 'Deleted successfully', type: 'success'},
-        });
+        }
     }
 
     resetSorts(sortingField: string, asc: boolean) {

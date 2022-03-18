@@ -1,4 +1,3 @@
-import React from 'react';
 import {api_urls} from "../../Api_urls";
 
 //TODO: Implement this file to replace
@@ -69,7 +68,10 @@ export function updateClick(modalData: any) {
     });
 }
 
-export function deleteClick(URL: string, id: string) {
+export function deleteRest(URL: string, id: string) {
+    var returnMessage = {
+        notify: {isOpen: true, message: 'Deleted successfully', type: 'success'},
+    }
     fetch(api_urls.NUTRITION_URL, {
         method: 'DELETE',
         headers: {
@@ -81,12 +83,9 @@ export function deleteClick(URL: string, id: string) {
         .then(res => {
             res.json();
         }, (error) => {
-            return ({
+            returnMessage = {
                 notify: {isOpen: true, message: 'Deletion failed [insert failure message from backend] ' + error, type: 'error'}
-            });
+            };
         })
-    return ({
-        confirmModal: {isOpen: false},
-        notify: {isOpen: true, message: 'Deleted successfully', type: 'success'},
-    });
+    return returnMessage;
 }
